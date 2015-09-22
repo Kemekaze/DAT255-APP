@@ -10,7 +10,7 @@ console.log(lib);
 
 
 db.con.connect('localhost',27017,'App',function(){
-	db.busses.get('_id',"5600275e0100867438d7d4e6",{}, function(result){
+	db.posts.voteUp("5601654a5a0880e4084f9981",function(result){
 		console.log(result);
 		db.con.close();
 	});
