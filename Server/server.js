@@ -5,13 +5,13 @@ var db = lib.db;
 
 
 //setup
-//console.log(lib);
+console.log(lib);
 
 
 
-db.db.connect('localhost',27017,'App',function(){
+db.con.connect('localhost',27017,'App',function(){
 	db.busses.get('_id',"5600275e0100867438d7d4e6",{}, function(result){
 		console.log(result);
-		db.db.closeConnection();
+		db.con.close();
 	});
 });

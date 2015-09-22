@@ -6,12 +6,10 @@ var exports = module.exports = {};
 var db = null;
 var isConnected = false;
 
-exports.ObjectID = require('mongodb').ObjectID;
-exports.assert = assert;
 exports.isConnected = function(){
 	return isConnected;
 }
-exports.getDB = function(){
+exports.get = function(){
 	return db;
 }
 exports.connect = function(ip,port,dbName, callback){
@@ -28,7 +26,7 @@ exports.connect = function(ip,port,dbName, callback){
 	  callback();
 	});
 }
-exports.closeConnection = function(){
+exports.close = function(){
 	db.close();
 	console.log("Database connection closed.");
 }

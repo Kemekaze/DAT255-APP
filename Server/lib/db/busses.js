@@ -1,6 +1,6 @@
 var db = require('./db.js');
-var assert = db.assert;
-
+var assert = require('assert');
+var ObjectID = require('mongodb').ObjectID;
 var exports = module.exports = {};
 
 //variables
@@ -9,7 +9,7 @@ var collectionName = "Busses";
 
 exports.add = function(values,callback){
 	// Get a collection
-	var collection = db.getDB().collection(collectionName);
+	var collection = db.get().collection(collectionName);
 	var obj ={dgw : values[0], vin : values[1], regnr : values[2], mac : values[3]};
 	//Add an object to the collection
 	collection.insert(obj, function(err, result) {	
@@ -26,9 +26,9 @@ exports.add = function(values,callback){
 // Example (56002a1f0d8866283c804741,{dgw:123,vin:323})
 exports.update = function(id, updateData, callback){
 	// Get a collection
-	var collection = db.getDB().collection(collectionName);
+	var collection = db.get().collection(collectionName);
 	//Create object id
-	var o_id = new db.ObjectID(id);
+	var o_id = new ObjectID(id);
 	//Update an object in the collection
 	collection.updateOne({_id: o_id},{$set: updateData}, function(err, result) {
 		//Test
@@ -43,10 +43,10 @@ exports.update = function(id, updateData, callback){
 // Example ("dgw","Ericsson$171328",{limit:0,})
 exports.get = function(key, value, options, callback){
 	// Get a collection
-	var collection = db.getDB().collection(collectionName);
+	var collection = db.get().collection(collectionName);
 	//Create object
 	var find = {};
-	find[key] = (key == '_id')? new db.ObjectID(value) : value;
+	find[key] = (key == '_id')? new ObjectID(value) : value;
 	//Get an object from collection
 	collection.findOne(find, options, function(err, result) {
 		//Test
@@ -59,7 +59,7 @@ exports.get = function(key, value, options, callback){
 // Example ()
 exports.getAll = function(callback){
 	// Get a collection
-	var collection = db.getDB().collection(collectionName);
+	var collection = db.get().collection(collectionName);
 	//Get all objects from the collection
 	collection.find({}).toArray(function(err, result) {
 		//Test
@@ -71,10 +71,10 @@ exports.getAll = function(callback){
 }
 exports.remove = function(key,value,options,callback){
 	// Get a collection
-	var collection = db.getDB().collection(collectionName);
+	var collection = db.get().collection(collectionName);
 	//Create object
 	var find = {};
-	find[key] = (key == '_id')? new db.ObjectID(value) : value;
+	find[key] = (key == '_id')? new ObjectID(value) : value;
 	//Remove from collection
 	collection.removeOne(find, options, function(err, result) {
 		//Test

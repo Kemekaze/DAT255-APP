@@ -1,4 +1,5 @@
 var exports = module.exports = {};
 
-exports.db = require("./db.js");
+exports.con = require("./db.js");
 exports.busses = require("./busses.js");
+exports.posts = require("./posts.js");
