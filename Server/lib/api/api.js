@@ -6,7 +6,6 @@
 //
 
 var userNamePass = "grp38:9-yxani3BZ";
-var encodedKey = window.btoa(userNamePass);
 
 var url = "https://ece01.ericsson.net:4443/ecity";
 
@@ -24,7 +23,7 @@ xhr.setRequestHeader("Authorization", "Basic " + btoa(userNamePass));
 xhr.send();
 
 console.log(xhr.status);
-console.log(xhr.statusText);
+console.log(xhr.responseText);
 
 
 
