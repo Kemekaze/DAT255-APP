@@ -4,7 +4,7 @@
 //
 //
 //
-
+/*
 var userNamePass = "grp38:9-yxani3BZ";
 
 var url = "https://ece01.ericsson.net:4443/ecity";
@@ -24,6 +24,31 @@ xhr.send();
 
 console.log(xhr.status);
 console.log(xhr.responseText);
+
+*/
+var t2  = new Date().getTime();
+var t1 = t2 - (1000 * 120);
+
+var request = require('request'),
+    username = "grp38",
+    password = "9-yxani3BZ",
+    url = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Next_Stop&t1="+ t1 + "&t2=" + t2+"",
+    auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+
+request(
+    {
+        url : url,
+        headers : {
+            "Authorization" : auth
+        }
+    },
+    function (error, response, body) {
+        //console.log(error);
+        //console.log(response);
+        console.log(body);
+    }
+);
+
 
 
 
