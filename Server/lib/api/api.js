@@ -6,8 +6,26 @@
 //
 
 var userNamePass = "grp38:9-yxani3BZ";
-
 var encodedKey = window.btoa(userNamePass);
+
+var url = "https://ece01.ericsson.net:4443/ecity";
+
+var t2  = new Date().getTime();
+var t1 = t2 - (1000 * 120);
+
+var url2 = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Next_Stop&t1="+ t1 + "&t2=" + t2;
+
+var xhr = new XMLHttpRequest();
+
+
+
+xhr.open("GET", url2, true);
+xhr.setRequestHeader("Authorization", "Basic " + btoa(userNamePass))l
+xhr.send();
+
+console.log(xhr.status);
+console.log(xhr.statusText);
+
 
 
 
