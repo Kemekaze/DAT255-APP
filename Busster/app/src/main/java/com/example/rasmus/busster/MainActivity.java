@@ -1,6 +1,7 @@
 package com.example.rasmus.busster;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -59,12 +62,15 @@ public class MainActivity extends AppCompatActivity
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
+                getWindow().getDecorView().setBackgroundColor(Color.CYAN);
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
+                getWindow().getDecorView().setBackgroundColor(Color.GREEN);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                getWindow().getDecorView().setBackgroundColor(Color.BLUE);
                 break;
         }
     }
@@ -142,6 +148,12 @@ public class MainActivity extends AppCompatActivity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+
+
+        public void setActivityBackgroundColor(int color) {
+            View view = this.getView();
+            view.setBackgroundColor(color);
         }
     }
 
