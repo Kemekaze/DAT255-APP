@@ -1,86 +1,74 @@
-var db = require('./db.js');
-var assert = require('assert');
-var ObjectID = require('mongodb').ObjectID;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+
 var exports = module.exports = {};
 
-//variables
-var collectionName = "Busses";
+//
+// Schemas definitions
+//
+var BusSchema = new Schema({
+  dgw: { type: String },
+  vin: { type: String },
+  regnr: { type: String },
+  mac: { type: String }
+});
 
+var BusModel = mongoose.model('Busses', BusSchema);
 
-exports.add = function(values,callback){
-	// Get a collection
-	var collection = db.get().collection(collectionName);
-	var obj ={dgw : values[0], vin : values[1], regnr : values[2], mac : values[3]};
-	//Add an object to the collection
-	collection.insert(obj, function(err, result) {	
-		//Test
-		assert.equal(err, null);
-		assert.equal(1, result.result.n);
-    	assert.equal(1, result.ops.length);
-    	console.log("Inserted 1 item into "+collectionName+" collection");
-    	//Callback
-	    callback(result);
-	    }
-	);
+exports.save = function(dgw,vin,regnr,mac,callback){
+
+	var bus = new BusModel({
+	    dgw: dgw,
+	    vin: vin,
+	    regnr: regnr,
+	    mac: mac
+	});
+  	bus.save(function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});	
 }
-// Example (56002a1f0d8866283c804741,{dgw:123,vin:323})
-exports.update = function(id, updateData, callback){
-	// Get a collection
-	var collection = db.get().collection(collectionName);
-	//Create object id
-	var o_id = new ObjectID(id);
-	//Update an object in the collection
-	collection.updateOne({_id: o_id},{$set: updateData}, function(err, result) {
-		//Test
-	    assert.equal(err, null);
-	    assert.equal(1, result.matchedCount);
-	    console.log("Updated id: "+id+" in "+collectionName+" collection ");
-	    //Callback
-	    callback(result);
-	  }); 
-	
+
+exports.find = function(key,value,callback){
+	var query = {};
+	query[key] = value;
+	BusModel.find(query, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
 }
-// Example ("dgw","Ericsson$171328",{limit:0,})
-exports.get = function(key, value, options, callback){
-	// Get a collection
-	var collection = db.get().collection(collectionName);
-	//Create object
-	var find = {};
-	find[key] = (key == '_id')? new ObjectID(value) : value;
-	//Get an object from collection
-	collection.findOne(find, options, function(err, result) {
-		//Test
-		assert.equal(err, null);
-		//callback
-    	callback(result);
-    });
-	
+exports.findOne = function(key,value,callback){
+	var query = {};
+	query[key] = value;
+	BusModel.findOne(query, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
 }
-// Example ()
-exports.getAll = function(callback){
-	// Get a collection
-	var collection = db.get().collection(collectionName);
-	//Get all objects from the collection
-	collection.find({}).toArray(function(err, result) {
-		//Test
-		assert.equal(err, null);
-		//Callback
-    	callback(result);
-    });
-	
+exports.findAll = function(callback){
+
+	BusModel.find(function (err, busses) {
+	  if (err) return console.error(err);
+	  callback(busses);
+	});
 }
-exports.remove = function(key,value,options,callback){
-	// Get a collection
-	var collection = db.get().collection(collectionName);
-	//Create object
-	var find = {};
-	find[key] = (key == '_id')? new ObjectID(value) : value;
-	//Remove from collection
-	collection.removeOne(find, options, function(err, result) {
-		//Test
-		assert.equal(null, err);
-        assert.equal(1, result.result.n);
-		//callback
-    	callback(result);
-    });
+exports.removeMany = function(key,value,callback){
+	var query = {};
+	query[key] = value;
+	BusModel.remove(query, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
+}
+exports.remove = function(id,callback){
+	BusModel.remove({_id:id}, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
+}
+exports.update = function(id,updateData,callback){
+	BusModel.where({_id:id}).update(updateData, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
 }
