@@ -20,7 +20,7 @@ var xhr = new XMLHttpRequest();
 
 
 xhr.open("GET", url2, true);
-xhr.setRequestHeader("Authorization", "Basic " + btoa(userNamePass))l
+xhr.setRequestHeader("Authorization", "Basic " + btoa(userNamePass));
 xhr.send();
 
 console.log(xhr.status);
