@@ -78,6 +78,7 @@ io.on('connection', function(socket){
 	  
 	
 	socket.on('get posts', function (options) {
+		
 		//get default params incase not sent and check for correct value
 		var query = (typeof(options[0]) == 'object')? options[0]: {},
 			limit = (typeof(options[1]) == 'number')? options[1]: 10,
