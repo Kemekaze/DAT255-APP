@@ -29,7 +29,7 @@ exports.save = function(dgw,vin,regnr,mac,callback){
 	});	
 }
 
-exports.find = function(query,value,callback){
+exports.find = function(query,callback){
 	BusModel.find(query, function (err, bus) {
 	  if (err) return console.error(err);
 	  callback(bus);
@@ -48,9 +48,7 @@ exports.findAll = function(callback){
 	  callback(busses);
 	});
 }
-exports.removeMany = function(key,value,callback){
-	var query = {};
-	query[key] = value;
+exports.removeMany = function(query,callback){	
 	BusModel.remove(query, function (err, bus) {
 	  if (err) return console.error(err);
 	  callback(bus);

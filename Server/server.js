@@ -40,23 +40,20 @@ lib.db.posts.save("body","user",55,"mac",function(post){
 
 
 var app = express();
-var server = http.createServer(app);
-var io = socketIO(server);
-
-server.listen(SERVER_PORT,function(){
-	console.log("Server listening at port %d",SERVER_PORT);
-});
+var http = http.Server(app);
+var io = socketIO(http);
 
 
-var checkAuthToken = function(){
 
-}
+
+
 app.get('/',function(req,res){
-	res.send("hello");
+	res.sendFile(__dirname + '/testConnection.html');
 	console.log("User on '/' ");
 });
 io.on('connection', function(socket){ 
 	console.log("User with id '"+socket.id+"' connected.");
+	
 	/*socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
@@ -77,15 +74,25 @@ io.on('connection', function(socket){
 	  
 	
 	socket.on('get posts', function (options) {
-
-	  	//options bestämer dessa parametrar {},5,0,{date: -1}
-	  	lib.db.posts.find({},5,0,{date: -1},function(posts){
+		
+		var query = (typeof(options[0]) == 'object')? options[0]: {},
+			limit = (typeof(options[1]) == 'number')? options[1]: 10,
+			skip  = (typeof(options[2]) == 'number')? options[2]: 0,
+			sort  = (typeof(options[3]) == 'object')? options[3]: {};
+	  	console.log(query+" : "+limit+" : "+skip+" : "+sort);
+	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
 	  		socket.emit('posts', posts);
 	  	});
 
 	});
 
  });
+
+http.listen(SERVER_PORT,function(){
+	console.log("Server listening at port %d",SERVER_PORT);
+});
+
+
 
 
 
