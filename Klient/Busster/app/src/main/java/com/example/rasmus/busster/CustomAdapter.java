@@ -2,6 +2,8 @@ package com.example.rasmus.busster;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,7 @@ public class CustomAdapter extends BaseAdapter {
         TextView userName = (TextView) convertView.findViewById(R.id.userName);
         TextView timeStamp = (TextView) convertView.findViewById(R.id.postTimeStamp);
         TextView bussLine = (TextView) convertView.findViewById(R.id.bussLine);
+        TextView vote = (TextView) convertView.findViewById(R.id.votes);
 
         Post thisPost = posts.get(position);
 
@@ -61,6 +64,14 @@ public class CustomAdapter extends BaseAdapter {
         userName.setText(thisPost.getUserName());
         timeStamp.setText(thisPost.getTimeStamp());
         bussLine.setText(thisPost.getBussLine()+"");
+
+        String dVotes = thisPost.getDownVote()+"";
+        String uVotes = thisPost.getUpVote()+"";
+
+        SpannableString voteString = new SpannableString(thisPost.getDownVote() + "/" + thisPost.getUpVote());
+        voteString.setSpan(new ForegroundColorSpan(Color.RED), 0, dVotes.length(), 0);
+        voteString.setSpan(new ForegroundColorSpan(Color.GREEN), dVotes.length()+1,dVotes.length()+uVotes.length()+1, 0);
+        vote.setText(voteString, TextView.BufferType.SPANNABLE);
 
         return convertView;
     }

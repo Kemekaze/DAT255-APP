@@ -10,15 +10,15 @@ public class Post {
     private String userName;
     private String timeStamp;
     private int bussLine;
-    private int uppVote;
+    private int upVote;
     private int downVote;
 
-    public Post(String messageText, String userName, String timeStamp, int bussLine, int uppVote, int downVote) {
+    public Post(String messageText, String userName, String timeStamp, int bussLine, int upVote, int downVote) {
         this.messageText = messageText;
         this.userName = userName;
         this.timeStamp = timeStamp;
         this.bussLine = bussLine;
-        this.uppVote = uppVote;
+        this.upVote = upVote;
         this.downVote = downVote;
     }
 
@@ -38,8 +38,8 @@ public class Post {
         return bussLine;
     }
 
-    public int getUppVote() {
-        return uppVote;
+    public int getUpVote() {
+        return upVote;
     }
 
     public int getDownVote() {
