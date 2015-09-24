@@ -13,4 +13,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="test_string">test på dig</string>
+    <string name="title_activity_test_skit">TestSkit</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

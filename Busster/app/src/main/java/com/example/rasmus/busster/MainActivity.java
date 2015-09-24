@@ -1,6 +1,7 @@
 package com.example.rasmus.busster;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -63,10 +64,15 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 mTitle = getString(R.string.title_section1);
                 getWindow().getDecorView().setBackgroundColor(Color.CYAN);
+
+
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
                 getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+                Intent intent = new Intent(this,ListActivity.class);
+
+                startActivity(intent);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
