@@ -14,7 +14,7 @@ var PostSchema = new Schema({
   	 			user: String,
   				date: Date 
   			}],
-  time: { type: Date, default: Date.now },
+  date: { type: Date, default: Date.now },
   hidden: { type: Boolean},
   meta: {
     votes: {
@@ -32,10 +32,9 @@ var PostSchema = new Schema({
 
 var PostModel = mongoose.model('Posts', PostSchema);
 
-exports.find = function(key,value,callback){
-	var query = {};
-	query[key] = value;
-	PostModel.find(query, function (err, p) {
+exports.find = function(query,limit,skip,sort,callback){
+
+	PostModel.find(query).limit(limit).skip(skip).sort(sort).exec(function (err, p) {
 	  if (err) return console.error(err);
 	  callback(p);
 	});
@@ -83,7 +82,7 @@ exports.voteDown = function(id,callback){
 	  callback(p);
 	});
 }
-exports.comment.save = function(post_id,body,user,callback){
+exports.saveComment = function(post_id,body,user,callback){
 	var comment ={
 		body: body, 
   	 	user: user,
@@ -95,7 +94,7 @@ exports.comment.save = function(post_id,body,user,callback){
 	});
 
 } 
-exports.comment.getAll = function(post_id,callback){
+exports.getAllComments = function(post_id,callback){
 	exports.findById(post_id,function(post){
 		callback(post.comments);
 	})

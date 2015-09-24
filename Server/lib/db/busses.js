@@ -29,20 +29,16 @@ exports.save = function(dgw,vin,regnr,mac,callback){
 	});	
 }
 
-exports.find = function(key,value,callback){
-	var query = {};
-	query[key] = value;
+exports.find = function(query,value,callback){
 	BusModel.find(query, function (err, bus) {
 	  if (err) return console.error(err);
 	  callback(bus);
 	});
 }
-exports.findOne = function(key,value,callback){
-	var query = {};
-	query[key] = value;
-	BusModel.findOne(query, function (err, bus) {
+exports.findById = function(id,callback){
+	BusModel.find({_id:id}, function (err, p) {
 	  if (err) return console.error(err);
-	  callback(bus);
+	  callback(p);
 	});
 }
 exports.findAll = function(callback){
