@@ -13,8 +13,8 @@ var SERVER_PORT   = 3000;
 var DB_URL   = "localhost";
 var DB_PORT   = 27017;
 var DB_NAME   = "App";
-var socketIds= [];
-var socketId = {}
+var clients= [];
+var client = {}
 var numUsers = 0;
 
 
@@ -52,8 +52,12 @@ app.get('/',function(req,res){
 	console.log("User on '/' ");
 });
 io.on('connection', function(socket){ 
-	console.log("User with id '"+socket.id+"' connected.");
-	
+
+	console.log("Connected: '"+socket.id);
+
+	clients.push(socket);//add client to array 
+	//NOTE this will be done in authentication 
+
 	/*socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
@@ -74,7 +78,7 @@ io.on('connection', function(socket){
 	  
 	
 	socket.on('get posts', function (options) {
-		
+		//get default params incase not sent and check for correct value
 		var query = (typeof(options[0]) == 'object')? options[0]: {},
 			limit = (typeof(options[1]) == 'number')? options[1]: 10,
 			skip  = (typeof(options[2]) == 'number')? options[2]: 0,
@@ -85,6 +89,11 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+	socket.on('disconnect', function () { 
+		console.log("Disconnected: '"+socket.id);
+	    var i = clients.indexOf(socket);
+	    clients.splice(i,1);
+	  });
 
  });
 
