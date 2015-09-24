@@ -8,19 +8,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Rasmus on 2015-09-12.
  */
 public class CustomAdapter extends BaseAdapter {
 
     Context ctxt;
-    Item[] items;
+    ArrayList<Post> posts;
     LayoutInflater myInflater;
 
 
 
-    public CustomAdapter(Item[] items, Context context){
-        this.items = items;
+    public CustomAdapter( ArrayList<Post> posts, Context context){
+       this.posts = posts;
         this.ctxt = context;
         myInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -28,12 +30,12 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return items.length;
+        return posts.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return items[position];
+        return posts.get(position);
     }
 
     @Override
@@ -45,30 +47,22 @@ public class CustomAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if(convertView == null){
-            convertView = myInflater.inflate(R.layout.three_row_list_item,parent,false);
+            convertView = myInflater.inflate(R.layout.busster_post_item,parent,false);
         }
-        TextView id = (TextView) convertView.findViewById(R.id.TextViewId);
-        TextView txt = (TextView) convertView.findViewById(R.id.TextViewTxt);
-        TextView cat = (TextView) convertView.findViewById(R.id.TextViewCat);
 
-        id.setText(position+1+"");
-        txt.setText(items[position].getText());
-        cat.setText(items[position].getCategory().toString());
-        cat.setTextColor(whichColor(items[position].getCategory()));
+        TextView textMessage = (TextView) convertView.findViewById(R.id.postMessage);
+        TextView userName = (TextView) convertView.findViewById(R.id.userName);
+        TextView timeStamp = (TextView) convertView.findViewById(R.id.postTimeStamp);
+        TextView bussLine = (TextView) convertView.findViewById(R.id.bussLine);
+
+        Post thisPost = posts.get(position);
+
+        textMessage.setText(thisPost.getMessageText());
+        userName.setText(thisPost.getUserName());
+        timeStamp.setText(thisPost.getTimeStamp());
+        bussLine.setText(thisPost.getBussLine()+"");
 
         return convertView;
     }
 
-    public int whichColor(Item.CATEGORY category){
-        switch(category) {
-            case COOL:
-                return Color.CYAN;
-            case IMPORTANT:
-                return Color.RED;
-            case VERYIMPORTANT:
-                return Color.YELLOW;
-            default:
-                return Color.BLACK;
-        }
-    }
 }

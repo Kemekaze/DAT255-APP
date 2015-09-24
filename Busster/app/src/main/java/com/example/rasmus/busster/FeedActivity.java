@@ -5,34 +5,30 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
-public class ListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class FeedActivity extends AppCompatActivity {
+
+    private ListView lv;
+    private CustomAdapter cad;
+    private ArrayList<Post> posts = new ArrayList<Post>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        Item item1 = new Item("Matte", Item.CATEGORY.COOL);
-        Item item2 = new Item("Pogrammering", Item.CATEGORY.COOL);
-        Item item3 = new Item("Tenta", Item.CATEGORY.IMPORTANT);
-        Item item4 = new Item("Matte", Item.CATEGORY.COOL);
-        Item item5 = new Item("Pogrammering", Item.CATEGORY.COOL);
-        Item item6 = new Item("Tenta", Item.CATEGORY.IMPORTANT);
-        Item item7 = new Item("Matte", Item.CATEGORY.COOL);
-        Item item8 = new Item("Pogrammering", Item.CATEGORY.COOL);
-        Item item9 = new Item("Tenta", Item.CATEGORY.IMPORTANT);
-        Item item10 = new Item("Matte", Item.CATEGORY.COOL);
-        Item item11 = new Item("Pogrammering", Item.CATEGORY.COOL);
-        Item item12 = new Item("Tenta", Item.CATEGORY.IMPORTANT);
-        Item[] vals = {item1,item2,item3, item4,item5,item6,item7,item8,item9,item10,item11,item12};
+        lv = (ListView)findViewById(R.id.listView);
 
+        cad = new CustomAdapter(posts,this);
 
-        ListView lv = (ListView)findViewById(R.id.listView);
-
-        CustomAdapter cad = new CustomAdapter(vals,this);
         lv.setAdapter(cad);
+
+        addNewPost("Hej", "Rasmus", "1min", 55, 600, 10000);
+        addNewPost("Halloj!", "Oliver","1min",55,50000,1);
     }
 
     @Override
@@ -56,4 +52,14 @@ public class ListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void addNewPost(String message,String userName ,String timeStamp, int bussNumber, int downVote, int upVote ){
+
+        Post post = new Post(message, userName, timeStamp, bussNumber,downVote,upVote);
+        posts.add(post);
+        cad.notifyDataSetChanged();
+
+    }
+
+
 }
