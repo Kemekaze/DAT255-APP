@@ -32,10 +32,9 @@ db.once('open', function (callback) {
 /*lib.db.posts.find({},3,0,{date: -1},function(posts){
 	console.log(posts)
 });
-lib.db.posts.save("body","user",55,"mac",function(post){
+*/
 
-	console.log(post);
-});*/
+
 
 
 
@@ -81,7 +80,7 @@ io.on('connection', function(socket){
 		
 		//get default params incase not sent and check for correct value
 		var query = (typeof(options[0]) == 'object')? options[0]: {},
-			limit = (typeof(options[1]) == 'number')? options[1]: 10,
+			limit = (typeof(options[1]) == 'number' && options[1] != 0)? options[1]: 10,
 			skip  = (typeof(options[2]) == 'number')? options[2]: 0,
 			sort  = (typeof(options[3]) == 'object')? options[3]: {};
 	  	console.log(query+" : "+limit+" : "+skip+" : "+sort);
