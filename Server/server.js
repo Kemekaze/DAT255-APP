@@ -32,8 +32,12 @@ db.once('open', function (callback) {
 /*lib.db.posts.find({},3,0,{date: -1},function(posts){
 	console.log(posts)
 });
-*/
 
+
+*/
+lib.db.posts.save("The is the Body 2","USER 2",23,"This is a mac address",function(r){
+	console.log(r);
+});
 
 
 
@@ -83,8 +87,9 @@ io.on('connection', function(socket){
 			limit = (typeof(options[1]) == 'number' && options[1] != 0)? options[1]: 10,
 			skip  = (typeof(options[2]) == 'number')? options[2]: 0,
 			sort  = (typeof(options[3]) == 'object')? options[3]: {};
-	  	console.log(query+" : "+limit+" : "+skip+" : "+sort);
+	  	console.log(JSON.stringify(query)+" : "+limit+" : "+skip+" : "+JSON.stringify(sort));
 	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
+	  		console.log("Returning: "+posts.length+" posts")
 	  		socket.emit('posts', posts);
 	  	});
 

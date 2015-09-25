@@ -12,16 +12,16 @@ var PostSchema = new Schema({
   comments: [{ 
   	 			body: String, 
   	 			user: String,
-  				date: Date 
+  				date: Number 
   			}],
-  date: { type: Date, default: Date.now },
+  date: { type: Number},
   hidden: { type: Boolean},
   meta: {
     votes: {
     	up: { type: Number},
     	down: { type: Number}
     },
-    Bus:{
+    bus:{
     	mac: { type: String},
     	line: { type: Number}
     },
@@ -51,14 +51,14 @@ exports.save = function(body,user,line,mac,callback){
 	      body: body,
 		  user: user,  
 		  comments: [],
-		  time: (new Date).getTime(),
+		  date: (new Date).getTime(),
 		  hidden: false,
 		  meta: {
 		    votes: {
 		    	up: 0,
 		    	down: 0
 		    },
-		    Bus:{
+		    bus:{
 		    	mac: mac,
 		    	line: line
 		    },
