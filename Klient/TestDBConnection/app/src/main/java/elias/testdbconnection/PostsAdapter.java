@@ -62,6 +62,7 @@ public class PostsAdapter extends BaseAdapter{
         TextView votesUp = (TextView) customView.findViewById(R.id.votesUp);
         TextView votesDown = (TextView) customView.findViewById(R.id.votesDown);
         TextView line = (TextView) customView.findViewById(R.id.line);
+        TextView time = (TextView) customView.findViewById(R.id.time);
 
         body.setText(p.getBody());
         user.setText(p.getUser());
@@ -69,7 +70,7 @@ public class PostsAdapter extends BaseAdapter{
         votesUp.setText(String.valueOf(p.getVotes()[0]));
         votesDown.setText(String.valueOf(p.getVotes()[1]));
         line.setText(String.valueOf(p.getBusLine()));
-
+        time.setText(p.getRelativeTime());
         return customView;
     }
 }

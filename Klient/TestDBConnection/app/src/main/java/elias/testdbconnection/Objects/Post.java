@@ -6,6 +6,9 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.util.Date;
 
 public class Post {
 
@@ -71,9 +74,10 @@ public class Post {
     public long getTime() {
         return time;
     }
-    public String getReadableTime() {
 
-        return"";
+    public String getRelativeTime() {
+        PrettyTime p = new PrettyTime();
+        return p.format(new Date(time));
     }
 
     public String getUser() {
@@ -119,9 +123,10 @@ public class Post {
         public long getTime() {
             return time;
         }
-        public String getReadableTime() {
 
-            return"";
+        public String getRelativeTime() {
+            PrettyTime p = new PrettyTime();
+            return p.format(new Date(time));
         }
 
         public String getUser() {

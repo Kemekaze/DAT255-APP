@@ -23,4 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'io.socket:socket.io-client:0.6.1'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    compile 'org.ocpsoft.prettytime:prettytime:4.0.0.Final'
 }

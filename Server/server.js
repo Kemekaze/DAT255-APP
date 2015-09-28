@@ -57,7 +57,7 @@ app.get('/',function(req,res){
 io.on('connection', function(socket){ 
 
 	console.log("Connected: '"+socket.id);
-
+	console.log("Ip: '"+socket.request.connection.remoteAddress);
 	clients.push(socket);//add client to array 
 	//NOTE this will be done in authentication 
 
