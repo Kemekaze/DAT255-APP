@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-
+var api = require('../api/api.js');
 var exports = module.exports = {};
 
 //
@@ -13,7 +13,15 @@ var BusSchema = new Schema({
   mac: { type: String }
 });
 
-var BusModel = mongoose.model('Busses', BusSchema);
+// assign a function to the "methods" object of our Schema
+BusSchema.methods.getApiData = function (sensor, t1, t2, callback) {	
+	  api.get(this.get("dgw"),sensor,t1,t2,function(data){
+	  	callback(data);
+	  });
+}
+var BusModel = exports.Model = mongoose.model('Busses', BusSchema);
+
+
 
 exports.save = function(dgw,vin,regnr,mac,callback){
 
@@ -23,9 +31,9 @@ exports.save = function(dgw,vin,regnr,mac,callback){
 	    regnr: regnr,
 	    mac: mac
 	});
-  	bus.save(function (err, bus) {
+  	bus.save(function (err, res) {
 	  if (err) return console.error(err);
-	  callback(bus);
+	  callback(res);
 	});	
 }
 

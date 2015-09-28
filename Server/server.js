@@ -8,7 +8,7 @@ var lib = require("./lib");
 
 
 //setup
-//console.log(lib);
+console.log(lib);
 var SERVER_PORT   = 3000;
 var DB_URL   = "localhost";
 var DB_PORT   = 27017;
@@ -27,17 +27,10 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
   console.log("Database '"+DB_NAME+"' connected at '"+DB_URL+":"+DB_PORT+"'" );
+  console.log("--------------- SERVER BOOTED ---------------");
   //db.close();
 });
-/*lib.db.posts.find({},3,0,{date: -1},function(posts){
-	console.log(posts)
-});
 
-
-*/
-lib.db.posts.save("The is the Body 2","USER 2",23,"This is a mac address",function(r){
-	console.log(r);
-});
 
 
 
@@ -47,6 +40,10 @@ var http = http.Server(app);
 var io = socketIO(http);
 
 
+function checkAuthToken(token ,callback){
+	console.log("Token: '"+token+"'");
+	callback(false,true);
+}
 
 
 
@@ -55,19 +52,17 @@ app.get('/',function(req,res){
 	console.log("User on '/' ");
 });
 io.on('connection', function(socket){ 
+	console.log("Connected: '"+socket.id); 
 
-	console.log("Connected: '"+socket.id);
-	console.log("Ip: '"+socket.request.connection.remoteAddress);
-	clients.push(socket);//add client to array 
-	//NOTE this will be done in authentication 
-
-	/*socket.on('authenticate', function(data){
+	socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
 	      if (!err && success){
 	        console.log("Authenticated socket ", socket.id);
 	        socket.auth = true;
+	        clients.push(socket);
 	      }
+
 	    });
 	  });
 	 
@@ -77,7 +72,7 @@ io.on('connection', function(socket){
 	      console.log("Disconnecting socket ", socket.id);
 	      socket.disconnect('unauthorized');
 	    }
-	  }, 1000);*/
+	  }, 1000);
 	  
 	
 	socket.on('get posts', function (options) {
@@ -94,6 +89,9 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
+
+
 	socket.on('disconnect', function () { 
 		console.log("Disconnected: '"+socket.id);
 	    var i = clients.indexOf(socket);

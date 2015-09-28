@@ -1,6 +1,8 @@
 package elias.testdbconnection.Resources;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by elias on 2015-09-25.
@@ -32,5 +34,15 @@ public class ServerQueries {
         jsonArray.put(arg4);
         return jsonArray;
     }
+    public static <T> JSONObject query(String key, T value){
+        try {
+            return new JSONObject().put(key,value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
 }

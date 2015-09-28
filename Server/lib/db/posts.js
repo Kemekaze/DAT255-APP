@@ -29,7 +29,12 @@ var PostSchema = new Schema({
   }
 
 });
-
+PostSchema.methods.saveComment = function(body,user,callback){
+	exports.saveComment(this.get("id"),body,user,callback);	
+} 
+PostSchema.methods.getAllComments = function(callback){
+	exports.getAllComments(this.get("id"),callback);
+} 
 var PostModel = mongoose.model('Posts', PostSchema);
 
 exports.find = function(query,limit,skip,sort,callback){

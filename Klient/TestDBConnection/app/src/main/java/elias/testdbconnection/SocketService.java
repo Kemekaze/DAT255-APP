@@ -26,7 +26,7 @@ public class SocketService extends Service {
     private static final String TAG = "App.SocketService";
 
     private final IBinder socketServiceBinder = new SocketServiceBinder();
-    private Socket socket;
+    private static Socket socket;
 
     public SocketService() {
         Log.i(TAG, "SocketService");
@@ -53,7 +53,7 @@ public class SocketService extends Service {
         Log.i(TAG, "Service destroyed");
         super.onDestroy();
     }
-    public Socket getSocket(){
+    public static Socket getSocket(){
         return socket;
     }
     private List<Post> jsonToPost(JSONArray jsonArray){
@@ -85,12 +85,16 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventConnected");
-            try {
+
+                JSONObject query = ServerQueries.query("token", "this should be a token");
+                socket.emit("authenticate",query);
+
+            /*try {
                 JSONArray query = ServerQueries.query(new JSONObject(), 10, 0, new JSONObject().putOpt("date", -1));
                 socket.emit("get posts",query);
             } catch (JSONException e) {
                 socket.emit("get posts",new JSONArray());
-            }
+            }*/
 
         }
     };

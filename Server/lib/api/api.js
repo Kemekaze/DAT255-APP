@@ -4,7 +4,7 @@ var exports = module.exports = {};
 
 
 exports.get = function(bus, sensor, t1, t2, callback){
-    
+    console.log(" bus: %s, t1: %d, t2: %d",bus,t1,t2);
     var request = require('request'),
         username = "grp38",
         password = "9-yxani3BZ",
@@ -19,8 +19,8 @@ exports.get = function(bus, sensor, t1, t2, callback){
             }
         },
         function (error, response, body) {
-                console.log(error);
-                console.log(response);
+                //console.log(error);
+                console.log(response.statusCode);
                 callback(body);
 
         }
@@ -28,6 +28,7 @@ exports.get = function(bus, sensor, t1, t2, callback){
     );
         
 }
+
 
 
 
