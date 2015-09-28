@@ -32,7 +32,7 @@ var PostSchema = new Schema({
 PostSchema.methods.saveComment = function(body,user,callback){
 	exports.saveComment(this.get("id"),body,user,callback);	
 } 
-PostSchema.methods.getAllComments = function(callback){
+PostSchema.methods.getComments = function(callback){
 	exports.getAllComments(this.get("id"),callback);
 } 
 var PostModel = mongoose.model('Posts', PostSchema);
@@ -99,7 +99,7 @@ exports.saveComment = function(post_id,body,user,callback){
 	});
 
 } 
-exports.getAllComments = function(post_id,callback){
+exports.getComments = function(post_id,callback){
 	exports.findById(post_id,function(post){
 		callback(post.comments);
 	})

@@ -74,8 +74,14 @@ io.on('connection', function(socket){
 	    }
 	  }, 1000);
 	  
-	
-	socket.on('get posts', function (options) {
+	socket.on('disconnect', function () { 
+		console.log("Disconnected: '"+socket.id);
+	    var i = clients.indexOf(socket);
+	    clients.splice(i,1);
+	});
+
+	//POSTS
+	socket.on('getPosts', function (options) {
 		
 		//get default params incase not sent and check for correct value
 		var query = (typeof(options[0]) == 'object')? options[0]: {},
@@ -84,19 +90,59 @@ io.on('connection', function(socket){
 			sort  = (typeof(options[3]) == 'object')? options[3]: {};
 	  	console.log(JSON.stringify(query)+" : "+limit+" : "+skip+" : "+JSON.stringify(sort));
 	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
-	  		console.log("Returning: "+posts.length+" posts")
+	  		console.log("Returning: "+posts.length+" posts");
 	  		socket.emit('posts', posts);
 	  	});
 
 	});
+	socket.on('getPost', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.findById(post_id,function(post){
+	  		console.log("Returning post with id: "+post_id);
+	  		socket.emit('post', post);
+	  	});
+
+	});
+	socket.on('savePost', function (data) {
+		var user = data.user;
+		var body = data.body;
+		var line = data.line;
+		var mac  = data.mac;
+		// validation here
+
+		lib.db.posts.save(function(post){
+			console.log("Post saved with id: "+post.get("id"));
+	  		socket.emit('postSaved', comments);
+
+		});
+
+	});
+	socket.on('getComments', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.getAllComments(post_id,function(comments){
+	  		console.log("Returning comments for post id: "+post_id);
+	  		socket.emit('comments', comments);
+	  	});
+	});
+	socket.on('saveComment', function (data) {
+		var post_id = data.post_id;	
+		var user    = data.user;
+		var body    = data.body;
+		// validation here
+
+	  	lib.db.posts.saveComment(post_id,user,body,function(comment){
+	  		console.log("Comment saved for post id: "+post_id);
+	  		socket.emit('commentSaved', comment);
+	  	});
+	});
 
 
 
-	socket.on('disconnect', function () { 
-		console.log("Disconnected: '"+socket.id);
-	    var i = clients.indexOf(socket);
-	    clients.splice(i,1);
-	  });
+	
 
  });
 

@@ -14,19 +14,22 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import elias.testdbconnection.Objects.Post;
 import elias.testdbconnection.Resources.Constants;
 import elias.testdbconnection.Resources.ServerQueries;
+import elias.testdbconnection.events.PostsEvent;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+import de.greenrobot.event.EventBus;
 
 public class SocketService extends Service {
     private static final String TAG = "App.SocketService";
 
     private final IBinder socketServiceBinder = new SocketServiceBinder();
     private static Socket socket;
+    private EventBus eventBus = EventBus.getDefault();
 
     public SocketService() {
         Log.i(TAG, "SocketService");
@@ -41,11 +44,21 @@ public class SocketService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG, "onBind");
+        setupSocket();
+        return socketServiceBinder;
+    }
+    private void setupSocket(){
+        Log.i(TAG, "onBind");
         socket.on(Socket.EVENT_CONNECT, eventConnected);
         socket.on("posts", eventGetPosts);
         socket.on("busses", eventGetBuses);
         socket.connect();
-        return socketServiceBinder;
+    }
+    @Override
+    public void onCreate() {
+        Log.i(TAG, "onCreate");
+        setupSocket();
+        super.onCreate();
     }
 
     @Override
@@ -53,9 +66,17 @@ public class SocketService extends Service {
         Log.i(TAG, "Service destroyed");
         super.onDestroy();
     }
-    public static Socket getSocket(){
+    public Socket getSocket(){
+        Log.i(TAG, "getSocket");
+        Log.i(TAG, Thread.currentThread().toString());
         return socket;
     }
+    public static <T> void  send(String key, T value){
+        Log.i(TAG, "send");
+        Log.i(TAG, Thread.currentThread().toString());
+        socket.emit(key,value);
+    }
+
     private List<Post> jsonToPost(JSONArray jsonArray){
         List<Post> posts = new ArrayList<>();
         for(int i = 0; i< jsonArray.length();i++){
@@ -72,7 +93,7 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG,"eventGetPosts");
-            EventBus.getDefault().post(jsonToPost((JSONArray)args[0]));
+            eventBus.post(new PostsEvent(jsonToPost((JSONArray) args[0])));
         }
     };
     private Emitter.Listener eventGetBuses = new Emitter.Listener() {
@@ -93,7 +114,7 @@ public class SocketService extends Service {
                 JSONArray query = ServerQueries.query(new JSONObject(), 10, 0, new JSONObject().putOpt("date", -1));
                 socket.emit("get posts",query);
             } catch (JSONException e) {
-                socket.emit("get posts",new JSONArray());
+                socket.emit("getPosts",new JSONArray());
             }*/
 
         }

@@ -1,12 +1,8 @@
 package elias.testdbconnection;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -19,25 +15,36 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+
+
 import elias.testdbconnection.Objects.Post;
 import elias.testdbconnection.Resources.ServerQueries;
-import elias.testdbconnection.SocketService.SocketServiceBinder;
+import elias.testdbconnection.events.PostsEvent;
+
+
 
 
 public class MainActivity extends Activity {
     private static final String TAG = "App.Main";
 
-    protected SocketService socketService;
+    //protected SocketService socketService;
     boolean isBound = false;
+    EventBus eventBus = EventBus.getDefault();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new Thread() {
+            public void run() {
+                Intent i = new Intent(getApplicationContext(),SocketService.class);
+                startService(i);
+            }
+        }.start();
+        /*new Thread() {
             public void run() {
                 getApplicationContext().bindService(
                         new Intent(getApplicationContext(), SocketService.class),
@@ -46,7 +53,7 @@ public class MainActivity extends Activity {
                 );
 
             }
-        }.start();
+        }.start();*/
 
         ListView lw = (ListView) findViewById(R.id.posts);
         lw.setAdapter(
@@ -77,38 +84,38 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onStart() {
+        eventBus.register(this);
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        eventBus.unregister(this);
         super.onStop();
     }
     public void refreshPosts(View view){
         Log.i(TAG, "refreshPosts");
-        Log.i(TAG, Thread.currentThread().toString());
+        Log.i(TAG, String.valueOf(Thread.currentThread().getId()));
         ListView lw = (ListView) findViewById(R.id.posts);
         try {
             JSONArray query = ServerQueries.query(new JSONObject(),10,0,new JSONObject().putOpt("date", -1));
-            socketService.getSocket().emit("get posts",query);
+            SocketService.send("getPosts", query);
+            //socketService.getSocket().emit("getPosts",query);
         } catch (JSONException e) {
-            socketService.getSocket().emit("get posts",new JSONArray());
+            //socketService.getSocket().emit("getPosts",new JSONArray());
         }
 
     }
-
     @Subscribe
-     public void onEventMainThread(List<Post> posts){
+     public void onEventMainThread(PostsEvent posts){
 
         Log.i(TAG, "onEventMainThread(Post[])");
-        Log.i(TAG, Thread.currentThread().toString());
+        Log.i(TAG, String.valueOf(Thread.currentThread().getId()));
         ListView lw = (ListView) findViewById(R.id.posts);
         PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(posts);
+        adapter.addPosts(posts.posts);
     }
-    private ServiceConnection socketConnection = new ServiceConnection() {
+    /*private ServiceConnection socketConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SocketServiceBinder binder = (SocketServiceBinder) service;
@@ -122,7 +129,7 @@ public class MainActivity extends Activity {
             isBound = false;
 
         }
-    };
+    };*/
 
 
 }
