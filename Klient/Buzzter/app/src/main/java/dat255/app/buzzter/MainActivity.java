@@ -19,6 +19,7 @@ import dat255.app.buzzter.Adapters.PostsAdapter;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
 import dat255.app.buzzter.Objects.Post;
+import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -99,7 +100,7 @@ public class MainActivity extends Activity {
         int skip = lw.getAdapter().getCount();
         Log.i(TAG, String.valueOf(skip));
         EventBus.getDefault().post(
-                new SendDataEvent("getPosts",
+                new SendDataEvent(Constants.SocketEvents.GET_POSTS,
                         ServerQueries.getPosts(new JSONObject(),limit,skip,new JSONObject())
                 )
         );

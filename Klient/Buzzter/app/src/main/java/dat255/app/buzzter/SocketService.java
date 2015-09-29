@@ -27,12 +27,12 @@ import io.socket.emitter.Emitter;
 public class SocketService extends Service {
     private static final String TAG = " dat255.app.buzzter.SS";
 
-    private Socket socket;
+    private static Socket socket;
 
     public SocketService() {
         Log.i(TAG, "SocketService");
         try {
-            socket = IO.socket(Constants.SERVER_URL);
+            socket = IO.socket("http://"+Constants.SERVER_IP+":"+Constants.SERVER_PORT);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -47,9 +47,23 @@ public class SocketService extends Service {
     public void onCreate() {
         Log.i(TAG, "onCreate");
         EventBus.getDefault().register(this);
+        //Connection
         socket.on(Socket.EVENT_CONNECT, eventConnected);
-        socket.on("posts", eventGetPosts);
-        socket.on("busses", eventGetBuses);
+        socket.on(Socket.EVENT_DISCONNECT, eventDisconnected);
+        //Authorization
+        socket.on(Constants.SocketEvents.AUTHORIZED, eventAuthorized);
+        socket.on(Constants.SocketEvents.UNAUTHORIZED, eventUnauthorized);
+        //posts
+        socket.on(Constants.SocketEvents.GET_POSTS, eventGetPosts);
+        socket.on(Constants.SocketEvents.SAVE_POST, eventSavePost);
+        socket.on(Constants.SocketEvents.VOTE_UP, eventVotedUp);
+        socket.on(Constants.SocketEvents.VOTE_DOWN, eventVotedDown);
+        //Comments
+        socket.on(Constants.SocketEvents.GET_COMMENTS, eventGetComments);
+        socket.on(Constants.SocketEvents.SAVE_COMMENT, eventSaveComment);
+        //Bus
+        socket.on(Constants.SocketEvents.GET_BUSES, eventGetBuses);
+
         socket.connect();
         super.onCreate();
     }
@@ -73,7 +87,42 @@ public class SocketService extends Service {
         }
         return posts;
     }
-    //Socket events
+    /**Socket events**/
+
+    //Connection
+    private Emitter.Listener eventConnected = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventConnected");
+            JSONObject query = ServerQueries.query("token", "this should be a token");
+            socket.emit(Constants.SocketEvents.AUTHENTICATE, query);
+        }
+    };
+
+    private Emitter.Listener eventDisconnected = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventDisconnected");
+            socket.emit(Socket.EVENT_RECONNECT_ATTEMPT);
+        }
+    };
+
+    //Authentication
+    private Emitter.Listener eventAuthorized = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventAuthorized");
+            socket.emit(Constants.SocketEvents.GET_POSTS);
+        }
+    };
+    private Emitter.Listener eventUnauthorized = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventUnauthorized");
+        }
+    };
+
+    //Posts
     private Emitter.Listener eventGetPosts = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -81,25 +130,57 @@ public class SocketService extends Service {
             EventBus.getDefault().post(new PostsEvent(jsonToPost((JSONArray) args[0])));
         }
     };
+    private Emitter.Listener eventSavePost = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventSavePost");
+            //vad den skall göra
+        }
+    };
+    private Emitter.Listener eventVotedUp = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventVotedUp");
+            //vad den skall göra
+        }
+    };
+    private Emitter.Listener eventVotedDown = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventVotedDown");
+            //vad den skall göra
+        }
+    };
+
+    //Comments
+    private Emitter.Listener eventGetComments = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventGetComments");
+            //vad den skall göra
+        }
+    };
+    private Emitter.Listener eventSaveComment = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventSaveComment");
+            //vad den skall göra
+        }
+    };
+    //Buses
     private Emitter.Listener eventGetBuses = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventGetBuses");
+            //vad den skall göra
         }
     };
-    private Emitter.Listener eventConnected = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.i(TAG, "eventConnected");
-            JSONObject query = ServerQueries.query("token", "this should be a token");
-            socket.emit("authenticate",query);
-        }
-    };
+
+
     //Eventbus events
     @Subscribe
     public void sendToServerEvent(SendDataEvent event){
         Log.i(TAG, "sendToServerEvent(SendDataEvent)");
-
         socket.emit(event.getEventName(),event.getData());
     }
 

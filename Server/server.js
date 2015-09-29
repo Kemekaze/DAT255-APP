@@ -59,22 +59,22 @@ io.on('connection', function(socket){
 	socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
-	      if (!err && success){
-	        console.log("Authenticated socket ", socket.id);
-	        socket.auth = true;
-	        clients.push(socket);
-	      }
-
+	        if (!err && success){
+	            console.log("Authenticated socket ", socket.id);
+	            socket.auth = true;
+	            clients.push(socket);
+	            socket.emit("authorized");
+	        }
 	    });
-	  });
+	});
 	 
-	  setTimeout(function(){
-	    //If the socket didn't authenticate, disconnect it
-	    if (!socket.auth) {
-	      console.log("Disconnecting socket ", socket.id);
-	      socket.disconnect('unauthorized');
-	    }
-	  }, 1000);
+    setTimeout(function(){
+        //If the socket didn't authenticate, disconnect it
+        if (!socket.auth) {
+            console.log("Disconnecting socket ", socket.id);
+            socket.disconnect('unauthorized');
+        }
+    }, 1000);
 	  
 	socket.on('disconnect', function () { 
 		console.log("Disconnected: '"+socket.id);
@@ -84,14 +84,18 @@ io.on('connection', function(socket){
 
 	//POSTS
 	socket.on('getPosts', function (data) {
-		var query = (data.query == null || typeof(data.query) != 'object')? {} : data.query, 
-			limit = (data.limit == null || typeof(data.limit) != 'number')? 10 : data.limit,
-			skip  = (data.skip == null || typeof(data.skip) != 'number')? 0 : data.skip,
-			sort  = (data.sort == null || typeof(data.sort) != 'object')? {date: -1} : data.sort;
+		if(data == null) data = {}
+		var query = (data.query === undefined || typeof(data.query) != 'object')? {} : data.query, 
+			limit = (data.limit === undefined || typeof(data.limit) != 'number')? 10 : data.limit,
+			skip  = (data.skip === undefined || typeof(data.skip) != 'number')? 0 : data.skip,
+			sort  = (data.sort === undefined || typeof(data.sort) != 'object')? {date: -1} : data.sort;
+		
+
+		
 		console.log(JSON.stringify(query)+" | "+limit+" | "+skip+" | "+JSON.stringify(query));	
 	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
 	  		console.log("Returning: "+posts.length+" posts");
-	  		socket.emit('posts', posts);
+	  		socket.emit('getPosts', posts);
 	  	});
 
 	});
@@ -101,7 +105,7 @@ io.on('connection', function(socket){
 
 	  	lib.db.posts.findById(post_id,function(post){
 	  		console.log("Returning post with id: "+post_id);
-	  		socket.emit('post', post);
+	  		socket.emit('getPost', post);
 	  	});
 
 	});
