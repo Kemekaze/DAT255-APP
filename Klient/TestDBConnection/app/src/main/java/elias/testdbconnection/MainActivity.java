@@ -1,18 +1,28 @@
 package elias.testdbconnection;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -30,13 +42,19 @@ import elias.testdbconnection.Resources.ServerQueries;
 import elias.testdbconnection.SocketService.SocketServiceBinder;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
     private static final String TAG = "App.Main";
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private DrawerLayout drawerLayout;
+    private ListView drawerListView;
+    private String[] planets;
+    private ActionBarDrawerToggle drawerToggle;
 
 
     protected SocketService socketService;
     boolean isBound = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +70,34 @@ public class MainActivity extends Activity {
 
             }
         }.start();
+
+       // DrawerLayout section start
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        planets = getResources().getStringArray(R.array.planets);
+        drawerListView = (ListView) findViewById(R.id.left_drawer);
+        drawerListView.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, planets));
+        drawerListView.setOnItemClickListener(this);
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.drawable.ic_drawer,
+                R.string.drawer_open,R.string.drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView){
+                super.onDrawerClosed(drawerView);
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView){
+                super.onDrawerOpened(drawerView);
+            }
+
+
+        };
+        drawerLayout.setDrawerListener(drawerToggle);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        // DrawerLayout section end
+
 
 
         ListView lw = (ListView) findViewById(R.id.posts);
@@ -89,6 +135,27 @@ public class MainActivity extends Activity {
 
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(drawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration configuration){
+     super.onConfigurationChanged(configuration);
+        drawerToggle.onConfigurationChanged(configuration);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,4 +214,18 @@ public class MainActivity extends Activity {
     };
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
+        selectItem(position);
+    }
+
+    private void selectItem(int position) {
+        drawerListView.setItemChecked(position,true);
+        setTitle(planets[position]);
+    }
+
+    public void setTitle(String title){
+       getActionBar().setTitle(title);
+    }
 }
