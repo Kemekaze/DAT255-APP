@@ -27,6 +27,7 @@ import de.greenrobot.event.ThreadMode;
 
 public class MainActivity extends Activity {
     private final String TAG = "dat255.app.buzzter.Main";
+    private Intent socketServiceIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
@@ -34,8 +35,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         new Thread(){
             public void run(){
-                Intent i = new Intent(getApplicationContext(),SocketService.class);
-                startService(i);
+                socketServiceIntent = new Intent(getApplicationContext(),SocketService.class);
+                startService(socketServiceIntent);
             }
         }.start();
 
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
+        stopService(socketServiceIntent);
         super.onStop();
     }
 
