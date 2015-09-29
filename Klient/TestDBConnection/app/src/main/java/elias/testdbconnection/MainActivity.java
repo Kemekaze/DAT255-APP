@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -30,6 +32,8 @@ import elias.testdbconnection.SocketService.SocketServiceBinder;
 
 public class MainActivity extends Activity {
     private static final String TAG = "App.Main";
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     protected SocketService socketService;
     boolean isBound = false;
@@ -39,6 +43,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         new Thread() {
             public void run() {
+                Log.i(TAG,"thread");
                 getApplicationContext().bindService(
                         new Intent(getApplicationContext(), SocketService.class),
                         socketConnection,
@@ -47,6 +52,7 @@ public class MainActivity extends Activity {
 
             }
         }.start();
+
 
         ListView lw = (ListView) findViewById(R.id.posts);
         lw.setAdapter(
@@ -64,6 +70,22 @@ public class MainActivity extends Activity {
                     }
                 }
         );
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        refreshPosts();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+            }
+        });
 
 
     }
@@ -86,7 +108,7 @@ public class MainActivity extends Activity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-    public void refreshPosts(View view){
+    public void refreshPosts(){
         Log.i(TAG, "refreshPosts");
         Log.i(TAG, Thread.currentThread().toString());
         ListView lw = (ListView) findViewById(R.id.posts);

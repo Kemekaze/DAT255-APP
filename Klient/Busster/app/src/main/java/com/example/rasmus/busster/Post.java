@@ -20,6 +20,7 @@ public class Post {
         this.bussLine = bussLine;
         this.upVote = upVote;
         this.downVote = downVote;
+
     }
 
     public String getMessageText() {

@@ -23,4 +23,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'io.socket:socket.io-client:0.6.1'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    compile "com.android.support:support-v4:23.0.0"
+    compile "com.android.support:support-v13:23.0.0"
+
 }

@@ -55,13 +55,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onSectionAttached(int number) {
+        FeedActivity fragment;
+        android.app.FragmentManager fragmentManager = getFragmentManager();
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
                 getWindow().getDecorView().setBackgroundColor(Color.CYAN);
-                Intent intent = new Intent(this,FeedActivity.class);
-                startActivity(intent);
-
+                //Intent intent = new Intent(this,FeedActivity.class);
+                //startActivity(intent);
+                fragment = new FeedActivity();
+                break;
                 break;
             case 2:
                 mTitle = getString(R.string.post);
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
     }
 
     public void restoreActionBar() {
