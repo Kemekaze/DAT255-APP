@@ -31,7 +31,9 @@ db.once('open', function (callback) {
   //db.close();
 });
 
-
+lib.db.posts.save("body","user",55,"mac",function(p){
+	console.log(p);
+});
 
 
 
@@ -138,6 +140,27 @@ io.on('connection', function(socket){
 	  		console.log("Comment saved for post id: "+post_id);
 	  		socket.emit('commentSaved', comment);
 	  	});
+	});
+	//votes
+	socket.on('voteUp', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.voteUp(post_id,function(post){
+	  		console.log("Up voted post id: "+post_id);
+	  		socket.emit('upVoted', {status:"1"});
+	  	});
+
+	});
+	socket.on('voteDown', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.voteDown(post_id,function(post){
+	  		console.log("Down voted post id: "+post_id);
+	  		socket.emit('downVoted', {status:"1"});
+	  	});
+
 	});
 
 
