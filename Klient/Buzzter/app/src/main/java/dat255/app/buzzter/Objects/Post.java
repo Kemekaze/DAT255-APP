@@ -1,8 +1,6 @@
 package dat255.app.buzzter.Objects;
 
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +23,9 @@ public class Post {
     public Post(JSONObject post) {
 
         try {
-            Log.i("Object.Post", post.toString());
             JSONObject meta = post.getJSONObject("meta");
-            Log.i("Object.Post", meta.toString());
             JSONObject votes = meta.getJSONObject("votes");
-            Log.i("Object.Post", votes.toString());
             JSONObject bus = meta.getJSONObject("bus");
-            Log.i("Object.Post", bus.toString());
-
 
             this._id = post.getString("_id");
             this.body = post.getString("body");

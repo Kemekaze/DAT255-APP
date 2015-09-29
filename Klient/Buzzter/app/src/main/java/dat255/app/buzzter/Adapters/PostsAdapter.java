@@ -1,7 +1,6 @@
-package dat255.app.buzzter;
+package dat255.app.buzzter.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import dat255.app.buzzter.Objects.Post;
+import dat255.app.buzzter.R;
 
 
 public class PostsAdapter extends BaseAdapter{
@@ -44,8 +44,20 @@ public class PostsAdapter extends BaseAdapter{
        posts.add(post);
        this.notifyDataSetChanged();
     }
+    public void addPostBegining(Post post) {
+        posts.add(0,post);
+        this.notifyDataSetChanged();
+    }
     public void addPosts(List<Post> posts) {
         this.posts.addAll(posts);
+        this.notifyDataSetChanged();
+    }
+    public void addPostsBegining(List<Post> posts) {
+        this.posts.addAll(0,posts);
+        this.notifyDataSetChanged();
+    }
+    public void addPostsRefresh(List<Post> posts) {
+        this.posts = posts;
         this.notifyDataSetChanged();
     }
 
@@ -66,7 +78,6 @@ public class PostsAdapter extends BaseAdapter{
 
         body.setText(p.getBody());
         user.setText(p.getUser());
-        Log.i("Object.Post", "UP: " + String.valueOf(p.getVotes()[0]) + " DOWN: " + String.valueOf(p.getVotes()[1]));
         votesUp.setText(String.valueOf(p.getVotes()[0]));
         votesDown.setText(String.valueOf(p.getVotes()[1]));
         line.setText(String.valueOf(p.getBusLine()));

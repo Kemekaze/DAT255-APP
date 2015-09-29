@@ -6,7 +6,7 @@ package dat255.app.buzzter.Events;
 public class SendDataEvent {
 
     private String eventName;
-    private Object data;
+    private Object data = null;
     public SendDataEvent(String eventName, Object data) {
         this.eventName = eventName;
         this.data = data;

@@ -31,9 +31,9 @@ db.once('open', function (callback) {
   //db.close();
 });
 
-lib.db.posts.save("body","user",55,"mac",function(p){
+/*lib.db.posts.save("body","user",55,"mac",function(p){
 	console.log(p);
-});
+});*/
 
 
 
@@ -83,14 +83,12 @@ io.on('connection', function(socket){
 	});
 
 	//POSTS
-	socket.on('getPosts', function (options) {
-		
-		//get default params incase not sent and check for correct value
-		var query = (typeof(options[0]) == 'object')? options[0]: {},
-			limit = (typeof(options[1]) == 'number' && options[1] != 0)? options[1]: 10,
-			skip  = (typeof(options[2]) == 'number')? options[2]: 0,
-			sort  = (typeof(options[3]) == 'object')? options[3]: {};
-	  	console.log(JSON.stringify(query)+" : "+limit+" : "+skip+" : "+JSON.stringify(sort));
+	socket.on('getPosts', function (data) {
+		var query = (data.query == null || typeof(data.query) != 'object')? {} : data.query, 
+			limit = (data.limit == null || typeof(data.limit) != 'number')? 10 : data.limit,
+			skip  = (data.skip == null || typeof(data.skip) != 'number')? 0 : data.skip,
+			sort  = (data.sort == null || typeof(data.sort) != 'object')? {date: -1} : data.sort;
+		console.log(JSON.stringify(query)+" | "+limit+" | "+skip+" | "+JSON.stringify(query));	
 	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
 	  		console.log("Returning: "+posts.length+" posts");
 	  		socket.emit('posts', posts);
@@ -108,13 +106,13 @@ io.on('connection', function(socket){
 
 	});
 	socket.on('savePost', function (data) {
-		var user = data.user;
-		var body = data.body;
-		var line = data.line;
-		var mac  = data.mac;
+		var user = data.user,
+		    body = data.body,
+		    line = data.line,
+		    mac  = data.mac;
 		// validation here
 
-		lib.db.posts.save(function(post){
+		lib.db.posts.save(body,user,line,mac,function(post){
 			console.log("Post saved with id: "+post.get("id"));
 	  		socket.emit('postSaved', comments);
 

@@ -2,7 +2,6 @@ package dat255.app.buzzter;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -14,14 +13,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
-import de.greenrobot.event.EventBus;
-
 import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
-import dat255.app.buzzter.Events.PostsEvent;
-
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -31,7 +28,6 @@ public class SocketService extends Service {
     private static final String TAG = " dat255.app.buzzter.SS";
 
     private Socket socket;
-    private EventBus eventBus = EventBus.getDefault();
 
     public SocketService() {
         Log.i(TAG, "SocketService");
@@ -40,7 +36,6 @@ public class SocketService extends Service {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -51,18 +46,18 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         Log.i(TAG, "onCreate");
-
+        EventBus.getDefault().register(this);
         socket.on(Socket.EVENT_CONNECT, eventConnected);
         socket.on("posts", eventGetPosts);
         socket.on("busses", eventGetBuses);
         socket.connect();
-
         super.onCreate();
     }
 
     @Override
     public void onDestroy() {
         Log.i(TAG, "Service destroyed");
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -83,8 +78,7 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG,"eventGetPosts");
-            Log.i(TAG, Thread.currentThread().toString());
-            eventBus.post(new PostsEvent(jsonToPost((JSONArray) args[0])));
+            EventBus.getDefault().post(new PostsEvent(jsonToPost((JSONArray) args[0])));
         }
     };
     private Emitter.Listener eventGetBuses = new Emitter.Listener() {
@@ -97,15 +91,15 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventConnected");
-
-                JSONObject query = ServerQueries.query("token", "this should be a token");
-                socket.emit("authenticate",query);
-
+            JSONObject query = ServerQueries.query("token", "this should be a token");
+            socket.emit("authenticate",query);
         }
     };
     //Eventbus events
     @Subscribe
-    public void onEvent(SendDataEvent event){
+    public void sendToServerEvent(SendDataEvent event){
+        Log.i(TAG, "sendToServerEvent(SendDataEvent)");
+
         socket.emit(event.getEventName(),event.getData());
     }
 
