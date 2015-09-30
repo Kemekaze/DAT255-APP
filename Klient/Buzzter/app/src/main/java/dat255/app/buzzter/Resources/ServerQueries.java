@@ -41,6 +41,14 @@ public class ServerQueries {
         }
         return null;
     }
+    public static <T> JSONObject add(JSONObject obj, String key, T value){
+        try {
+            return obj.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static <T,T2> JSONObject getPosts(T query, int limit, int skip, T2 sort){
         JSONObject q = new JSONObject();
         try {

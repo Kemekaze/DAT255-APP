@@ -1,7 +1,12 @@
 package dat255.app.buzzter;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -92,10 +97,21 @@ public class SocketService extends Service {
 
     //Connection
     private Emitter.Listener eventConnected = new Emitter.Listener() {
+
         @Override
         public void call(Object... args) {
+
             Log.i(TAG, "eventConnected");
-            JSONObject query = ServerQueries.query("token", "this should be a token");
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            String mac = "null";
+            if(nInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                Log.i(TAG, String.valueOf(manager.getWifiState()));
+                WifiInfo info = manager.getConnectionInfo();
+                mac = info.getBSSID();
+            }
+            JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"mac", mac);
             socket.emit(Constants.SocketEvents.AUTHENTICATE, query);
         }
     };
