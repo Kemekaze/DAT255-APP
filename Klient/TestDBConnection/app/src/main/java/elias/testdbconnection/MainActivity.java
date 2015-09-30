@@ -3,6 +3,7 @@ package elias.testdbconnection;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,39 +44,28 @@ import elias.testdbconnection.SocketService.SocketServiceBinder;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
-    private static final String TAG = "App.Main";
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
     private String[] planets;
     private ActionBarDrawerToggle drawerToggle;
+    private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
 
 
-    protected SocketService socketService;
-    boolean isBound = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Thread() {
-            public void run() {
-                Log.i(TAG,"thread");
-                getApplicationContext().bindService(
-                        new Intent(getApplicationContext(), SocketService.class),
-                        socketConnection,
-                        Context.BIND_AUTO_CREATE
-                );
 
-            }
-        }.start();
 
        // DrawerLayout section start
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         planets = getResources().getStringArray(R.array.planets);
         drawerListView = (ListView) findViewById(R.id.left_drawer);
-        drawerListView.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, planets));
+        drawerListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, planets));
         drawerListView.setOnItemClickListener(this);
         drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.drawable.ic_drawer,
                 R.string.drawer_open,R.string.drawer_close){
@@ -96,42 +86,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         drawerLayout.setDrawerListener(drawerToggle);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        fragmentManager = getFragmentManager();
+
+        loadSelection(0);
         // DrawerLayout section end
-
-
-
-        ListView lw = (ListView) findViewById(R.id.posts);
-        lw.setAdapter(
-                new PostsAdapter(
-                        this,
-                        new ArrayList<Post>()
-                )
-        );
-        lw.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Post p = (Post) parent.getItemAtPosition(position);
-                        Toast.makeText(MainActivity.this, p.getId(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        refreshPosts();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
-            }
-        });
 
 
     }
@@ -164,54 +122,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-    public void refreshPosts(){
-        Log.i(TAG, "refreshPosts");
-        Log.i(TAG, Thread.currentThread().toString());
-        ListView lw = (ListView) findViewById(R.id.posts);
-        try {
-            JSONArray query = ServerQueries.query(new JSONObject(),10,0,new JSONObject().putOpt("date", -1));
-            socketService.getSocket().emit("get posts",query);
-        } catch (JSONException e) {
-            socketService.getSocket().emit("get posts",new JSONArray());
-        }
-
-    }
-
-    @Subscribe
-     public void onEventMainThread(List<Post> posts){
-
-        Log.i(TAG, "onEventMainThread(Post[])");
-        Log.i(TAG, Thread.currentThread().toString());
-        ListView lw = (ListView) findViewById(R.id.posts);
-        PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(posts);
-    }
-    private ServiceConnection socketConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            SocketServiceBinder binder = (SocketServiceBinder) service;
-            socketService = binder.getService();
-
-            isBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-
-        }
-    };
 
 
     @Override
@@ -220,9 +131,37 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         selectItem(position);
     }
 
+    private void loadSelection(int pos){
+        drawerListView.setItemChecked(pos,true);
+
+        switch (pos){
+            case 0:
+                PostFragment postFragment = new PostFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,postFragment);
+                fragmentTransaction.commit();
+                break;
+            case 1:
+                AlarmFragment alarmFragment = new AlarmFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,alarmFragment);
+                fragmentTransaction.commit();
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+
+    }
+
     private void selectItem(int position) {
-        drawerListView.setItemChecked(position,true);
+        drawerListView.setItemChecked(position, true);
         setTitle(planets[position]);
+
+        loadSelection(position);
+
+        drawerLayout.closeDrawer(drawerListView);
     }
 
     public void setTitle(String title){
