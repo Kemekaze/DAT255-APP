@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dat255.app.buzzter.Events.PostsEvent;
+import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
 import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Resources.Constants;
@@ -134,7 +135,8 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventSavePost");
-            //vad den skall göra
+            JSONObject obj = (JSONObject)args[0];
+            EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
         }
     };
     private Emitter.Listener eventVotedUp = new Emitter.Listener() {
@@ -164,7 +166,7 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventSaveComment");
-            //vad den skall göra
+
         }
     };
     //Buses

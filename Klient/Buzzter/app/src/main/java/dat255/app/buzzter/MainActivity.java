@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import dat255.app.buzzter.Adapters.PostsAdapter;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
+import dat255.app.buzzter.Events.StatusEvent;
 import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
@@ -59,16 +61,29 @@ public class MainActivity extends Activity {
 
     }
 
+
+    public void savePost(View v) {
+        Intent myIntent = new Intent(MainActivity.this, AddPost.class);
+        MainActivity.this.startActivity(myIntent);
+    }
+
+
+
     @Override
     protected void onStart() {
+        Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
+     StatusEvent e = EventBus.getDefault().getStickyEvent(StatusEvent.class);
+        if(e != null)statusEvent(e);
         super.onStart();
+
     }
 
     @Override
     protected void onStop() {
+        Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
-        stopService(socketServiceIntent);
+       // stopService(socketServiceIntent);
         super.onStop();
     }
 
@@ -103,9 +118,15 @@ public class MainActivity extends Activity {
         Log.i(TAG, String.valueOf(skip));
         EventBus.getDefault().post(
                 new SendDataEvent(Constants.SocketEvents.GET_POSTS,
-                        ServerQueries.getPosts(new JSONObject(),limit,skip,new JSONObject())
+                        ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject())
                 )
         );
+
+    }
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void statusEvent(StatusEvent event){
+        Log.e(TAG, "statusEvent");
+        Toast.makeText(this.getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
 
     }
 
