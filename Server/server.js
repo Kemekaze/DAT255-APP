@@ -62,6 +62,8 @@ io.on('connection', function(socket){
 	        if (!err && success){
 	            console.log("Authenticated socket ", socket.id);
 	            socket.auth = true;
+	            socket.mac = data.mac;
+	            console.log("Socket mac: ", socket.mac);
 	            clients.push(socket);
 	            socket.emit("authorized");
 	        }
@@ -110,7 +112,10 @@ io.on('connection', function(socket){
 
 	});
 	socket.on('savePost', function (data) {
-		var user = data.user,
+		console.log('savePost');
+		console.log(JSON.stringify(data));
+		socket.emit('savePost', {status:"ok"});
+		/*var user = data.user,
 		    body = data.body,
 		    line = data.line,
 		    mac  = data.mac;
@@ -120,7 +125,7 @@ io.on('connection', function(socket){
 			console.log("Post saved with id: "+post.get("id"));
 	  		socket.emit('postSaved', comments);
 
-		});
+		});*/
 
 	});
 	socket.on('getComments', function (data) {
