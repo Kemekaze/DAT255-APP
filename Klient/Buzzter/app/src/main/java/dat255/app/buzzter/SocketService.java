@@ -11,18 +11,15 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
-import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Resources.Constants;
+import dat255.app.buzzter.Resources.DataHandler;
 import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -82,17 +79,6 @@ public class SocketService extends Service {
     }
 
 
-    private List<Post> jsonToPost(JSONArray jsonArray){
-        List<Post> posts = new ArrayList<>();
-        for(int i = 0; i< jsonArray.length();i++){
-            try {
-                posts.add(new Post(jsonArray.getJSONObject(i)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return posts;
-    }
     /**Socket events**/
 
     //Connection
@@ -144,7 +130,7 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG,"eventGetPosts");
-            EventBus.getDefault().post(new PostsEvent(jsonToPost((JSONArray) args[0])));
+            EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr((JSONArray) args[0])));
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {
@@ -152,7 +138,9 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventSavePost");
             JSONObject obj = (JSONObject)args[0];
+
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
+            EventBus.getDefault().postSticky(new PostsEvent(DataHandler.jsonToPostArr((JSONObject)obj.opt("post")),2));
         }
     };
     private Emitter.Listener eventVotedUp = new Emitter.Listener() {

@@ -45,18 +45,28 @@ public class PostsAdapter extends BaseAdapter{
        this.notifyDataSetChanged();
     }
     public void addPostBegining(Post post) {
-        posts.add(0,post);
+        posts.add(0, post);
         this.notifyDataSetChanged();
     }
-    public void addPosts(List<Post> posts) {
-        this.posts.addAll(posts);
+    public void addPosts(List<Post> posts,int type) {
+        switch(type){
+            case 1:
+                addPostsRefresh(posts);
+                break;
+            case 2:
+                addPostsBegining(posts);
+                break;
+            default:
+                this.posts.addAll(posts);
+                break;
+        }
         this.notifyDataSetChanged();
     }
-    public void addPostsBegining(List<Post> posts) {
+    private void addPostsBegining(List<Post> posts) {
         this.posts.addAll(0,posts);
         this.notifyDataSetChanged();
     }
-    public void addPostsRefresh(List<Post> posts) {
+    private void addPostsRefresh(List<Post> posts) {
         this.posts = posts;
         this.notifyDataSetChanged();
     }

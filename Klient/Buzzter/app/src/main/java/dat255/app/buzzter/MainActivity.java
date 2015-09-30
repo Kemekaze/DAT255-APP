@@ -26,6 +26,9 @@ import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 public class MainActivity extends Activity {
     private final String TAG = "dat255.app.buzzter.Main";
@@ -58,7 +61,6 @@ public class MainActivity extends Activity {
                     }
                 }
         );
-
     }
 
 
@@ -73,8 +75,10 @@ public class MainActivity extends Activity {
     protected void onStart() {
         Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
-     StatusEvent e = EventBus.getDefault().getStickyEvent(StatusEvent.class);
-        if(e != null)statusEvent(e);
+        StatusEvent status = EventBus.getDefault().getStickyEvent(StatusEvent.class);
+        PostsEvent posts = EventBus.getDefault().getStickyEvent(PostsEvent.class);
+        if(status != null)statusEvent(status);
+        if(posts != null)updatePostsEvent(posts);
         super.onStart();
 
     }
@@ -107,7 +111,7 @@ public class MainActivity extends Activity {
         //update post list
         ListView lw = (ListView) findViewById(R.id.posts);
         PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(event.posts);
+        adapter.addPosts(event.posts,event.eventType);
     }
 
     public void getPosts(View view){

@@ -57,7 +57,7 @@ public class AddPost extends Activity {
     public void getEditText(View v) {
         EditText edittext = (EditText)findViewById(R.id.editText);
         Log.e(TAG, edittext.getText().toString());
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, edittext.getText().toString()));
+        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, ServerQueries.query("body",edittext.getText().toString())));
     }
 
     @Override
