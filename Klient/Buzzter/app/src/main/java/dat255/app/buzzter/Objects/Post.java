@@ -12,13 +12,13 @@ import java.util.Date;
 
 public class Post {
 
-    private String _id;
-    private String body;
-    private String user;
+    private String _id ="";
+    private String body = "";
+    private String user = "";
     private Comment[] comments;
-    private long time;
-    private int[] votes;
-    private int busLine;
+    private long time = -1;
+    private int[] votes = {-1,-1};
+    private int busLine = -1;
 
 
 

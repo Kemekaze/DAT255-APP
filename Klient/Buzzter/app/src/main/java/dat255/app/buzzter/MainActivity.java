@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -125,17 +126,26 @@ public class MainActivity extends Activity {
         postsAdapter.addPosts(event.posts,event.eventType);
     }
 
-    public void getPosts(View view){
-        Log.i(TAG, "refreshPosts");
-        int limit = 10;
-        int skip = mLayoutManager.getItemCount();
+    public void getMorePosts(View view){
+        Log.i(TAG, "getMorePosts");
+        getPosts(view, 10, mAdapter.getItemCount());
+    }
+    private void getPosts(View view, int limit, int skip){
         Log.i(TAG, String.valueOf(skip));
-        EventBus.getDefault().post(
-                new SendDataEvent(Constants.SocketEvents.GET_POSTS,
-                        ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject())
-                )
-        );
 
+        try {
+            EventBus.getDefault().post(
+                    new SendDataEvent(Constants.SocketEvents.GET_POSTS,
+                            ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject().put("date",-1))
+                    )
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void refreshPosts(View view){
+        Log.i(TAG, "refreshPosts");
+        getPosts(view,10,0);
     }
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event){

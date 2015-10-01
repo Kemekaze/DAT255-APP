@@ -130,7 +130,10 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG,"eventGetPosts");
-            EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr((JSONArray) args[0])));
+            JSONObject obj = (JSONObject) args[0];
+            JSONArray posts = (JSONArray)  obj.opt("posts");
+            int type = (int)obj.opt("type");
+            EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr(posts),type));
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {
