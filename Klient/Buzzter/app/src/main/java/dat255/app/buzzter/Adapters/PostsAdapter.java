@@ -60,8 +60,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         holder.user.setText(posts.get(position).getUser());
         holder.line.setText(String.valueOf(posts.get(position).getBusLine()));
         holder.time.setText(posts.get(position).getRelativeTime());
-        holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
-        holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
+       // holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
+       // holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
 
     }
 

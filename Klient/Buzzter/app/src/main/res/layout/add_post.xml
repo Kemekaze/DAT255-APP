@@ -33,10 +33,10 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send"
         android:id="@+id/button2"
         android:onClick="getEditText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:background="@drawable/ic_action_send"
+        android:layout_below="@+id/editText"
+        android:layout_alignEnd="@+id/editText" />
 
 </RelativeLayout>
