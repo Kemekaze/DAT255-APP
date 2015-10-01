@@ -1,137 +1,173 @@
 package dat255.app.buzzter;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import dat255.app.buzzter.Adapters.PostsAdapter;
-import dat255.app.buzzter.Events.PostsEvent;
-import dat255.app.buzzter.Events.SendDataEvent;
-import dat255.app.buzzter.Events.StatusEvent;
-import dat255.app.buzzter.Objects.Post;
-import dat255.app.buzzter.Resources.Constants;
-import dat255.app.buzzter.Resources.ServerQueries;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
 
-public class MainActivity extends Activity {
-    private final String TAG = "dat255.app.buzzter.Main";
-    private Intent socketServiceIntent;
+import dat255.app.buzzter.AlarmFragment;
+import dat255.app.buzzter.PostFragment;
+import dat255.app.buzzter.R;
+
+
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
+
+    private DrawerLayout drawerLayout;
+    private ListView drawerListView;
+    private String[] planets;
+    private ActionBarDrawerToggle drawerToggle;
+    private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Thread(){
-            public void run(){
-                socketServiceIntent = new Intent(getApplicationContext(),SocketService.class);
-                startService(socketServiceIntent);
+
+
+       // DrawerLayout section start
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        planets = getResources().getStringArray(R.array.planets);
+        drawerListView = (ListView) findViewById(R.id.left_drawer);
+        drawerListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, planets));
+        drawerListView.setOnItemClickListener(this);
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.drawable.ic_launcher,
+                R.string.drawer_open,R.string.drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView){
+                super.onDrawerClosed(drawerView);
+
             }
-        }.start();
 
-        ListView lw = (ListView) findViewById(R.id.posts);
-        lw.setAdapter(
-                new PostsAdapter(
-                        this,
-                        new ArrayList<Post>()
-                )
-        );
-        lw.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Post p = (Post) parent.getItemAtPosition(position);
-                        Toast.makeText(MainActivity.this, p.getId(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-    }
+            @Override
+            public void onDrawerOpened(View drawerView){
+                super.onDrawerOpened(drawerView);
+            }
 
 
-    public void savePost(View v) {
-        Intent myIntent = new Intent(MainActivity.this, AddPost.class);
-        MainActivity.this.startActivity(myIntent);
-    }
+        };
+        drawerLayout.setDrawerListener(drawerToggle);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        fragmentManager = getFragmentManager();
 
+        loadSelection(0);
+        // DrawerLayout section end
 
-
-    @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart");
-        EventBus.getDefault().register(this);
-        StatusEvent status = EventBus.getDefault().getStickyEvent(StatusEvent.class);
-        PostsEvent posts = EventBus.getDefault().getStickyEvent(PostsEvent.class);
-        if(status != null)statusEvent(status);
-        if(posts != null)updatePostsEvent(posts);
-        super.onStart();
 
     }
 
     @Override
-    protected void onStop() {
-        Log.i(TAG, "onStop");
-        EventBus.getDefault().unregister(this);
-       // stopService(socketServiceIntent);
-        super.onStop();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(drawerToggle.onOptionsItemSelected(item)){
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void updatePostsEvent(PostsEvent event){
-        Log.i(TAG, "updatePostsEvent(PostsEvent)");
-        //update post list
-        ListView lw = (ListView) findViewById(R.id.posts);
-        PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(event.posts,event.eventType);
+
+    @Override
+    public void onConfigurationChanged(Configuration configuration){
+     super.onConfigurationChanged(configuration);
+        drawerToggle.onConfigurationChanged(configuration);
     }
 
-    public void getPosts(View view){
-        Log.i(TAG, "refreshPosts");
-        ListView lw = (ListView) findViewById(R.id.posts);
-        int limit = 10;
-        int skip = lw.getAdapter().getCount();
-        Log.i(TAG, String.valueOf(skip));
-        EventBus.getDefault().post(
-                new SendDataEvent(Constants.SocketEvents.GET_POSTS,
-                        ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject())
-                )
-        );
-
-    }
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void statusEvent(StatusEvent event){
-        Log.e(TAG, "statusEvent");
-        Toast.makeText(this.getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
-
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
+        selectItem(position);
+    }
+
+    private void loadSelection(int pos){
+        drawerListView.setItemChecked(pos,true);
+
+        switch (pos){
+            case 0:
+                PostFragment postFragment = new PostFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,postFragment);
+                fragmentTransaction.commit();
+                break;
+            case 1:
+                AddPostFragment addPostFragment = new AddPostFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,addPostFragment);
+                fragmentTransaction.commit();
+                break;
+
+            case 3:
+                AlarmFragment alarmFragment = new AlarmFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,alarmFragment);
+                fragmentTransaction.commit();
+                break;
+            case 4:
+                break;
+        }
+
+    }
+
+    private void selectItem(int position) {
+        drawerListView.setItemChecked(position, true);
+        setTitle(planets[position]);
+
+        loadSelection(position);
+
+        drawerLayout.closeDrawer(drawerListView);
+    }
+
+    public void setTitle(String title){
+       getActionBar().setTitle(title);
+    }
 }

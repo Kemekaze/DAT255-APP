@@ -1,20 +1,12 @@
 package dat255.app.buzzter;
 
 import android.app.Activity;
-
-import android.app.FragmentTransaction;
 import android.content.Intent;
-
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.Handler;
-
-import android.support.v4.widget.SwipeRefreshLayout;
-
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,6 +14,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
 import dat255.app.buzzter.Adapters.PostsAdapter;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
@@ -33,49 +26,27 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
-
-public class PostFragment extends Fragment {
-
-
+public class MainActivity2 extends Activity {
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
 
-    ListView lw;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
-
-
-
-    public PostFragment() {
-        // Required empty public constructor
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main2);
         new Thread(){
             public void run(){
-                socketServiceIntent = new Intent(getActivity().getApplicationContext(),SocketService.class);
-                getActivity().startService(socketServiceIntent);
+                socketServiceIntent = new Intent(getApplicationContext(),SocketService.class);
+                startService(socketServiceIntent);
             }
         }.start();
 
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        final View rootView = inflater.inflate(R.layout.fragment_post, container, false);
-
-        lw = (ListView) rootView.findViewById(R.id.posts);
+        ListView lw = (ListView) findViewById(R.id.posts);
         lw.setAdapter(
                 new PostsAdapter(
-                        getActivity(),
+                        this,
                         new ArrayList<Post>()
                 )
         );
@@ -84,55 +55,22 @@ public class PostFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Post p = (Post) parent.getItemAtPosition(position);
-                        Toast.makeText(getActivity(), p.getId(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity2.this, p.getId(), Toast.LENGTH_SHORT).show();
                     }
                 }
         );
-
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.activity_main_swipe_refresh_layout);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        getPosts(rootView);
-
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
-            }
-        });
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post, container, false);
     }
+
 
     public void savePost(View v) {
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new AddPostFragment(), "NewFragmentTag");
-        ft.commit();
-
+        Intent myIntent = new Intent(MainActivity2.this, AddPost.class);
+        MainActivity2.this.startActivity(myIntent);
     }
 
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Override
-    public void onStart() {
+    protected void onStart() {
         Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
         StatusEvent status = EventBus.getDefault().getStickyEvent(StatusEvent.class);
@@ -144,25 +82,39 @@ public class PostFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
-        // stopService(socketServiceIntent);
+       // stopService(socketServiceIntent);
         super.onStop();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void updatePostsEvent(PostsEvent event){
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
         //update post list
-        ListView lw = (ListView) getView().findViewById(R.id.posts);
+        ListView lw = (ListView) findViewById(R.id.posts);
         PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(event.posts, event.eventType);
+        adapter.addPosts(event.posts,event.eventType);
     }
 
     public void getPosts(View view){
         Log.i(TAG, "refreshPosts");
-        ListView lw = (ListView) view.findViewById(R.id.posts);
+        ListView lw = (ListView) findViewById(R.id.posts);
         int limit = 10;
         int skip = lw.getAdapter().getCount();
         Log.i(TAG, String.valueOf(skip));
@@ -176,14 +128,8 @@ public class PostFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event){
         Log.e(TAG, "statusEvent");
-        Toast.makeText(getActivity().getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
 
     }
-
-
-
-
-
-
 
 }
