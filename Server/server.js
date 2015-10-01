@@ -55,7 +55,7 @@ app.get('/',function(req,res){
 });
 io.on('connection', function(socket){ 
 	console.log("Connected: '"+socket.id); 
-
+	console.log("CLients: "+ clients.length);
 	socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
@@ -82,6 +82,7 @@ io.on('connection', function(socket){
 		console.log("Disconnected: '"+socket.id);
 	    var i = clients.indexOf(socket);
 	    clients.splice(i,1);
+	    console.log("CLients: "+ clients.length);
 	});
 
 	//POSTS
@@ -97,7 +98,9 @@ io.on('connection', function(socket){
 		console.log(JSON.stringify(query)+" | "+limit+" | "+skip+" | "+JSON.stringify(query));	
 	  	lib.db.posts.find(query,limit,skip,sort,function(posts){
 	  		console.log("Returning: "+posts.length+" posts");
-	  		socket.emit('getPosts', posts);
+	  		var type = (skip == 0)? 1: 0;
+	  		var p={posts :posts,type:type};  
+	  		socket.emit('getPosts', p);
 	  	});
 
 	});
@@ -113,19 +116,18 @@ io.on('connection', function(socket){
 	});
 	socket.on('savePost', function (data) {
 		console.log('savePost');
-		console.log(JSON.stringify(data));
-		socket.emit('savePost', {status:"ok"});
-		/*var user = data.user,
+		
+		var user = "Anon",
 		    body = data.body,
-		    line = data.line,
-		    mac  = data.mac;
-		// validation here
+		    line = 0,
+		    mac  = socket.mac;
+		
 
 		lib.db.posts.save(body,user,line,mac,function(post){
 			console.log("Post saved with id: "+post.get("id"));
-	  		socket.emit('postSaved', comments);
-
-		});*/
+			console.log("Post : "+JSON.stringify(post));
+	  		socket.emit('savePost', {status:"ok",post:post});
+		});
 
 	});
 	socket.on('getComments', function (data) {

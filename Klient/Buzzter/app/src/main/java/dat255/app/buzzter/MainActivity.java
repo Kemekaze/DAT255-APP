@@ -3,6 +3,7 @@ package dat255.app.buzzter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,7 +32,7 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
 
@@ -56,28 +57,10 @@ public class MainActivity extends Activity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new PostsAdapter(new ArrayList<Post>());
         mRecyclerView.setAdapter(mAdapter);
-
-        /*ListView lw = (ListView) findViewById(R.id.posts);
-        lw.setAdapter(
-                new PostsAdapter(
-                        this,
-                        new ArrayList<Post>()
-                )
-        );
-        lw.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Post p = (Post) parent.getItemAtPosition(position);
-                        Toast.makeText(MainActivity.this, p.getId(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );*/
-
     }
 
 
-    public void savePost(View v) {
+    public void addPost(View v) {
         Intent myIntent = new Intent(MainActivity.this, AddPost.class);
         MainActivity.this.startActivity(myIntent);
     }
@@ -100,7 +83,6 @@ public class MainActivity extends Activity {
     protected void onStop() {
         Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
-       // stopService(socketServiceIntent);
         super.onStop();
     }
 
