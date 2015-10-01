@@ -24,5 +24,7 @@ dependencies {
     compile 'io.socket:socket.io-client:0.6.1'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'org.ocpsoft.prettytime:prettytime:4.0.0.Final'
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
 }

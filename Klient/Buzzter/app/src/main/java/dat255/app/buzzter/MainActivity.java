@@ -3,6 +3,8 @@ package dat255.app.buzzter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,13 +28,16 @@ import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
+
 
 public class MainActivity extends Activity {
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
@@ -44,8 +49,14 @@ public class MainActivity extends Activity {
                 startService(socketServiceIntent);
             }
         }.start();
+        mRecyclerView = (RecyclerView) findViewById(R.id.posts);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new PostsAdapter(new ArrayList<Post>());
+        mRecyclerView.setAdapter(mAdapter);
 
-        ListView lw = (ListView) findViewById(R.id.posts);
+        /*ListView lw = (ListView) findViewById(R.id.posts);
         lw.setAdapter(
                 new PostsAdapter(
                         this,
@@ -60,7 +71,8 @@ public class MainActivity extends Activity {
                         Toast.makeText(MainActivity.this, p.getId(), Toast.LENGTH_SHORT).show();
                     }
                 }
-        );
+        );*/
+
     }
 
 
@@ -77,7 +89,7 @@ public class MainActivity extends Activity {
         EventBus.getDefault().register(this);
         StatusEvent status = EventBus.getDefault().getStickyEvent(StatusEvent.class);
         PostsEvent posts = EventBus.getDefault().getStickyEvent(PostsEvent.class);
-        if(status != null)statusEvent(status);
+        if (status != null)statusEvent(status);
         if(posts != null)updatePostsEvent(posts);
         super.onStart();
 
@@ -109,16 +121,14 @@ public class MainActivity extends Activity {
     public void updatePostsEvent(PostsEvent event){
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
         //update post list
-        ListView lw = (ListView) findViewById(R.id.posts);
-        PostsAdapter adapter = (PostsAdapter)lw.getAdapter();
-        adapter.addPosts(event.posts,event.eventType);
+        PostsAdapter postsAdapter = (PostsAdapter) mAdapter;
+        postsAdapter.addPosts(event.posts,event.eventType);
     }
 
     public void getPosts(View view){
         Log.i(TAG, "refreshPosts");
-        ListView lw = (ListView) findViewById(R.id.posts);
         int limit = 10;
-        int skip = lw.getAdapter().getCount();
+        int skip = mLayoutManager.getItemCount();
         Log.i(TAG, String.valueOf(skip));
         EventBus.getDefault().post(
                 new SendDataEvent(Constants.SocketEvents.GET_POSTS,

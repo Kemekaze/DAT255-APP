@@ -1,6 +1,8 @@
 package dat255.app.buzzter.Objects;
 
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +72,7 @@ public class Post {
 
     public String getRelativeTime() {
         PrettyTime p = new PrettyTime();
+        Log.i("dat255.app.buzzter.Obj",String.valueOf(time));
         return p.format(new Date(time));
     }
 

@@ -1,6 +1,7 @@
 package dat255.app.buzzter.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +14,61 @@ import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.R;
 
 
-public class PostsAdapter extends BaseAdapter{
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
-    private final Context context;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public TextView body;
+        public TextView user;
+        public TextView line;
+        public TextView time;
+        public TextView votes_up;
+        public TextView votes_down;
+        public ViewHolder(View view) {
+            super(view);
+            body = (TextView) view.findViewById(R.id.body);
+            user = (TextView) view.findViewById(R.id.user);
+            line = (TextView) view.findViewById(R.id.line);
+            time = (TextView) view.findViewById(R.id.time);
+            votes_up = (TextView) view.findViewById(R.id.votesUp);
+            votes_down = (TextView) view.findViewById(R.id.votesDown);
+        }
+    }
+
+
     public List<Post> posts;
-    public PostsAdapter(Context context, List<Post> posts) {
-        super();
+    public PostsAdapter(List<Post> posts) {
         this.posts = posts;
-        this.context = context;
+    }
+    // Create new views (invoked by the layout manager)
+    @Override
+    public PostsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                   int viewType) {
+
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
     }
 
+    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public int getCount() {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+        holder.body.setText(posts.get(position).getBody());
+        holder.user.setText(posts.get(position).getUser());
+        holder.line.setText(String.valueOf(posts.get(position).getBusLine()));
+        holder.time.setText(posts.get(position).getRelativeTime());
+        holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
+        holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
+
+    }
+
+    // Return the size of your dataset (invoked by the layout manager)
+    @Override
+    public int getItemCount() {
         return posts.size();
-    }
-
-    @Override
-    public Post getItem(int position) {
-        return posts.get(position);
     }
 
     public long getItemId(int position) {
@@ -71,27 +109,4 @@ public class PostsAdapter extends BaseAdapter{
         this.notifyDataSetChanged();
     }
 
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View customView = inflater.inflate(R.layout.custom_row, parent, false);
-
-        Post p = getItem(position);
-
-        TextView body = (TextView) customView.findViewById(R.id.body);
-        TextView user = (TextView) customView.findViewById(R.id.user);
-        TextView votesUp = (TextView) customView.findViewById(R.id.votesUp);
-        TextView votesDown = (TextView) customView.findViewById(R.id.votesDown);
-        TextView line = (TextView) customView.findViewById(R.id.line);
-        TextView time = (TextView) customView.findViewById(R.id.time);
-
-        body.setText(p.getBody());
-        user.setText(p.getUser());
-        votesUp.setText(String.valueOf(p.getVotes()[0]));
-        votesDown.setText(String.valueOf(p.getVotes()[1]));
-        line.setText(String.valueOf(p.getBusLine()));
-        time.setText(p.getRelativeTime());
-        return customView;
-    }
 }
