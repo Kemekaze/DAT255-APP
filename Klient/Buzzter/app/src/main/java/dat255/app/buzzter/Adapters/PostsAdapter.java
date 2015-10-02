@@ -88,8 +88,8 @@ public class PostsAdapter extends BaseAdapter{
 
         body.setText(p.getBody());
         user.setText(p.getUser());
-        votesUp.setText(String.valueOf(p.getVotes()[0]));
-        votesDown.setText(String.valueOf(p.getVotes()[1]));
+        //votesUp.setText(String.valueOf(p.getVotes()[0]));
+        //votesDown.setText(String.valueOf(p.getVotes()[1]));
         line.setText(String.valueOf(p.getBusLine()));
         time.setText(p.getRelativeTime());
         return customView;

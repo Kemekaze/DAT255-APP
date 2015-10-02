@@ -8,7 +8,6 @@
         android:text="Press"
         android:id="@+id/btn"
         android:layout_centerHorizontal="true"
-        android:onClick="getPosts"
         android:singleLine="false" />
 
 
@@ -40,7 +39,6 @@
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="savePost"
         android:layout_gravity="right|top" />
 
 

@@ -41,7 +41,7 @@ import dat255.app.buzzter.PostFragment;
 import dat255.app.buzzter.R;
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener, FragmentChangeListener{
 
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
@@ -169,5 +169,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     public void setTitle(String title){
        getActionBar().setTitle(title);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment, fragment.toString());
+        fragmentTransaction.addToBackStack(fragment.toString());
+        fragmentTransaction.commit();
     }
 }

@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
@@ -27,6 +29,7 @@ public class AddPostFragment extends Fragment {
 
     private final String TAG = "dat255.app.buzzter.AP";
     private EditText edittext;
+    private Button sendBtn;
 
 
     public AddPostFragment() {
@@ -45,16 +48,31 @@ public class AddPostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.add_post, container, false);
-
+        final View rootView = inflater.inflate(R.layout.add_post, container, false);
         edittext = (EditText) rootView.findViewById(R.id.editText);
+        sendBtn = (Button) rootView.findViewById(R.id.SendBtn);
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getEditText(rootView);
+            }
+        });
+
         // Inflate the layout for this fragment
         return rootView;
     }
 
-    public void getEditText(View v) {
+    public void getEditText(View view) {
+        edittext = (EditText) view.findViewById(R.id.editText);
         Log.e(TAG, edittext.getText().toString());
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, ServerQueries.query("body", edittext.getText().toString())));
+        Toast.makeText(view.getContext(),edittext.getText(),Toast.LENGTH_LONG).show();
+
+        if(edittext != null) {
+            EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, ServerQueries.query("body", edittext.getText().toString())));
+            showOtherFragment();
+        }
+
     }
 
     @Override
@@ -78,13 +96,17 @@ public class AddPostFragment extends Fragment {
         if(event.getStatus().equals("ok")){
             Log.i(TAG, "savePostStatus");
             EventBus.getDefault().postSticky(new StatusEvent("Post saved!"));
-            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,new PostFragment());
-            ft.addToBackStack(null);
-            ft.commit();
+            //getActivity().finish();
         }
         //BEhandla error för fel.
         else Log.e(TAG, "PostSaveError");
+    }
+
+    public void showOtherFragment()
+    {
+        Fragment fr=new PostFragment();
+        FragmentChangeListener fc=(FragmentChangeListener)getActivity();
+        fc.replaceFragment(fr);
     }
 
 

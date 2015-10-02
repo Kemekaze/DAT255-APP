@@ -2,6 +2,7 @@ package dat255.app.buzzter;
 
 import android.app.Activity;
 
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 
@@ -16,8 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 import org.json.JSONObject;
 
@@ -39,8 +42,9 @@ public class PostFragment extends Fragment {
 
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
+    private Button btn,btn2;
+    private ListView lw;
 
-    ListView lw;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -71,6 +75,24 @@ public class PostFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_post, container, false);
+
+        btn = (Button) rootView.findViewById(R.id.button);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOtherFragment();
+            }
+        });
+
+        btn2 = (Button) rootView.findViewById(R.id.btn);
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPosts(rootView);
+            }
+        });
 
         lw = (ListView) rootView.findViewById(R.id.posts);
         lw.setAdapter(
@@ -108,15 +130,9 @@ public class PostFragment extends Fragment {
         });
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post, container, false);
+        return rootView;
     }
 
-    public void savePost(View v) {
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new AddPostFragment(), "NewFragmentTag");
-        ft.commit();
-
-    }
 
 
 
@@ -182,8 +198,10 @@ public class PostFragment extends Fragment {
 
 
 
-
-
-
-
+    public void showOtherFragment()
+    {
+        Fragment fr=new AddPostFragment();
+        FragmentChangeListener fc=(FragmentChangeListener)getActivity();
+        fc.replaceFragment(fr);
+    }
 }
