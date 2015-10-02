@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddPost"></activity>
+
 
         <service android:name=".SocketService"></service>
     </application>
