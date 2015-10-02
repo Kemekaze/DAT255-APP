@@ -13,6 +13,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import dat255.app.buzzter.Objects.Post;
+
+
 import dat255.app.buzzter.R;
 
 
@@ -131,5 +133,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         this.posts = posts;
         this.notifyDataSetChanged();
     }
+
 
 }
