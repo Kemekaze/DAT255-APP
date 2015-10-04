@@ -1,25 +1,20 @@
 package dat255.app.buzzter;
 
+/**
+ * Created by Rasmus on 2015-10-04.
+ */
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +26,7 @@ import android.widget.Toast;
 
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener, FragmentChangeListener{
+public class BackuppMainAct extends  AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
 
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
@@ -40,6 +35,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
 
+    private final String TAG = "dat255.app.buzzter.Main";
+    private Intent socketServiceIntent;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
 
@@ -55,7 +56,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         drawerListView = (ListView) findViewById(R.id.left_drawer);
         drawerListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, planets));
         drawerListView.setOnItemClickListener(this);
-        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.drawable.ic_launcher,
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,
                 R.string.drawer_open,R.string.drawer_close){
 
             @Override
@@ -71,16 +72,19 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 
         };
+
+
         drawerLayout.setDrawerListener(drawerToggle);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeButtonEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         fragmentManager = getFragmentManager();
 
         loadSelection(0);
         // DrawerLayout section end
-
-
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -89,6 +93,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration configuration){
@@ -100,6 +105,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     protected void onPostCreate(Bundle savedInstanceState){
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+
     }
 
 
@@ -119,6 +125,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         selectItem(position);
     }
 
+
     private void loadSelection(int pos){
         drawerListView.setItemChecked(pos,true);
 
@@ -136,14 +143,13 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 fragmentTransaction.commit();
                 break;
 
-            case 3:
+            case 2:
                 AlarmFragment alarmFragment = new AlarmFragment();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_frame,alarmFragment);
                 fragmentTransaction.commit();
                 break;
-            case 4:
-                break;
+
         }
 
     }
@@ -155,10 +161,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         loadSelection(position);
 
         drawerLayout.closeDrawer(drawerListView);
+
     }
 
     public void setTitle(String title){
-        getActionBar().setTitle(title);
+        this.getSupportActionBar().setTitle(title);
+
     }
 
     @Override

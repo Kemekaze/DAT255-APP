@@ -44,13 +44,15 @@ import de.greenrobot.event.ThreadMode;
 public class PostFragment extends Fragment {
 
 
-    private final String TAG = "dat255.app.buzzter.Main";
-    private Intent socketServiceIntent;
+
     private Button btn,btn2;
     private ListView lw;
 
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private final String TAG = "dat255.app.buzzter.Main";
+    private Intent socketServiceIntent;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -82,10 +84,17 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView = inflater.inflate(R.layout.fragment_post, container, false);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.posts);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(rootView.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new PostsAdapter(new ArrayList<Post>());
+        mRecyclerView.setAdapter(mAdapter);
+
+
         FloatingActionButton floatingActionButton = (FloatingActionButton)  rootView.findViewById(R.id.addPost);
-        btn = (Button) rootView.findViewById(R.id.getMorePosts);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +103,11 @@ public class PostFragment extends Fragment {
             }
         });
 
-        btn2 = (Button) rootView.findViewById(R.id.refresh);
+        btn = (Button) rootView.findViewById(R.id.getMorePosts);
+
+
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,19 +116,8 @@ public class PostFragment extends Fragment {
             }
         });
 
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshPosts(rootView);
-            }
-        });
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.posts);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new PostsAdapter(new ArrayList<Post>());
-        mRecyclerView.setAdapter(mAdapter);
+
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.activity_main_swipe_refresh_layout);

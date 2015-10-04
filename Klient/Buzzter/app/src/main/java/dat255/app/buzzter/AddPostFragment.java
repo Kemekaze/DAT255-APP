@@ -53,6 +53,7 @@ public class AddPostFragment extends Fragment {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(v.getContext(),"Send", Toast.LENGTH_LONG).show();
                 getEditText(rootView);
             }
         });
