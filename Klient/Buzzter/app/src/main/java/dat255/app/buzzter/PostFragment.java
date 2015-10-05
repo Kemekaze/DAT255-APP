@@ -113,16 +113,22 @@ public class PostFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 //Toast.makeText(rootView.getContext(),""+ direction, Toast.LENGTH_LONG).show();
-                refreshPosts(rootView);
-
+                //refreshPosts(rootView);
+                PostsAdapter postsAdapter = (PostsAdapter )mRecyclerView.getAdapter();
+                boolean like;
                 if(direction == 8){
                     Toast.makeText(rootView.getContext(),"VoteUp", Toast.LENGTH_LONG).show();
-                    sendToSe
+                    like = true;
+                    vote(postsAdapter.getItem(position),like);
                 }
 
                 if(direction == 4){
                     Toast.makeText(rootView.getContext(),"VoteDown", Toast.LENGTH_LONG).show();
+                    like = false;
+                    vote(postsAdapter.getItem(position),like);
                 }
+
+                refreshPosts(rootView);
                 //mArray.remove(position);
                // mRecyclerView.getAdapter().notifyItemRemoved(position);
             }
@@ -252,7 +258,21 @@ public class PostFragment extends Fragment {
     }
 
 
-   
+    private void vote(Post p, boolean like){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("post_id",p.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SendDataEvent ev;
+        if(like) {
+             ev = new SendDataEvent(Constants.SocketEvents.VOTE_UP, data);
+        }else{
+            ev = new SendDataEvent(Constants.SocketEvents.VOTE_DOWN, data);
+        }
+        EventBus.getDefault().post(ev);
+    }
 
 
     public void showOtherFragment()

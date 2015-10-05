@@ -111,6 +111,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return position;
     }
 
+    public Post getItem(int position){
+        return posts.get(position);
+    }
+
     public List<Post> getPosts() {
         return posts;
     }
