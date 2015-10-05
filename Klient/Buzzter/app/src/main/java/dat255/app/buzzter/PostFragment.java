@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import dat255.app.buzzter.Adapters.PostsAdapter;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
@@ -57,6 +60,7 @@ public class PostFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Post> mArray;
 
 
 
@@ -90,9 +94,44 @@ public class PostFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new PostsAdapter(new ArrayList<Post>());
+        mArray = new ArrayList<Post>();
+        mAdapter = new PostsAdapter(mArray);
         mRecyclerView.setAdapter(mAdapter);
 
+
+
+// Extend the Callback class
+        ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                //Toast.makeText(rootView.getContext(),""+ direction, Toast.LENGTH_LONG).show();
+                refreshPosts(rootView);
+
+                if(direction == 8){
+                    Toast.makeText(rootView.getContext(),"VoteUp", Toast.LENGTH_LONG).show();
+                    sendToSe
+                }
+
+                if(direction == 4){
+                    Toast.makeText(rootView.getContext(),"VoteDown", Toast.LENGTH_LONG).show();
+                }
+                //mArray.remove(position);
+               // mRecyclerView.getAdapter().notifyItemRemoved(position);
+            }
+        };
+
+
+        // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
+        ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
+        ith.attachToRecyclerView(mRecyclerView);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton)  rootView.findViewById(R.id.addPost);
 
@@ -104,8 +143,6 @@ public class PostFragment extends Fragment {
         });
 
         btn = (Button) rootView.findViewById(R.id.getMorePosts);
-
-
 
 
 
@@ -136,7 +173,8 @@ public class PostFragment extends Fragment {
                 }, 2500);
             }
         });
-
+        //mSwipeRefreshLayout.setColorSchemeColors(android.R.color.holo_purple,android.R.color.holo_red_dark);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_purple,android.R.color.holo_red_dark);
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -213,6 +251,8 @@ public class PostFragment extends Fragment {
 
     }
 
+
+   
 
 
     public void showOtherFragment()
