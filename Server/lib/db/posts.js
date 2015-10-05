@@ -22,7 +22,7 @@ var PostSchema = new Schema({
     	down: { type: Number}
     },
     bus:{
-    	mac: { type: String},
+    	systemid: { type: Number},
     	line: { type: Number}
     },
     type: { type: String}
@@ -35,7 +35,7 @@ PostSchema.methods.saveComment = function(body,user,callback){
 PostSchema.methods.getComments = function(callback){
 	exports.getAllComments(this.get("id"),callback);
 } 
-var PostModel = mongoose.model('Posts', PostSchema);
+var PostModel = exports.model = mongoose.model('Posts', PostSchema);
 
 exports.find = function(query,limit,skip,sort,callback){
 

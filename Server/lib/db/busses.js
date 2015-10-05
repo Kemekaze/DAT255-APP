@@ -7,10 +7,15 @@ var exports = module.exports = {};
 // Schemas definitions
 //
 var BusSchema = new Schema({
-  dgw: { type: String },
-  vin: { type: String },
-  regnr: { type: String },
-  mac: { type: String }
+    dgw: { type: String },
+    vin: { type: String },
+    regnr: { type: String },
+    mac: { type: String },
+    systemid: { type: String },
+    journey: { 	  	
+    	name: { type: Number},
+    	destination: { type: String}	    
+    }
 });
 
 // assign a function to the "methods" object of our Schema
@@ -19,9 +24,14 @@ BusSchema.methods.getApiData = function (sensor, t1, t2, callback) {
 	  	callback(data);
 	  });
 }
-var BusModel = exports.Model = mongoose.model('Busses', BusSchema);
+BusSchema.methods.update = function (updateData, callback) {	
+	  exports.update(this.get("id"),updateData,function(data){
+	  		callback(data);
+	  });
+}
 
 
+var BusModel = exports.model = mongoose.model('Busses', BusSchema);
 
 exports.save = function(dgw,vin,regnr,mac,callback){
 
@@ -64,6 +74,12 @@ exports.removeMany = function(query,callback){
 }
 exports.remove = function(id,callback){
 	BusModel.remove({_id:id}, function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
+}
+exports.findOneAndUpdate = function(query,updateData,callback){
+	BusModel.findOneAndUpdate(query,updateData, function (err, bus) {
 	  if (err) return console.error(err);
 	  callback(bus);
 	});

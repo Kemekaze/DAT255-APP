@@ -6,34 +6,41 @@ var http = require('http');
 
 var lib = require("./lib");
 
-
+var exports = module.exports = {};
 //setup
 console.log(lib);
 var SERVER_PORT   = 3000;
 var DB_URL   = "localhost";
 var DB_PORT   = 27017;
 var DB_NAME   = "App";
-var clients= [];
-var client = {}
-var numUsers = 0;
 
+var clients = {};
+var clients_total= 0;
+var buses = [];
 
 //Database
-
-
-//url = 'mongodb://localhost:27017/App';	
+	
 mongoose.connect('mongodb://'+DB_URL+':'+DB_PORT+'/'+DB_NAME);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
+  lib.db.busses.findAll(function(data){
+  	data.forEach(function(bus){
+  			var systemid = bus.get("systemid");
+  			clients[systemid] = [];
+  			buses.push(systemid);
+  			exports.buses = buses;
+  	});  	
+  });
   console.log("Database '"+DB_NAME+"' connected at '"+DB_URL+":"+DB_PORT+"'" );
   console.log("--------------- SERVER BOOTED ---------------");
-  //db.close();
 });
 
-/*lib.db.posts.save("body","user",55,"mac",function(p){
-	console.log(p);
-});*/
+//test västraffik api
+/*lib.api.vasttrafik.get("location.name","chalmers",function(data){
+	console.log(data.LocationList.servertime);	
+})*/
+
 
 
 
@@ -42,11 +49,35 @@ var http = http.Server(app);
 var io = socketIO(http);
 
 
+
+
 function checkAuthToken(token ,callback){
 	console.log("Token: '"+token+"'");
 	callback(false,true);
 }
+//EVENTS
+function events(){
+	console.log("EVENTS");
 
+	//this should be places somewhere else
+	for (var i = 0; i < buses.length; i++) {
+
+		if(clients[buses[i]].length == 0){
+			continue;
+		} 
+
+		lib.events.nextStop(buses[i],function(nextStop){
+			console.log("Bus %s , ",nextStop.bus, nextStop.post.get("body"));
+			clients[nextStop.bus].forEach(function(socketid){
+
+				socketid.emit("getBusNextStop",nextStop.post);
+			});
+		});
+	};
+	
+}
+
+setInterval(events, 5000);
 
 
 app.get('/',function(req,res){
@@ -55,34 +86,41 @@ app.get('/',function(req,res){
 });
 io.on('connection', function(socket){ 
 	console.log("Connected: '"+socket.id); 
-	console.log("CLients: "+ clients.length);
+	
 	socket.on('authenticate', function(data){
 	    //check the auth data sent by the client
 	    checkAuthToken(data.token, function(err, success){
 	        if (!err && success){
-	            console.log("Authenticated socket ", socket.id);
+	            console.log("Authenticated: ", socket.id);
 	            socket.auth = true;
-	            socket.mac = data.mac;
-	            console.log("Socket mac: ", socket.mac);
-	            clients.push(socket);
+
+	            var bus_id = socket.bus_id = data.bus_id;
+	            clients[bus_id].push(socket);
+	            clients_total++;
+
+	            console.log("Clients: "+ clients_total);
 	            socket.emit("authorized");
 	        }
 	    });
 	});
-	 
-    setTimeout(function(){
-        //If the socket didn't authenticate, disconnect it
+	
+	//disconnecting if not authenticated
+    setTimeout(function(){        
         if (!socket.auth) {
             console.log("Disconnecting socket ", socket.id);
             socket.disconnect('unauthorized');
         }
     }, 1000);
 	  
+
 	socket.on('disconnect', function () { 
 		console.log("Disconnected: '"+socket.id);
-	    var i = clients.indexOf(socket);
-	    clients.splice(i,1);
-	    console.log("CLients: "+ clients.length);
+		if(socket.auth == true){
+		    var i = clients[socket.bus_id].indexOf(socket);
+		    clients[socket.bus_id].splice(i,1);
+		    clients_total--;
+		}
+	    console.log("Clients: "+ clients_total);
 	});
 
 	//POSTS
@@ -157,7 +195,7 @@ io.on('connection', function(socket){
 
 	  	lib.db.posts.voteUp(post_id,function(post){
 	  		console.log("Up voted post id: "+post_id);
-	  		socket.emit('upVoted', {status:"1"});
+	  		socket.emit('voteUp', {status:"1"});
 	  	});
 
 	});
@@ -167,14 +205,10 @@ io.on('connection', function(socket){
 
 	  	lib.db.posts.voteDown(post_id,function(post){
 	  		console.log("Down voted post id: "+post_id);
-	  		socket.emit('downVoted', {status:"1"});
+	  		socket.emit('voteDown', {status:"1"});
 	  	});
 
 	});
-
-
-
-	
 
  });
 

@@ -1,6 +1,5 @@
 package dat255.app.buzzter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -58,7 +54,16 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new PostsAdapter(new ArrayList<Post>());
         mRecyclerView.setAdapter(mAdapter);
     }
-
+    private void voteUp(Post p){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("post_id",p.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SendDataEvent ev = new SendDataEvent(Constants.SocketEvents.VOTE_UP,data);
+        EventBus.getDefault().post(ev);
+    }
 
     public void addPost(View v) {
         Intent myIntent = new Intent(MainActivity.this, AddPost.class);
@@ -100,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void updatePostsEvent(PostsEvent event){
         Log.i(TAG, "updatePostsEvent(PostsEvent)");

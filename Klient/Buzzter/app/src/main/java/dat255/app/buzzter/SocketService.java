@@ -1,12 +1,7 @@
 package dat255.app.buzzter;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -66,6 +61,7 @@ public class SocketService extends Service {
         socket.on(Constants.SocketEvents.SAVE_COMMENT, eventSaveComment);
         //Bus
         socket.on(Constants.SocketEvents.GET_BUSES, eventGetBuses);
+        socket.on(Constants.SocketEvents.GET_BUS_NEXT_STOP, eventNextStop);
 
         socket.connect();
         super.onCreate();
@@ -88,7 +84,7 @@ public class SocketService extends Service {
         public void call(Object... args) {
 
             Log.i(TAG, "eventConnected");
-            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            /*ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo nInfo = cm.getActiveNetworkInfo();
             String mac = "null";
             if(nInfo.getType() == ConnectivityManager.TYPE_WIFI) {
@@ -96,8 +92,10 @@ public class SocketService extends Service {
                 Log.i(TAG, String.valueOf(manager.getWifiState()));
                 WifiInfo info = manager.getConnectionInfo();
                 mac = info.getBSSID();
-            }
-            JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"mac", mac);
+            } JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"mac", mac);
+            */
+            long busId = 2501131248l;
+            JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"bus_id", busId);
             socket.emit(Constants.SocketEvents.AUTHENTICATE, query);
         }
     };
@@ -143,7 +141,7 @@ public class SocketService extends Service {
             JSONObject obj = (JSONObject)args[0];
 
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
-            EventBus.getDefault().postSticky(new PostsEvent(DataHandler.jsonToPostArr((JSONObject)obj.opt("post")),2));
+            EventBus.getDefault().postSticky(new PostsEvent(DataHandler.jsonToPostArr((JSONObject) obj.opt("post")), 2));
         }
     };
     private Emitter.Listener eventVotedUp = new Emitter.Listener() {
@@ -182,6 +180,15 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventGetBuses");
             //vad den skall göra
+        }
+    };
+    private Emitter.Listener eventNextStop = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventNextStop");
+            JSONObject post = (JSONObject)args[0];
+            int type = 2;
+            EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr(post), type));
         }
     };
 

@@ -1,8 +1,6 @@
 package dat255.app.buzzter.Objects;
 
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +17,8 @@ public class Post {
     private long time = -1;
     private int[] votes = {-1,-1};
     private int busLine = -1;
+    private String type = "post";
+
 
 
 
@@ -33,6 +33,7 @@ public class Post {
             this.body = post.getString("body");
             this.user = post.getString("user");
             this.busLine = bus.getInt("line");
+            this.type = meta.getString("type");
             this.votes = new int[]{
                     votes.getInt("up"),
                     votes.getInt("down")
@@ -70,9 +71,12 @@ public class Post {
         return time;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public String getRelativeTime() {
         PrettyTime p = new PrettyTime();
-        Log.i("dat255.app.buzzter.Obj",String.valueOf(time));
         return p.format(new Date(time));
     }
 
