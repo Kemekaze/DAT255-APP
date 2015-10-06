@@ -36,7 +36,8 @@
         android:id="@+id/button2"
         android:onClick="getEditText"
         android:background="@drawable/ic_action_send"
-        android:layout_below="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/editText"
+        android:layout_marginBottom="27dp" />
 
 </RelativeLayout>

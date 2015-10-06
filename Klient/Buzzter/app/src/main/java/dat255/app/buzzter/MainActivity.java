@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(socketServiceIntent);
             }
         }.start();
-        mRecyclerView = (RecyclerView) findViewById(R.id.posts);
+        mRecyclerView = (RecyclerView) findViewById(R.id.comments);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
