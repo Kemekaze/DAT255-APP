@@ -37,9 +37,9 @@ db.once('open', function (callback) {
 });
 
 //test västraffik api
-/*lib.api.vasttrafik.get("location.name","chalmers",function(data){
+lib.api.vasttrafik.get("location.name","chalmers",function(data){
 	console.log(data.LocationList.servertime);	
-})*/
+})
 
 
 
@@ -65,11 +65,10 @@ function events(){
 		if(clients[buses[i]].length == 0){
 			continue;
 		} 
-
+		console.log("Fetching next stop for bus '%s'",buses[i]);
 		lib.events.nextStop(buses[i],function(nextStop){
-			console.log("Bus %s , ",nextStop.bus, nextStop.post.get("body"));
+			console.log("Sending next stop to %s clients for bus '%s'",clients[nextStop.bus].length, nextStop.bus);
 			clients[nextStop.bus].forEach(function(socketid){
-
 				socketid.emit("getBusNextStop",nextStop.post);
 			});
 		});

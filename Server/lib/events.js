@@ -4,12 +4,12 @@ var vt = require('./api').vasttrafik;
 var db = require('./db');
 
 exports.nextStop = function(bus,callback){
-	console.log("nextStop: "+bus);
+	//console.log("Event nextStop: "+bus);
 	db.busses.find({systemid:bus},function(db_bus){
 		var dgw    = db_bus[0].get("dgw"),
 		  	sensor = "Ericsson$Next_Stop",
 		  	t2     = (new Date).getTime(),
-		  	t1     = t2- 60*60*000; 
+		  	t1     = t2- 5*60*1000; 
 
 	
 		api.get(dgw,sensor,t1,t2,function(data){
@@ -17,7 +17,7 @@ exports.nextStop = function(bus,callback){
 			    body: "Next stop "+data[data.length-1].value,
 				user: "System",  
 				comments: [],
-				date: (new Date).getTime()+5000,
+				date: (new Date).getTime()+60*1000,//tiden det sskall ta 
 			    hidden: false,
 				meta: {
 				    votes: {
@@ -36,6 +36,7 @@ exports.nextStop = function(bus,callback){
 					bus:bus
 				});
 		});
+
 		
 	});
 	
@@ -112,5 +113,5 @@ function getLastResourceSpec(journeyArray, callback){
 	return callback({name:journeyNameValue,dest:destinationValue});
 }
 //updated busses every 10 minutes
-setInterval(exports.updateBusJourney, 10*60*1000);
+setInterval(exports.updateBusJourney, 1*60*1000);
 
