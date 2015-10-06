@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="dat255.app.buzzter.AddPostFragment">
 
     <View
     android:layout_width="fill_parent"
@@ -33,10 +33,11 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:id="@+id/SendBtn"
         android:onClick="getEditText"
         android:background="@drawable/ic_action_send"
         android:layout_below="@+id/editText"
         android:layout_alignEnd="@+id/editText" />
 
-</RelativeLayout>
+
+</FrameLayout>

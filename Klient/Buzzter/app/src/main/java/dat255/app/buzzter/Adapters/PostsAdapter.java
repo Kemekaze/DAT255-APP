@@ -1,18 +1,22 @@
 package dat255.app.buzzter.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import dat255.app.buzzter.Objects.Post;
+
+
 import dat255.app.buzzter.R;
 
 
@@ -29,6 +33,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public TextView votes_up;
         public TextView votes_down;
         public viewHolderClicks viewHolderClicks;
+        public RelativeLayout relativeLayout;
 
         public ViewHolder(View view, viewHolderClicks listner) {
             super(view);
@@ -38,6 +43,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             time = (TextView) view.findViewById(R.id.time);
             votes_up = (TextView) view.findViewById(R.id.votesUp);
             votes_down = (TextView) view.findViewById(R.id.votesDown);
+            relativeLayout = (RelativeLayout) view.findViewById(R.id.rel);
             view.setOnClickListener(this);
         }
 
@@ -62,7 +68,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public PostsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item1, parent, false);
 
         ViewHolder vh = new ViewHolder(v, new ViewHolder.viewHolderClicks() {
             @Override
@@ -83,8 +89,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         holder.user.setText(posts.get(position).getUser());
         holder.line.setText(String.valueOf(posts.get(position).getBusLine()));
         holder.time.setText(posts.get(position).getRelativeTime());
-       // holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
-       // holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
+        holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
+        holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
+
+        holder.votes_up.setTextColor(Color.GREEN);
+        holder.votes_down.setTextColor(Color.RED);
+
+        if ((position % 2) == 0){
+
+        }
 
     }
 
@@ -96,6 +109,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public long getItemId(int position) {
         return position;
+    }
+
+    public Post getItem(int position){
+        return posts.get(position);
     }
 
     public List<Post> getPosts() {
@@ -131,5 +148,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         this.posts = posts;
         this.notifyDataSetChanged();
     }
+
 
 }
