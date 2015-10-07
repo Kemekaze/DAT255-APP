@@ -36,10 +36,7 @@ db.once('open', function (callback) {
   console.log("--------------- SERVER BOOTED ---------------");
 });
 
-//test västraffik api
-lib.api.vasttrafik.get("location.name","chalmers",function(data){
-	console.log(data.LocationList.servertime);	
-})
+lib.events.beginUpdateBuses();
 
 
 
@@ -76,7 +73,7 @@ function events(){
 	
 }
 
-setInterval(events, 5000);
+//setInterval(events, 5000);
 
 
 app.get('/',function(req,res){
@@ -160,7 +157,7 @@ io.on('connection', function(socket){
 		    mac  = socket.mac;
 		
 
-		lib.db.posts.save(body,user,line,mac,function(post){
+		lib.db.posts.save(body,user,line,mac,"post",function(post){
 			console.log("Post saved with id: "+post.get("id"));
 			console.log("Post : "+JSON.stringify(post));
 	  		socket.emit('savePost', {status:"ok",post:post});

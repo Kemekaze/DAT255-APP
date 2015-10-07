@@ -50,7 +50,7 @@ exports.findById = function(id,callback){
 	  callback(p);
 	});
 }
-exports.save = function(body,user,line,mac,callback){
+exports.save = function(body,user,line,mac,type,callback){
 	
 	var post = new PostModel({
 	      body: body,
