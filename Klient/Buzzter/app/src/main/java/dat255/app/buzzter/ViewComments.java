@@ -33,9 +33,6 @@ public class ViewComments extends AppCompatActivity {
         mAdapter = new CommentsAdapter(new ArrayList<Post.Comment>());
         mRecyclerView.setAdapter(mAdapter);
 
-      //  mAdapter = new CommentsAdapter() {
-
-      //  }
     }
 
     @Override
