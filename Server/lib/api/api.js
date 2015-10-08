@@ -20,11 +20,13 @@ exports.get = function(bus, sensor, t1, t2, callback){
     function (error, response, body) {
             //console.log("Error: " + error);
             //console.log("Response: " + response.statusCode);
-            console.log("Body: '"+ body+"'");
-            if(body != ""){
+            //console.log("Body: '"+ body+"'");
+            if(body != "")
                 callback(JSON.parse(body));
-            }
-            callback(body);
+            else
+                callback(body);
+            
+            
             
 
     });

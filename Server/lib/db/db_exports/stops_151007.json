@@ -1,0 +1,13 @@
+{"_id":{ "$oid": "56150f1fd4f4cfec12456614" },"name":"Brunnsparken, Göteborg","lon":"11.967842","lat":"57.706944","stopid":"9021014001760000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456615" },"name":"Chalmers Tvärgata, Göteborg","lon":"11.980337","lat":"57.689721","stopid":"9021014001970000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456616" },"name":"Frihamnsporten, Göteborg","lon":"11.959527","lat":"57.718208","stopid":"9021014002472000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456617" },"name":"Götaplatsen, Göteborg","lon":"11.978971","lat":"57.697622","stopid":"9021014003020000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456618" },"name":"Kungsportsplatsen, Göteborg","lon":"11.969748","lat":"57.704023","stopid":"9021014004090000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456619" },"name":"Lilla Bommen, Göteborg","lon":"11.966035","lat":"57.709551","stopid":"9021014004380000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661a" },"name":"Lindholmsplatsen, Göteborg","lon":"11.938465","lat":"57.706998","stopid":"9021014004494000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661b" },"name":"Pumpgatan, Göteborg","lon":"11.946151","lat":"57.712724","stopid":"9021014005355000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661c" },"name":"Regnbågsgatan, Göteborg","lon":"11.942753","lat":"57.710774","stopid":"9021014005465000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661d" },"name":"Sven Hultins plats, Göteborg","lon":"11.976696","lat":"57.686350","stopid":"9021014006475000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661e" },"name":"Teknikgatan, Göteborg","lon":"11.937198","lat":"57.706917","stopid":"9021014006675000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec1245661f" },"name":"Valand, Göteborg","lon":"11.974521","lat":"57.700337","stopid":"9021014007220000","__v":0}
+{"_id":{ "$oid": "56150f1fd4f4cfec12456620" },"name":"Ålandsgatan, Göteborg","lon":"11.977721","lat":"57.692220","stopid":"9021014007440000","__v":0}

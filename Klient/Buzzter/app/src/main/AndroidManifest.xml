@@ -20,9 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".AddPost" />
 
         <service android:name=".SocketService" />
+=======
+>>>>>>> dev
 
         <activity
             android:name=".ViewComments"
@@ -31,3 +34,4 @@
     </application>
 
 </manifest>
+

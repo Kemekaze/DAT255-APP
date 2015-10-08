@@ -1,50 +1,73 @@
 package dat255.app.buzzter;
 
+
+/**
+ * Created by Rasmus on 2015-10-04.
+ */
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import dat255.app.buzzter.Adapters.PostsAdapter;
-import dat255.app.buzzter.Events.PostsEvent;
-import dat255.app.buzzter.Events.SendDataEvent;
-import dat255.app.buzzter.Events.StatusEvent;
-import dat255.app.buzzter.Objects.Post;
-import dat255.app.buzzter.Resources.Constants;
-import dat255.app.buzzter.Resources.ServerQueries;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends  AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
+
+    private DrawerLayout drawerLayout;
+    private ListView drawerListView;
+    private String[] planets;
+    private ActionBarDrawerToggle drawerToggle;
+    private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
+
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Thread(){
-            public void run(){
-                socketServiceIntent = new Intent(getApplicationContext(),SocketService.class);
-                startService(socketServiceIntent);
+
+
+        // DrawerLayout section start
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        planets = getResources().getStringArray(R.array.planets);
+        drawerListView = (ListView) findViewById(R.id.left_drawer);
+        drawerListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, planets));
+        drawerListView.setOnItemClickListener(this);
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,
+                R.string.drawer_open,R.string.drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView){
+                super.onDrawerClosed(drawerView);
+
             }
+<<<<<<< HEAD
         }.start();
         mRecyclerView = (RecyclerView) findViewById(R.id.comments);
         mRecyclerView.setHasFixedSize(true);
@@ -63,10 +86,26 @@ public class MainActivity extends AppCompatActivity {
         SendDataEvent ev = new SendDataEvent(Constants.SocketEvents.VOTE_UP,data);
         EventBus.getDefault().post(ev);
     }
+=======
+>>>>>>> dev
 
-    public void addPost(View v) {
-        Intent myIntent = new Intent(MainActivity.this, AddPost.class);
-        MainActivity.this.startActivity(myIntent);
+            @Override
+            public void onDrawerOpened(View drawerView){
+                super.onDrawerOpened(drawerView);
+            }
+
+
+        };
+
+
+        drawerLayout.setDrawerListener(drawerToggle);
+        this.getSupportActionBar().setHomeButtonEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fragmentManager = getFragmentManager();
+
+        loadSelection(0);
+        // DrawerLayout section end
     }
     public void viewComments(View v) {
         Intent myIntent = new Intent(MainActivity.this, ViewComments.class);
@@ -75,73 +114,110 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart");
-        EventBus.getDefault().register(this);
-        StatusEvent status = EventBus.getDefault().getStickyEvent(StatusEvent.class);
-        PostsEvent posts = EventBus.getDefault().getStickyEvent(PostsEvent.class);
-        if (status != null)statusEvent(status);
-        if(posts != null)updatePostsEvent(posts);
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onStop() {
-        Log.i(TAG, "onStop");
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(drawerToggle.onOptionsItemSelected(item)){
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration configuration){
+        super.onConfigurationChanged(configuration);
+        drawerToggle.onConfigurationChanged(configuration);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
+        selectItem(position);
+
+<<<<<<< HEAD
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void updatePostsEvent(PostsEvent event){
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
         //update post list
         PostsAdapter postsAdapter = (PostsAdapter) mAdapter;
         postsAdapter.addPosts(event.posts, event.eventType);
+=======
+>>>>>>> dev
     }
 
-    public void getMorePosts(View view){
-        Log.i(TAG, "getMorePosts");
-        getPosts(view, 10, mAdapter.getItemCount());
-    }
-    private void getPosts(View view, int limit, int skip){
-        Log.i(TAG, String.valueOf(skip));
 
-        try {
-            EventBus.getDefault().post(
-                    new SendDataEvent(Constants.SocketEvents.GET_POSTS,
-                            ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject().put("date",-1))
-                    )
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private void loadSelection(int pos){
+        drawerListView.setItemChecked(pos,true);
+
+        switch (pos){
+            case 0:
+                PostFragment postFragment = new PostFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,postFragment);
+                fragmentTransaction.commit();
+                break;
+            case 1:
+                AddPostFragment addPostFragment = new AddPostFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,addPostFragment);
+                fragmentTransaction.commit();
+                break;
+
+            case 2:
+                AlarmFragment alarmFragment = new AlarmFragment();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,alarmFragment);
+                fragmentTransaction.commit();
+                break;
+
         }
+
     }
+<<<<<<< HEAD
     public void refreshPosts(View view){
         Log.i(TAG, "refreshPosts");
         getPosts(view, 10, 0);
+=======
+
+    private void selectItem(int position) {
+        drawerListView.setItemChecked(position, true);
+        setTitle(planets[position]);
+
+        loadSelection(position);
+
+        drawerLayout.closeDrawer(drawerListView);
+
+>>>>>>> dev
     }
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void statusEvent(StatusEvent event){
-        Log.e(TAG, "statusEvent");
-        Toast.makeText(this.getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
+
+    public void setTitle(String title){
+        this.getSupportActionBar().setTitle(title);
 
     }
 
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment, fragment.toString());
+        fragmentTransaction.addToBackStack(fragment.toString());
+        fragmentTransaction.commit();
+    }
 }

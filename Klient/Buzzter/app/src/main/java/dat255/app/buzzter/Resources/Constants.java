@@ -1,11 +1,15 @@
 package dat255.app.buzzter.Resources;
 
+
+
 /**
  * Created by elias on 2015-09-25.
  */
 public class Constants {
 
+
     public static final String SERVER_IP = "192.168.0.202";
+
     public static final String SERVER_PORT = "3000";
 
 
@@ -29,5 +33,6 @@ public class Constants {
         public static final String GET_BUS = "getBus";
         public static final String GET_BUS_NEXT_STOP = "getBusNextStop";
     }
+
 
 }

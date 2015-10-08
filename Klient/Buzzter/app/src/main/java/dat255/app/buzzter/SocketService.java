@@ -47,6 +47,7 @@ public class SocketService extends Service {
         EventBus.getDefault().register(this);
         //Connection
         socket.on(Socket.EVENT_CONNECT, eventConnected);
+        socket.on(Socket.EVENT_RECONNECT, eventReconnected);
         socket.on(Socket.EVENT_DISCONNECT, eventDisconnected);
         //Authorization
         socket.on(Constants.SocketEvents.AUTHORIZED, eventAuthorized);
@@ -84,19 +85,19 @@ public class SocketService extends Service {
         public void call(Object... args) {
 
             Log.i(TAG, "eventConnected");
-            /*ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cm.getActiveNetworkInfo();
-            String mac = "null";
-            if(nInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                Log.i(TAG, String.valueOf(manager.getWifiState()));
-                WifiInfo info = manager.getConnectionInfo();
-                mac = info.getBSSID();
-            } JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"mac", mac);
-            */
-            long busId = 2501131248l;
+
+            long busId = 2501069758l;
             JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"bus_id", busId);
             socket.emit(Constants.SocketEvents.AUTHENTICATE, query);
+        }
+    };
+    private Emitter.Listener eventReconnected = new Emitter.Listener() {
+
+        @Override
+        public void call(Object... args) {
+
+            Log.i(TAG, "eventReconnected");
+
         }
     };
 

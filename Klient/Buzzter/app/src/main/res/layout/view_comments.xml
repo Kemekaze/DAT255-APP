@@ -25,6 +25,10 @@
         android:onClick="addPost"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+<<<<<<< HEAD
         />
+=======
+    />
+>>>>>>> dev
 
 </RelativeLayout>

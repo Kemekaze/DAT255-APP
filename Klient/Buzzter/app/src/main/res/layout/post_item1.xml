@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:id = "@+id/rel"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Body"
+        android:id="@+id/body"
+        android:layout_marginTop="12dp"
+        android:width="250dp"
+        android:layout_marginLeft="20dp"
+        android:height="60dp"
+        android:layout_marginEnd="11dp"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/line" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="user"
+        android:id="@+id/user"
+        android:layout_alignTop="@+id/body"
+        android:layout_alignEnd="@+id/votesDown" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/votesUp"
+        android:layout_marginRight="5dp"
+        android:layout_alignBaseline="@+id/line"
+        android:layout_alignBottom="@+id/line"
+        android:layout_toStartOf="@+id/votesDown" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/votesDown"
+        android:layout_marginLeft="5dp"
+        android:layout_alignBaseline="@+id/votesUp"
+        android:layout_alignBottom="@+id/votesUp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="43dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="55"
+        android:drawableLeft="@drawable/ic_action_directions_bus"
+        android:id="@+id/line"
+        android:layout_marginEnd="12dp"
+        android:layout_alignBaseline="@+id/time"
+        android:layout_alignBottom="@+id/time"
+        android:layout_toStartOf="@+id/votesUp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="time"
+        android:id="@+id/time"
+        android:width="150dp"
+        android:layout_below="@+id/body"
+        android:layout_alignStart="@+id/body" />
+
+</RelativeLayout>
