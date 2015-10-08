@@ -25,7 +25,7 @@ public class ViewComments extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_comments);
+        setContentView(R.layout.view_comments);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);

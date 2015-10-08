@@ -1,6 +1,7 @@
 package dat255.app.buzzter.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,10 +11,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
+import dat255.app.buzzter.AddPost;
+import dat255.app.buzzter.MainActivity;
 import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.R;
+import dat255.app.buzzter.ViewComments;
 
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -56,6 +62,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public PostsAdapter(List<Post> posts) {
         this.posts = posts;
+        Post testPost = new Post(new JSONObject());
+        testPost.getComments();
     }
     // Create new views (invoked by the layout manager)
     @Override
@@ -102,6 +110,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public List<Post> getPosts() {
         return posts;
     }
+
     public void addPost(Post post) {
        posts.add(post);
        this.notifyDataSetChanged();

@@ -31,7 +31,6 @@ import de.greenrobot.event.ThreadMode;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -69,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = new Intent(MainActivity.this, AddPost.class);
         MainActivity.this.startActivity(myIntent);
     }
-
+    public void viewComments(View v) {
+        Intent myIntent = new Intent(MainActivity.this, ViewComments.class);
+        MainActivity.this.startActivity(myIntent);
+    }
 
 
     @Override
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
         //update post list
         PostsAdapter postsAdapter = (PostsAdapter) mAdapter;
-        postsAdapter.addPosts(event.posts,event.eventType);
+        postsAdapter.addPosts(event.posts, event.eventType);
     }
 
     public void getMorePosts(View view){
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void refreshPosts(View view){
         Log.i(TAG, "refreshPosts");
-        getPosts(view,10,0);
+        getPosts(view, 10, 0);
     }
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event){
