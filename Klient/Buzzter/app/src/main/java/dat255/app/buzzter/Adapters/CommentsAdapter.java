@@ -46,6 +46,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             public void onclick(View v);
         }
     }
+<<<<<<< HEAD
+
+=======
+>>>>>>> dev
     public List<Post.Comment> comments;
 
     public CommentsAdapter(List<Post.Comment> comments) { this.comments = comments; }

@@ -33,15 +33,22 @@ public class ViewComments extends AppCompatActivity {
         mAdapter = new CommentsAdapter(new ArrayList<Post.Comment>());
         mRecyclerView.setAdapter(mAdapter);
 
+<<<<<<< HEAD
+=======
       //  mAdapter = new CommentsAdapter() {
 
       //  }
+>>>>>>> dev
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+<<<<<<< HEAD
+        getMenuInflater().inflate(R.menu.menu_view_comment, menu);
+=======
         //getMenuInflater().inflate(R.menu.menu_view_comment, menu); //??
+>>>>>>> dev
         return true;
     }
 

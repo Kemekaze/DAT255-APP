@@ -41,7 +41,6 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
 
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -68,6 +67,27 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
                 super.onDrawerClosed(drawerView);
 
             }
+<<<<<<< HEAD
+        }.start();
+        mRecyclerView = (RecyclerView) findViewById(R.id.comments);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new PostsAdapter(new ArrayList<Post>());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+    private void voteUp(Post p){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("post_id",p.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SendDataEvent ev = new SendDataEvent(Constants.SocketEvents.VOTE_UP,data);
+        EventBus.getDefault().post(ev);
+    }
+=======
+>>>>>>> dev
 
             @Override
             public void onDrawerOpened(View drawerView){
@@ -87,7 +107,10 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
         loadSelection(0);
         // DrawerLayout section end
     }
-
+    public void viewComments(View v) {
+        Intent myIntent = new Intent(MainActivity.this, ViewComments.class);
+        MainActivity.this.startActivity(myIntent);
+    }
 
 
     @Override
@@ -128,6 +151,15 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
         Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
         selectItem(position);
 
+<<<<<<< HEAD
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void updatePostsEvent(PostsEvent event){
+        Log.i(TAG, "updatePostsEvent(PostsEvent)");
+        //update post list
+        PostsAdapter postsAdapter = (PostsAdapter) mAdapter;
+        postsAdapter.addPosts(event.posts, event.eventType);
+=======
+>>>>>>> dev
     }
 
 
@@ -158,6 +190,11 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
         }
 
     }
+<<<<<<< HEAD
+    public void refreshPosts(View view){
+        Log.i(TAG, "refreshPosts");
+        getPosts(view, 10, 0);
+=======
 
     private void selectItem(int position) {
         drawerListView.setItemChecked(position, true);
@@ -167,6 +204,7 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
 
         drawerLayout.closeDrawer(drawerListView);
 
+>>>>>>> dev
     }
 
     public void setTitle(String title){

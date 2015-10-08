@@ -3,6 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+<<<<<<< HEAD
+    <string name="title_activity_view_comments">ViewComments</string>
+    <string name="title_activity_view_comment">ViewComment</string>
+=======
 
     <string name="drawer_open">Open navigation drawer</string>
 
@@ -18,4 +22,5 @@
 
     </string-array>
 
+>>>>>>> dev
 </resources>
