@@ -1,8 +1,11 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var moment = require('moment');
+
 var api = require('../api/api.js');
 var vt = require('../api/vasttrafik.js');
 var stops = require('../db/stops.js');
+
 var exports = module.exports = {};
 
 //
@@ -17,7 +20,8 @@ var BusSchema = new Schema({
     journey: { 	  	
     	ids: { 
     		id: String,
-    		stopsid: String
+    		stopsid: String,
+    		serviceid: String
     	},
     	destination: { type: String},
     	stops : [{ 
@@ -28,9 +32,14 @@ var BusSchema = new Schema({
 	  				routeIdx: String,
 	  				arrTime: String,
 	  				arrDate: String,
+	  				rtArrTime: String,
+	  				rtArrDate: String,
 	  				depTime: String,
 	  				depDate: String,
+	  				rtDepTime: String,
+	  				rtDepDate: String
   		}],
+
   		name: { type: String },
   		route:{
   			idxfrom: String,
@@ -58,17 +67,21 @@ BusSchema.methods.update = function (updateData, callback) {
 	  		callback(data);
 	  });
 }
-BusSchema.methods.updateJourneyId = function (callback) {	
+BusSchema.methods.updateJourneyId = function (callback) {
+	var bus = this;	
 	var sensor = "Ericsson$Journey_Info",
   		t2     = (new Date).getTime(),
   		t1     = t2-23*1000;
 	api.get(this.get("dgw"),sensor,t1,t2,function(journeyinfo){
 		if(journeyinfo != ""){
 			var updateData = getJourneyInfo(journeyinfo,"journey.ids.");
-			console.log(updateData);
-			exports.findOneAndUpdate({dgw:"Ericsson$"+journeyinfo[0].gatewayId},updateData,function(data){
-		  		callback({status:"Bus journey id updated",data:data});
-		    });
+
+			if(updateData["journey.ids.id"] != bus.journey.ids.id){
+				exports.findOneAndUpdate({dgw:"Ericsson$"+journeyinfo[0].gatewayId},updateData,function(data){
+			  		callback({status:"Bus journey id for '"+bus.regnr+"' updated",data:data});
+			    });
+			}
+			callback({status:"Bus journey id for '"+bus.regnr+"' no change",data:null});
 		}else
 			callback({status:"No journey data",data:null});			
 	});
@@ -85,46 +98,66 @@ BusSchema.methods.updateJourneyId = function (callback) {
 		return journey;
 	}
 }
-/*BusSchema.methods.updateJourney = function (callback) {	
-	var sensor = "Ericsson$Journey_Info",
-  		t2     = (new Date).getTime(),
-  		t1     = t2-23*1000;
-	api.get(this.get("dgw"),sensor,t1,t2,function(journeyinfo){
-		if(journeyinfo != ""){
-			var updateData = getJourneyInfo(journeyinfo,"journey.");
-			exports.findOneAndUpdate({dgw:"Ericsson$"+journeyinfo[0].gatewayId},updateData,function(data){
-		  		callback({status:"Bus journey updated",data:data});
-		    });
-		}else
-			callback({status:"No journey data",data:null});			
-	});
-
-	function getJourneyInfo(journeyData, prefix){
-		var journey = {};
-		journeyData.reverse();
-		journeyData.forEach(function(resource){
-			if(journey.length == 2) return journey;
-			var resourcename = ((resource.resourceSpec).substring(0,(resource.resourceSpec).length-6)).toLowerCase();
-			if(resourcename == "journey_name") resourcename = resourcename.substring(8,resourcename.length);
-			if(!(journey[prefix+resourcename] in journey))
-				journey[prefix+resourcename] = resource.value;			
-		});
-		return journey;
-	}
-}*/
-BusSchema.methods.updateJourney = function(stopsDepartures,callback){
-	var gid = this.get("journey.id");
+BusSchema.methods.updateJourney = function(stops,callback){
 	var bus = this;
+	var gid = bus.get("journey.ids.id");
 	
-	var stopsDistancesSorted = distances(stopsDepartures);
-	console.log(stopsDistancesSorted);
-    for(var i = 0;i<stopsDistancesSorted.length;i++){
-    	
-    	
-    }
-		
+	
+	var stopsSorted = distances(stops);
 
-	
+	//only 1 journey required to update, unneccessary to loop through entire array if found
+	var foundJourney = false;
+	if(gid !== undefined){
+		for(var s = 0, slen=stopsSorted.length; s < slen; s++){
+			if(foundJourney == true) break;
+
+			for(var d = 0, dlen=(stopsSorted[s][0].deps).length; d < dlen; d++){				
+				if(stopsSorted[s][0].deps[d].journeyid == gid ){
+					
+					//console.log("Bus %s found at %s",gid,stopsSorted[s][0].deps[d].stop);
+					
+					var direction = stopsSorted[s][0].deps[d].direction;
+
+					vt.request(stopsSorted[s][0].deps[d].JourneyDetailRef.ref, function(journeyStops){
+
+						var updateData=journeyStops.JourneyDetail.Stop;
+
+						for(var i =0,len=updateData.length; i<len;i++ ){
+							var stopid = updateData[i].id
+							delete updateData[i].id;
+							delete updateData[i].track;
+							updateData[i]['stopid'] = stopid;
+						}
+
+						//update bus with new data				
+						bus.journey.stops = updateData;
+						bus.journey.name = direction;
+						var serviceid = journeyStops.JourneyDetail.JourneyName.name;
+						serviceid = serviceid.substring(4,serviceid.length)
+						bus.journey.ids.serviceid = serviceid;
+
+						var journeyid = journeyStops.JourneyDetail.JourneyId;
+						bus.journey.route = {
+										idxfrom: journeyid.routeIdxFrom,
+			  							idxto: journeyid.routeIdxTo
+						};
+
+						bus.journey.ids.stopsid = journeyid.id; 
+						// save updated data
+						bus.save(function (err) {
+						    if (!err) 
+						    	callback({status:"Journey updated for bus '"+bus.regnr+"'",data:bus})
+						});
+					});
+					foundJourney = true;
+					break;
+
+				}
+			}
+		}
+	}
+	if(!foundJourney) callback({status:"No journey found",data:null});
+
 	function distances(stops){
 		var stopsDistances = [];
 		for (var i = 0; i < stops.length; ++i) {
@@ -161,6 +194,7 @@ BusSchema.methods.updateJourney = function(stopsDepartures,callback){
 }
 
 BusSchema.methods.updateGPS = function (callback) {	
+	var bus = this;
 	var sensor = "Ericsson$GPS2",
   		t2     = (new Date).getTime(),
   		t1     = t2-13*1000;
@@ -168,7 +202,7 @@ BusSchema.methods.updateGPS = function (callback) {
 		if(gpsApi != ""){
 			var updateData = getApiGps(gpsApi,"gps.");
 			exports.findOneAndUpdate({dgw:"Ericsson$"+gpsApi[0].gatewayId},updateData,function(data){
-		  		callback({status:"GPS updated",data:data});
+		  		callback({status:"GPS updated for bus '"+bus.regnr+"'",data:data});
 		    });
 		}else
 			callback({status:"No GPS data",data:null});			
@@ -187,6 +221,46 @@ BusSchema.methods.updateGPS = function (callback) {
 
 	}
 	  
+}
+BusSchema.methods.nextStop = function (callback) {	
+	var bus = this;
+	var stops = bus.journey.stops;
+    var nextStop = getNextStop(stops);
+    callback(nextStop);
+	
+	function getNextStop(stops){
+		var now = moment();
+
+		for(var i = 0, slen = stops.length;i< slen;i++){
+			var timeStop = null;
+			if(typeof stops[i].rtArrTime === 'undefined') {				
+				if(typeof stops[i].arrTime === 'undefined' ){
+					timeStop = stops[i].depTime
+				}else{
+					timeStop = stops[i].arrTime 
+				}				
+			}else{
+				timeStop =stops[i].rtArrTime;
+			}
+			
+			var h = parseInt(timeStop.substring(0,2));
+			var m = parseInt(timeStop.substring(3,5));
+			var rtArrTime = moment().hours(h).minutes(m);
+			if(now.isBefore(rtArrTime)){
+				return {
+					name:stops[i].name,
+					time:rtArrTime.unix(),
+					serviceid:bus.journey.ids.serviceid
+				};
+				break;
+			}
+		}
+		return null;
+	}	  
+}
+BusSchema.methods.getServiceid = function () {	
+	var bus = this;
+	return bus.get("journey.ids.serviceid"); 
 }
 
 

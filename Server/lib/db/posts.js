@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-
+var buses = require('../db/busses.js');
 var exports = module.exports = {};
 
 //
@@ -23,7 +23,7 @@ var PostSchema = new Schema({
     },
     bus:{
     	systemid: { type: Number},
-    	line: { type: Number}
+    	serviceid: { type: Number}
     },
     type: { type: String}
   }
@@ -50,13 +50,23 @@ exports.findById = function(id,callback){
 	  callback(p);
 	});
 }
-exports.save = function(body,user,line,mac,type,callback){
+exports.save = function(body,user,systemid,callback){
 	
+	buses.find({systemid:systemid},function(bus){
+		var date = (new Date).getTime();
+		var serviceid = bus[0].getServiceid();
+		exports.saveAny(body,user,systemid,serviceid,date,"post",function(post){
+			callback(post);
+		});	
+	});
+	
+}
+exports.saveAny = function(body,user,systemid,serviceid,date,type,callback){
 	var post = new PostModel({
 	      body: body,
 		  user: user,  
 		  comments: [],
-		  date: (new Date).getTime(),
+		  date: date,
 		  hidden: false,
 		  meta: {
 		    votes: {
@@ -64,16 +74,17 @@ exports.save = function(body,user,line,mac,type,callback){
 		    	down: 0
 		    },
 		    bus:{
-		    	mac: mac,
-		    	line: line
+		    	systemid: systemid,
+		    	serviceid: serviceid
 		    },
-    		type: "post"
+    		type: type
 		  }
 	});
   	post.save(function (err, p) {
 	  if (err) return console.error(err);
 	  callback(p);
 	});	
+
 }
 exports.voteUp = function(id,callback){
 	PostModel.where({_id:id}).update({ $inc: { "meta.votes.up": 1 }}, function (err, p) {

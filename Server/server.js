@@ -8,7 +8,7 @@ var lib = require("./lib");
 
 var exports = module.exports = {};
 //setup
-console.log(lib);
+//console.log(lib);
 var SERVER_PORT   = 3000;
 var DB_URL   = "localhost";
 var DB_PORT   = 27017;
@@ -153,11 +153,10 @@ io.on('connection', function(socket){
 		
 		var user = "Anon",
 		    body = data.body,
-		    line = 0,
-		    mac  = socket.mac;
+		    systemid  = socket.bus_id;
 		
 
-		lib.db.posts.save(body,user,line,mac,"post",function(post){
+		lib.db.posts.save(body,user,systemid,function(post){
 			console.log("Post saved with id: "+post.get("id"));
 			console.log("Post : "+JSON.stringify(post));
 	  		socket.emit('savePost', {status:"ok",post:post});

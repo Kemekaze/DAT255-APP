@@ -1,20 +1,6 @@
 package dat255.app.buzzter;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.LinearLayoutManager;
-
-import java.util.ArrayList;
-
-import dat255.app.buzzter.Adapters.CommentsAdapter;
-import dat255.app.buzzter.Objects.Post;
-
-
-public class ViewComments extends AppCompatActivity {
+/*public class ViewComments extends AppCompatActivity {
     private final String TAG = "dat255.app.buzzter.VC";
 
     private RecyclerView mRecyclerView;
@@ -66,7 +52,7 @@ public class ViewComments extends AppCompatActivity {
     }
 
 }
-
+*/
 
 
 

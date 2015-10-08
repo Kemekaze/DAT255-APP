@@ -43,40 +43,81 @@ exports.nextStop = function(bus,callback){
 }
 
 
+
+
 exports.beginUpdateBuses = function(){
 	console.log("-----BEGIN UPDATEING BUSES-----");
-	
+	//update all busses on startup so the api is not overloaded with requests
+	exports.updateBusesJourneyId(false);
+	setTimeout(exports.updateBusesJourney, 2000);
+
 	console.log("-----UPDATEING BUSES GPS DATA-----");
 	setInterval(exports.updateBusesGPS, 5*1000);
 	console.log("-----UPDATEING BUSES JOURNEY DATA-----");
 	setInterval(exports.updateBusesJourneyId, 5*1000);
-	//setInterval(exports.updateBusesJourney, 5*1000);
+	setInterval(exports.updateBusesJourney, 30*1000);
+
+	/*db.busses.find({dgw:"Ericsson$171234"},function(bus){
+		bus[0].nextStop(function(ns){
+			console.log(ns);
+		});
+	});*/
+
+	
 }
 
 var updateBusesJourneyIdCount = 0;
-exports.updateBusesJourneyId = function(callback){
-	console.log("Journey ids update count : %s",updateBusesJourneyIdCount)
+var updateBusesJourneyCount = 0;
+var updateBusesGPSCount = 0;
+
+var updateBusesJourneyIdProgress = 0;
+var updateBusesJourneyProgress = 0;
+var updateBusesGPSProgress = 0;
+
+exports.updateBusesJourneyId = function(updateJourney){
+	updateJourney = typeof updateJourney === 'undefined' ? false : updateJourney;
+	console.log("Journey ids update count : %s",updateBusesJourneyIdCount);
 	updateBusesJourneyIdCount = 0;
 	db.busses.findAll(function(buses){
 		buses.forEach(function(bus){
 			bus.updateJourneyId(function(data){
 				if(data.data != null){
-					updateBusesJourneyIdCount++;
+					console.log(data.status);
+					updateBusesJourneyIdCount++;	
+					if(updateJourney){		
+						exports.updateBusJourney(bus,function(){
+							if(data.data != null){
+								console.log(data.status);
+							}
+						});
+					}					
+					
 				}
 			});
 
 		});		
 	});
 }
-var updateBusesJourneyCount = 0;
-exports.updateBusesJourney = function(callback){
-	console.log("Journeys update count : %s",updateBusesJourneyCount)
+exports.updateBusJourney = function(bus){
+	console.log("Updating journey for %s",bus.get("regnr"));
+	db.stops.getAllDepForAll(function(stopsDepartures){
+		bus.updateJourney(stopsDepartures,function(data){
+			if(data.data != null){
+				console.log(data.status);
+			}
+		});		
+	});	
+}
+
+exports.updateBusesJourney = function(){
+	console.log("Journeys update count : %s",updateBusesJourneyCount);
 	updateBusesJourneyCount = 0;
 	db.busses.findAll(function(buses){
 		db.stops.getAllDepForAll(function(stopsDepartures){
 			buses.forEach(function(bus){
 				bus.updateJourney(stopsDepartures,function(data){
 					if(data.data != null){
+						console.log(data.status);
 						updateBusesJourneyCount++;
 					}
 				});								
@@ -84,9 +125,9 @@ exports.updateBusesJourney = function(callback){
 		});
 	});
 }
-var updateBusesGPSCount = 0;
-exports.updateBusesGPS = function(callback){
-	console.log("GPS update count : %s",updateBusesGPSCount)
+
+exports.updateBusesGPS = function(){
+	console.log("GPS update count : %s",updateBusesGPSCount);
 	updateBusesGPSCount = 0;
 	db.busses.findAll(function(buses){
 		buses.forEach(function(bus){
@@ -99,10 +140,16 @@ exports.updateBusesGPS = function(callback){
 	});
 }
 
-
-
-
-
-/*exports.updateBusesJourney(function(){
-
-});*/
+exports.nextStop = function(systemid,callback){
+	db.busses.find({systemid:systemid},function(bus){
+		bus[0].nextStop(function(stop){
+			db.posts.saveAny("Next stop "+stop.name,"Alert",systemid,stop.serviceid,stop.time,"EventNextStop",function(post){
+				callback({
+					post:post, 
+					systemid:systemid
+				})
+			});
+		});
+	});
+	
+}
