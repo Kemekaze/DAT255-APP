@@ -25,7 +25,7 @@ public class ViewComments extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_comments);
+        setContentView(R.layout.view_comments);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
@@ -41,7 +41,7 @@ public class ViewComments extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_comment, menu);
+        //getMenuInflater().inflate(R.menu.menu_view_comment, menu); //??
         return true;
     }
 
