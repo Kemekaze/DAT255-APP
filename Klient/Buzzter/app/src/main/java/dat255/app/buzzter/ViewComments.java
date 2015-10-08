@@ -1,6 +1,19 @@
 package dat255.app.buzzter;
 
-/*public class ViewComments extends AppCompatActivity {
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import java.util.ArrayList;
+
+import dat255.app.buzzter.Adapters.CommentsAdapter;
+import dat255.app.buzzter.Objects.Post;
+
+public class ViewComments extends AppCompatActivity {
     private final String TAG = "dat255.app.buzzter.VC";
 
     private RecyclerView mRecyclerView;
@@ -11,7 +24,7 @@ package dat255.app.buzzter;
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_comments);
+        setContentView(R.layout.view_comments);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
@@ -19,15 +32,13 @@ package dat255.app.buzzter;
         mAdapter = new CommentsAdapter(new ArrayList<Post.Comment>());
         mRecyclerView.setAdapter(mAdapter);
 
-      //  mAdapter = new CommentsAdapter() {
-
-      //  }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present
         getMenuInflater().inflate(R.menu.menu_view_comment, menu);
+
         return true;
     }
 
@@ -52,7 +63,7 @@ package dat255.app.buzzter;
     }
 
 }
-*/
+
 
 
 
