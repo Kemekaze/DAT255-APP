@@ -32,7 +32,7 @@ public class Post {
             this._id = post.getString("_id");
             this.body = post.getString("body");
             this.user = post.getString("user");
-            this.busLine = bus.getInt("serviceid");
+            this.busLine = bus.getInt("line");
             this.type = meta.getString("type");
             this.votes = new int[]{
                     votes.getInt("up"),

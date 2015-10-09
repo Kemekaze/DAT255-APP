@@ -1,8 +1,10 @@
 package dat255.app.buzzter;
 
 
-import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +27,7 @@ import de.greenrobot.event.Subscribe;
  */
 public class AddPostFragment extends Fragment {
 
-    private final String TAG = "dat255.app.buzzter.APF";
+    private final String TAG = "dat255.app.buzzter.AP";
     private EditText edittext;
     private Button sendBtn;
 

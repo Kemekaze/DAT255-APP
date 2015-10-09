@@ -1,19 +1,22 @@
 package dat255.app.buzzter.Adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.List;
 
 import dat255.app.buzzter.Objects.Post;
+
+
 import dat255.app.buzzter.R;
 
 
@@ -34,7 +37,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public ViewHolder(View view, viewHolderClicks listner) {
             super(view);
-
             body = (TextView) view.findViewById(R.id.body);
             user = (TextView) view.findViewById(R.id.user);
             line = (TextView) view.findViewById(R.id.line);
@@ -60,8 +62,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public PostsAdapter(List<Post> posts) {
         this.posts = posts;
-        Post testPost = new Post(new JSONObject());
-        testPost.getComments();
     }
     // Create new views (invoked by the layout manager)
     @Override
@@ -80,8 +80,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager
-    // )
+    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
@@ -119,7 +118,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public List<Post> getPosts() {
         return posts;
     }
-
     public void addPost(Post post) {
        posts.add(post);
        this.notifyDataSetChanged();
@@ -134,7 +132,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 addPostsRefresh(posts);
                 break;
             case 2:
-                addPostsBeginning(posts);
+                addPostsBegining(posts);
                 break;
             default:
                 this.posts.addAll(posts);
@@ -142,7 +140,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
         this.notifyDataSetChanged();
     }
-    private void addPostsBeginning(List<Post> posts) {
+    private void addPostsBegining(List<Post> posts) {
         this.posts.addAll(0,posts);
         this.notifyDataSetChanged();
     }
