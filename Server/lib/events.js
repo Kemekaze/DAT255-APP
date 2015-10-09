@@ -13,10 +13,6 @@ var updateBusesJourneyIdCount = 0;
 var updateBusesJourneyCount = 0;
 var updateBusesGPSCount = 0;
 
-var updateBusesJourneyIdCountTotal = 0;
-var updateBusesJourneyCountTotal = 0;
-var updateBusesGPSCountTotal = 0;
-
 var JOUNEY_UPDATE_TIME = 30;
 var JOUNEY_IDS_UPDATE_TIME = 5;
 var GPS_UPDATE_TIME = 5;
