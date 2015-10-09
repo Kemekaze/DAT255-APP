@@ -1,4 +1,4 @@
-package dat255.app.buzzter;
+/*package dat255.app.buzzter;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,7 +66,7 @@ public class ViewComments extends AppCompatActivity {
     }
 
 }
-
+*/
 
 
 
