@@ -62,6 +62,14 @@ exports.save = function(body,user,systemid,callback){
 	
 }
 exports.saveAny = function(body,user,systemid,serviceid,date,type,callback){
+	var post = exports.newModel(body,user,systemid,serviceid,date,type);
+  	post.save(function (err, p) {
+	  if (err) return console.error(err);
+	  callback(p);
+	});	
+
+}
+exports.newModel = function(body,user,systemid,serviceid,date,type){
 	var post = new PostModel({
 	      body: body,
 		  user: user,  
@@ -80,11 +88,7 @@ exports.saveAny = function(body,user,systemid,serviceid,date,type,callback){
     		type: type
 		  }
 	});
-  	post.save(function (err, p) {
-	  if (err) return console.error(err);
-	  callback(p);
-	});	
-
+	return post;
 }
 exports.voteUp = function(id,callback){
 	PostModel.where({_id:id}).update({ $inc: { "meta.votes.up": 1 }}, function (err, p) {

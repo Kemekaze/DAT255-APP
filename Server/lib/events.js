@@ -1,97 +1,78 @@
+var moment = require('moment');
+var log = require('single-line-log').stdout;
+
 var exports = module.exports = {};
 var api = require('./api').api;
 var vt = require('./api').vasttrafik;
 var db = require('./db');
+var socketEvents = require('../server.js').socket.events;
+var server = require('../server.js');
 
-exports.nextStop = function(bus,callback){
-	//console.log("Event nextStop: "+bus);
-	db.busses.find({systemid:bus},function(db_bus){
-		var dgw    = db_bus[0].get("dgw"),
-		  	sensor = "Ericsson$Next_Stop",
-		  	t2     = (new Date).getTime(),
-		  	t1     = t2- 5*60*1000; 
-
-	
-		api.get(dgw,sensor,t1,t2,function(data){
-			var post = new db.posts.model({
-			    body: "Next stop "+data[data.length-1].value,
-				user: "System",  
-				comments: [],
-				date: (new Date).getTime()+60*1000,//tiden det sskall ta 
-			    hidden: false,
-				meta: {
-				    votes: {
-				    	up: 0,
-				    	down: 0
-				    },
-				    bus:{
-				    	systemid: 0,
-				    	line: 0
-				    },
-		    		type: "event"
-				}
-			});
-			return callback({
-					post:post, 
-					bus:bus
-				});
-		});
-
-		
-	});
-	
-}
-
-
-
-
-exports.beginUpdateBuses = function(){
-	console.log("-----BEGIN UPDATEING BUSES-----");
-	//update all busses on startup so the api is not overloaded with requests
-	exports.updateBusesJourneyId(false);
-	setTimeout(exports.updateBusesJourney, 2000);
-
-	console.log("-----UPDATEING BUSES GPS DATA-----");
-	setInterval(exports.updateBusesGPS, 5*1000);
-	console.log("-----UPDATEING BUSES JOURNEY DATA-----");
-	setInterval(exports.updateBusesJourneyId, 5*1000);
-	setInterval(exports.updateBusesJourney, 30*1000);
-
-	/*db.busses.find({dgw:"Ericsson$171234"},function(bus){
-		bus[0].nextStop(function(ns){
-			console.log(ns);
-		});
-	});*/
-
-	
-}
 
 var updateBusesJourneyIdCount = 0;
 var updateBusesJourneyCount = 0;
 var updateBusesGPSCount = 0;
 
-var updateBusesJourneyIdProgress = 0;
-var updateBusesJourneyProgress = 0;
-var updateBusesGPSProgress = 0;
+var updateBusesJourneyIdCountTotal = 0;
+var updateBusesJourneyCountTotal = 0;
+var updateBusesGPSCountTotal = 0;
 
-exports.updateBusesJourneyId = function(updateJourney){
-	updateJourney = typeof updateJourney === 'undefined' ? false : updateJourney;
-	console.log("Journey ids update count : %s",updateBusesJourneyIdCount);
+var JOUNEY_UPDATE_TIME = 30;
+var JOUNEY_IDS_UPDATE_TIME = 5;
+var GPS_UPDATE_TIME = 5;
+var EVENT_NEXTSTOP_TIME = 10;
+
+exports.beginUpdateBuses = function(){
+	setInterval(updateConsole, 1000);
+	//console.log("-----BEGIN UPDATEING BUSES-----");
+
+	//update all busses on startup so the api is not overloaded with requests
+	exports.updateBusesJourneyId();
+	setTimeout(exports.updateBusesJourney, 2000);
+
+	//console.log("-----UPDATEING BUSES GPS DATA-----");
+	setInterval(exports.updateBusesGPS, GPS_UPDATE_TIME*1000);
+	//console.log("-----UPDATEING BUSES JOURNEY DATA-----");
+	setInterval(exports.updateBusesJourneyId, JOUNEY_IDS_UPDATE_TIME*1000);
+	setInterval(exports.updateBusesJourney, JOUNEY_UPDATE_TIME*1000);
+
+	//console.log("-----NEXTSTOP SOCKET EVENTS-----");
+	setInterval(exports.eventBusesNextStop, EVENT_NEXTSTOP_TIME*1000);
+	
+}
+
+
+var counter=0;
+function updateConsole(){
+	counter++;
+	var idsTime = JOUNEY_IDS_UPDATE_TIME-(counter%JOUNEY_IDS_UPDATE_TIME);
+	var jTime   = JOUNEY_UPDATE_TIME-(counter%JOUNEY_UPDATE_TIME);
+	var gpsTime = GPS_UPDATE_TIME-(counter%GPS_UPDATE_TIME);
+	log("-----------UPDATEING BUSES STATUS------------\n"+
+		" Journey id's: "+updateBusesJourneyIdCount+"/"+server.totalBuses+" updated. "+
+		"Updateing in  "+idsTime+" seconds.\n"+
+		" GPS:          "+updateBusesGPSCount+"/"+server.totalBuses+" updated. "+
+		"Updateing in  "+gpsTime+" seconds.\n"+
+		" Journeys :    "+updateBusesJourneyCount+"/"+server.totalBuses+" updated. "+
+		"Updateing in  "+jTime+" seconds.\n"+
+		"---------------------------------------------"
+	);
+}
+
+exports.updateBusesJourneyId = function(){
 	updateBusesJourneyIdCount = 0;
+
+
 	db.busses.findAll(function(buses){
+		updateBusesJourneyIdCountTotal = buses.length;
 		buses.forEach(function(bus){
 			bus.updateJourneyId(function(data){
 				if(data.data != null){
-					console.log(data.status);
-					updateBusesJourneyIdCount++;	
-					if(updateJourney){		
-						exports.updateBusJourney(bus,function(){
-							if(data.data != null){
-								console.log(data.status);
-							}
-						});
-					}					
-					
+					//console.log(data.status);
+					updateBusesJourneyIdCount++;
+					bus.resetEvents(function(rEv){
+						//console.log(rEv.status);
+					});					
 				}
 			});
 
@@ -99,25 +80,24 @@ exports.updateBusesJourneyId = function(updateJourney){
 	});
 }
 exports.updateBusJourney = function(bus){
-	console.log("Updating journey for %s",bus.get("regnr"));
+
+
 	db.stops.getAllDepForAll(function(stopsDepartures){
 		bus.updateJourney(stopsDepartures,function(data){
 			if(data.data != null){
-				console.log(data.status);
+				//console.log(data.status);
 			}
 		});		
 	});	
 }
 
 exports.updateBusesJourney = function(){
-	console.log("Journeys update count : %s",updateBusesJourneyCount);
 	updateBusesJourneyCount = 0;
 	db.busses.findAll(function(buses){
 		db.stops.getAllDepForAll(function(stopsDepartures){
 			buses.forEach(function(bus){
 				bus.updateJourney(stopsDepartures,function(data){
 					if(data.data != null){
-						console.log(data.status);
 						updateBusesJourneyCount++;
 					}
 				});								
@@ -127,8 +107,8 @@ exports.updateBusesJourney = function(){
 }
 
 exports.updateBusesGPS = function(){
-	console.log("GPS update count : %s",updateBusesGPSCount);
 	updateBusesGPSCount = 0;
+
 	db.busses.findAll(function(buses){
 		buses.forEach(function(bus){
 			bus.updateGPS(function(data){
@@ -143,7 +123,7 @@ exports.updateBusesGPS = function(){
 exports.nextStop = function(systemid,callback){
 	db.busses.find({systemid:systemid},function(bus){
 		bus[0].nextStop(function(stop){
-			db.posts.saveAny("Next stop "+stop.name,"Alert",systemid,stop.serviceid,stop.time,"EventNextStop",function(post){
+			db.posts.saveAny("Next stop "+stop.name,"Alert",systemid,stop.serviceid,stop.time.unix(),"EventNextStop",function(post){
 				callback({
 					post:post, 
 					systemid:systemid
@@ -152,4 +132,43 @@ exports.nextStop = function(systemid,callback){
 		});
 	});
 	
+}
+exports.eventBusesNextStop = function(callback){
+	db.busses.findAll(function(buses){
+		buses.forEach(function(bus){
+			bus.nextStop(function(nstop){
+				if(nstop != null){					
+					emitEvent(nstop,bus);
+					bus.findEvent(nstop.routeidx,function(ev){
+
+						if(nstop.time.diff(moment(), 'seconds') <= 60){
+							if(ev != null){
+								if(ev.min1Stop == false){
+									ev.min1Stop = true;
+									bus.save(function (err, res) {
+										if (err) console.error(err);
+										emitEvent(nstop);								    
+									});
+								}									
+							}
+							else{
+								bus.saveEvent({routeIdx: nstop.routeidx, min1Stop: true},function(evS){
+									emitEvent(nstop);
+								});
+							}
+						}
+						
+					});
+
+				}				
+			});
+		});
+	});
+	function emitEvent(nstop,bus){
+		socketEvents.nextStop({
+			post: db.posts.newModel("Next stop "+nstop.name+" "+moment().to(nstop.time) ,"Alert",nstop.systemid,nstop.serviceid,nstop.time.unix(),"EventNextStop"), 
+			systemid: nstop.systemid,
+			bus:bus
+		});
+	}	
 }

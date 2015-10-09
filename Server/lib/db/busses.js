@@ -38,8 +38,14 @@ var BusSchema = new Schema({
 	  				depDate: String,
 	  				rtDepTime: String,
 	  				rtDepDate: String
+	  				
   		}],
-
+  		events:[{
+	  				routeIdx: String,
+					min1Stop: { type: Boolean, default: false},
+					atStop: { type: Boolean, default: false},
+					depStop: { type: Boolean, default: false}
+		}], 
   		name: { type: String },
   		route:{
   			idxfrom: String,
@@ -76,7 +82,7 @@ BusSchema.methods.updateJourneyId = function (callback) {
 		if(journeyinfo != ""){
 			var updateData = getJourneyInfo(journeyinfo,"journey.ids.");
 
-			if(updateData["journey.ids.id"] != bus.journey.ids.id){
+			if(updateData["journey.ids.id"] != bus.journey.ids.id){				
 				exports.findOneAndUpdate({dgw:"Ericsson$"+journeyinfo[0].gatewayId},updateData,function(data){
 			  		callback({status:"Bus journey id for '"+bus.regnr+"' updated",data:data});
 			    });
@@ -98,18 +104,26 @@ BusSchema.methods.updateJourneyId = function (callback) {
 		return journey;
 	}
 }
+BusSchema.methods.resetEvents = function (callback) {	
+	var bus = this;
+	bus.journey.events = [];
+	bus.save(function (err) {
+	    if (!err) 
+	    	callback({status:"Events reseted for'"+bus.regnr+"'",data:bus})
+	});
+
+}
 BusSchema.methods.updateJourney = function(stops,callback){
 	var bus = this;
 	var gid = bus.get("journey.ids.id");
-	
-	
 	var stopsSorted = distances(stops);
 
 	//only 1 journey required to update, unneccessary to loop through entire array if found
 	var foundJourney = false;
-	if(gid !== undefined){
+	if(gid !== undefined ){
 		for(var s = 0, slen=stopsSorted.length; s < slen; s++){
 			if(foundJourney == true) break;
+			if(stopsSorted[s][0].deps === undefined) continue;
 
 			for(var d = 0, dlen=(stopsSorted[s][0].deps).length; d < dlen; d++){				
 				if(stopsSorted[s][0].deps[d].journeyid == gid ){
@@ -224,7 +238,7 @@ BusSchema.methods.updateGPS = function (callback) {
 }
 BusSchema.methods.nextStop = function (callback) {	
 	var bus = this;
-	var stops = bus.journey.stops;
+	var stops = bus.journey.stops;	
     var nextStop = getNextStop(stops);
     callback(nextStop);
 	
@@ -245,12 +259,14 @@ BusSchema.methods.nextStop = function (callback) {
 			
 			var h = parseInt(timeStop.substring(0,2));
 			var m = parseInt(timeStop.substring(3,5));
-			var rtArrTime = moment().hours(h).minutes(m);
+			var rtArrTime = moment().hours(h).minutes(m).seconds(0);
 			if(now.isBefore(rtArrTime)){
 				return {
-					name:stops[i].name,
-					time:rtArrTime.unix(),
-					serviceid:bus.journey.ids.serviceid
+					name: stops[i].name,
+					time: rtArrTime,
+					serviceid: bus.journey.ids.serviceid,
+					systemid: bus.systemid,
+					routeidx: stops[i].routeIdx
 				};
 				break;
 			}
@@ -261,6 +277,28 @@ BusSchema.methods.nextStop = function (callback) {
 BusSchema.methods.getServiceid = function () {	
 	var bus = this;
 	return bus.get("journey.ids.serviceid"); 
+}
+BusSchema.methods.findEvent = function (routeidx,callback) {
+	var bus = this;	
+	var eve  = null;
+	bus.journey.events.forEach(function(ev){
+		if(ev.routeIdx == routeidx) eve = ev;
+	});
+	callback(eve)
+}
+BusSchema.methods.saveEvent = function (ev,callback) {
+	var bus = this;
+	bus.journey.events.push(ev);
+	bus.save(function (err, ev) {
+	  if (err) return console.error(err);
+	  callback(ev);
+	});
+}
+BusSchema.methods.updateEvent = function (ev,updateData,callback) {	
+	ev.update(updateData,function (err, bus) {
+	  if (err) return console.error(err);
+	  callback(bus);
+	});
 }
 
 
@@ -286,6 +324,7 @@ exports.find = function(query,callback){
 	  callback(bus);
 	});
 }
+
 exports.findById = function(id,callback){
 	BusModel.find({_id:id}, function (err, p) {
 	  if (err) return console.error(err);

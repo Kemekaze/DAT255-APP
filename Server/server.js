@@ -3,10 +3,11 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var socketIO = require('socket.io');
 var http = require('http');
-
+var exports = module.exports = {socket:{events:{}}};
 var lib = require("./lib");
 
-var exports = module.exports = {};
+
+
 //setup
 //console.log(lib);
 var SERVER_PORT   = 3000;
@@ -16,7 +17,7 @@ var DB_NAME   = "App";
 
 var clients = {};
 var clients_total= 0;
-var buses = [];
+var buses_total;
 
 //Database
 	
@@ -25,11 +26,11 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
   lib.db.busses.findAll(function(data){
+  	buses_total = exports.totalBuses = data.length;
   	data.forEach(function(bus){
   			var systemid = bus.get("systemid");
   			clients[systemid] = [];
-  			buses.push(systemid);
-  			exports.buses = buses;
+
   	});  	
   });
   console.log("Database '"+DB_NAME+"' connected at '"+DB_URL+":"+DB_PORT+"'" );
@@ -52,24 +53,31 @@ function checkAuthToken(token ,callback){
 	console.log("Token: '"+token+"'");
 	callback(false,true);
 }
-//EVENTS
-function events(){
-	console.log("EVENTS");
+//Socket EVENTS
 
-	//this should be places somewhere else
-	for (var i = 0; i < buses.length; i++) {
+exports.socket.events.nextStop = function(nsData,bus){
+    if(clients[nsData.systemid].length != 0){
+    	//console.log(bus);
+    	console.log("Sending next stop to %s clients for bus '%s'",clients[nsData.systemid].length, bus.regnr);
+	    var busSocket = clients[nsData.systemid];
+		busSocket.forEach(function(socketid){
+				socketid.emit("getBusNextStop",nsData.post);
+		});
+	}
 
+
+
+	/*for (var i = 0; i < buses.length; i++) {
 		if(clients[buses[i]].length == 0){
 			continue;
 		} 
 		console.log("Fetching next stop for bus '%s'",buses[i]);
 		lib.events.nextStop(buses[i],function(nextStop){
-			console.log("Sending next stop to %s clients for bus '%s'",clients[nextStop.bus].length, nextStop.bus);
-			clients[nextStop.bus].forEach(function(socketid){
-				socketid.emit("getBusNextStop",nextStop.post);
-			});
+			
+			
 		});
-	};
+	};*/
+
 	
 }
 
