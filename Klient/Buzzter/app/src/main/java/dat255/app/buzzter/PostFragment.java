@@ -75,7 +75,7 @@ public class PostFragment extends Fragment {
                 getActivity().startService(socketServiceIntent);
             }
         }.start();
-       /* new Thread(){
+        /*new Thread(){
             public void run(){
                 socketServiceIntent = new Intent(getActivity().getApplicationContext(),ChatHeadService.class);
                 getActivity().startService(socketServiceIntent);
