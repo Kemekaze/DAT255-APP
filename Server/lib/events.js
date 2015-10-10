@@ -134,7 +134,6 @@ exports.eventBusesNextStop = function(callback){
 		buses.forEach(function(bus){
 			bus.nextStop(function(nstop){
 				if(nstop != null){					
-					emitEvent(nstop,bus);
 					bus.findEvent(nstop.routeidx,function(ev){
 
 						if(nstop.time.diff(moment(), 'seconds') <= 60){
@@ -143,13 +142,13 @@ exports.eventBusesNextStop = function(callback){
 									ev.min1Stop = true;
 									bus.save(function (err, res) {
 										if (err) console.error(err);
-										emitEvent(nstop);								    
+										emitEvent(nstop,bus);								    
 									});
 								}									
 							}
 							else{
 								bus.saveEvent({routeIdx: nstop.routeidx, min1Stop: true},function(evS){
-									emitEvent(nstop);
+									emitEvent(nstop,bus);
 								});
 							}
 						}

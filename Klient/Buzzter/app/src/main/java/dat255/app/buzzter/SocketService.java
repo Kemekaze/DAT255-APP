@@ -63,6 +63,8 @@ public class SocketService extends Service {
         //Bus
         socket.on(Constants.SocketEvents.GET_BUSES, eventGetBuses);
         socket.on(Constants.SocketEvents.GET_BUS_NEXT_STOP, eventNextStop);
+        socket.on(Constants.SocketEvents.GET_BUSES_GPS, eventGetBusesGPS);
+        socket.on(Constants.SocketEvents.GET_BUS_GPS, eventGetBusGPS);
 
         socket.connect();
         super.onCreate();
@@ -115,6 +117,7 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventAuthorized");
             socket.emit(Constants.SocketEvents.GET_POSTS);
+            socket.emit(Constants.SocketEvents.GET_BUSES_GPS);
         }
     };
     private Emitter.Listener eventUnauthorized = new Emitter.Listener() {
@@ -190,6 +193,20 @@ public class SocketService extends Service {
             JSONObject post = (JSONObject)args[0];
             int type = 2;
             EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr(post), type));
+        }
+    };
+    private Emitter.Listener eventGetBusesGPS = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventGetBusesGPS");
+            //vad den skall göra
+        }
+    };
+    private Emitter.Listener eventGetBusGPS = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventGetBusGPS");
+            //vad den skall göra
         }
     };
 

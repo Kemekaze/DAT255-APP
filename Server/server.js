@@ -57,7 +57,7 @@ function checkAuthToken(token ,callback){
 
 exports.socket.events.nextStop = function(nsData,bus){
     if(clients[nsData.systemid].length != 0){
-    	//console.log(bus);
+    	console.log(bus);
     	console.log("Sending next stop to %s clients for bus '%s'",clients[nsData.systemid].length, bus.regnr);
 	    var busSocket = clients[nsData.systemid];
 		busSocket.forEach(function(socketid){
@@ -211,6 +211,19 @@ io.on('connection', function(socket){
 	  		socket.emit('voteDown', {status:"1"});
 	  	});
 
+	});
+	socket.on('getBusGPS', function (data) {
+		var bus_id = data.bus_id;
+	  	lib.db.busses.find({systemid:bus_id},function(bus){
+	  		socket.emit('getBusGPS', {gps:bus[0].getGPS(),status:1});
+	  	});
+
+	});
+	socket.on('getBusesGPS', function (data) {
+		lib.db.busses.getGpsAll(function(gpsData){
+			console.log("getBusesGPS "+gpsData.length);
+			socket.emit('getBusesGPS', {gps:gpsData,status:1});
+		});	 
 	});
 
  });

@@ -278,6 +278,10 @@ BusSchema.methods.getServiceid = function () {
 	var bus = this;
 	return bus.get("journey.ids.serviceid"); 
 }
+BusSchema.methods.getGPS = function () {	
+	var bus = this;
+	return bus.get("gps"); 
+}
 BusSchema.methods.findEvent = function (routeidx,callback) {
 	var bus = this;	
 	var eve  = null;
@@ -361,4 +365,17 @@ exports.update = function(id,updateData,callback){
 	  if (err) return console.error(err);
 	  callback(bus);
 	});
+}
+exports.getGpsAll = function(callback){
+	var gpsData=[];
+	exports.findAll(function(buses){
+		buses.forEach(function(bus){
+			gpsData.push({
+				id: bus.get("id"),
+				systemid :bus.systemid,
+				gps : bus.gps
+			});
+		});
+		callback(gpsData);
+	})
 }
