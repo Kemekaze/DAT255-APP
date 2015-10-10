@@ -23,7 +23,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class SocketService extends Service {
-    private static final String TAG = " dat255.app.buzzter.SS";
+    private static final String TAG = "dat255.app.buzzter.SS";
 
     private static Socket socket;
 
@@ -55,8 +55,10 @@ public class SocketService extends Service {
         //posts
         socket.on(Constants.SocketEvents.GET_POSTS, eventGetPosts);
         socket.on(Constants.SocketEvents.SAVE_POST, eventSavePost);
-        socket.on(Constants.SocketEvents.VOTE_UP, eventVotedUp);
-        socket.on(Constants.SocketEvents.VOTE_DOWN, eventVotedDown);
+        socket.on(Constants.SocketEvents.INC_VOTES_UP, eventIncVotesUp);
+        socket.on(Constants.SocketEvents.INC_VOTES_DOWN, eventIncVotesDown);
+        socket.on(Constants.SocketEvents.DEC_VOTES_UP, eventDecVotesUp);
+        socket.on(Constants.SocketEvents.DEC_VOTES_DOWN, eventDecVotesDown);
         //Comments
         socket.on(Constants.SocketEvents.GET_COMMENTS, eventGetComments);
         socket.on(Constants.SocketEvents.SAVE_COMMENT, eventSaveComment);
@@ -134,6 +136,7 @@ public class SocketService extends Service {
             Log.i(TAG, "eventGetPosts");
             JSONObject data = (JSONObject)args[0];
             JSONArray posts = (JSONArray)data.opt("posts");
+
             int type = data.optInt("type");
             EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr(posts), type));
         }
@@ -145,20 +148,33 @@ public class SocketService extends Service {
             JSONObject obj = (JSONObject)args[0];
 
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
+
             EventBus.getDefault().postSticky(new PostsEvent(DataHandler.jsonToPostArr((JSONObject) obj.opt("post")), 2));
         }
     };
-    private Emitter.Listener eventVotedUp = new Emitter.Listener() {
+    private Emitter.Listener eventIncVotesUp = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.i(TAG, "eventVotedUp");
+            Log.i(TAG, "eventIncVotesUp");
             //vad den skall göra
         }
     };
-    private Emitter.Listener eventVotedDown = new Emitter.Listener() {
+    private Emitter.Listener eventDecVotesUp = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.i(TAG, "eventVotedDown");
+            Log.i(TAG, "eventIncVotesUp");
+            //vad den skall göra
+        }
+    };private Emitter.Listener eventIncVotesDown = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventIncVotesUp");
+            //vad den skall göra
+        }
+    };private Emitter.Listener eventDecVotesDown = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i(TAG, "eventIncVotesUp");
             //vad den skall göra
         }
     };
