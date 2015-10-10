@@ -32,6 +32,8 @@ public class Constants {
         public static final String GET_BUSES = "getBuses";
         public static final String GET_BUS = "getBus";
         public static final String GET_BUS_NEXT_STOP = "getBusNextStop";
+        public static final String GET_BUSES_GPS = "getBusesGPS";
+        public static final String GET_BUS_GPS = "getBusGPS";
     }
 
 
