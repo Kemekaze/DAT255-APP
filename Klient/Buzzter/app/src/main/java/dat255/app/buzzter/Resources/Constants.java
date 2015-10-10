@@ -8,7 +8,7 @@ package dat255.app.buzzter.Resources;
 public class Constants {
 
 
-    public static final String SERVER_IP = "192.168.0.202";
+    public static final String SERVER_IP = "192.168.0.9";
 
     public static final String SERVER_PORT = "3000";
 

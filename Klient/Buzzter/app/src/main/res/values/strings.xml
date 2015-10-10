@@ -14,8 +14,14 @@
     <item>Home</item>
     <item>AddPost</item>
     <item>Alarm</item>
+        <item>Map</item>
 
 
     </string-array>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

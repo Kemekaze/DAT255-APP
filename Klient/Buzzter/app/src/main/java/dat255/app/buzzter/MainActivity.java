@@ -5,10 +5,8 @@ package dat255.app.buzzter;
  * Created by Rasmus on 2015-10-04.
  */
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,8 +26,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-
-
 public class MainActivity extends  AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
 
     private DrawerLayout drawerLayout;
@@ -38,6 +34,7 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle drawerToggle;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
+    private int mSelectedItem;
 
     private final String TAG = "dat255.app.buzzter.Main";
     private Intent socketServiceIntent;
@@ -82,7 +79,7 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
         this.getSupportActionBar().setHomeButtonEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         loadSelection(0);
         // DrawerLayout section end
@@ -93,6 +90,7 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(drawerToggle.onOptionsItemSelected(item)){
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -126,13 +124,14 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
+        mSelectedItem = position;
         selectItem(position);
 
     }
 
 
     private void loadSelection(int pos){
-        drawerListView.setItemChecked(pos,true);
+        drawerListView.setItemChecked(pos, true);
 
         switch (pos){
             case 0:
@@ -154,6 +153,13 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
                 fragmentTransaction.replace(R.id.content_frame,alarmFragment);
                 fragmentTransaction.commit();
                 break;
+            case 3:
+                MapActivity mapActivity= new MapActivity();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame,mapActivity);
+                fragmentTransaction.commit();
+                break;
+
 
         }
 
@@ -174,12 +180,11 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
 
     }
 
+
+
+
     @Override
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, fragment, fragment.toString());
-        fragmentTransaction.addToBackStack(fragment.toString());
-        fragmentTransaction.commit();
+    public void replaceFragment(android.app.Fragment fragment) {
+
     }
 }

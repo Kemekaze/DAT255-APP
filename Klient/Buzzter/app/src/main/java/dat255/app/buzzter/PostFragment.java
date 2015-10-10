@@ -2,12 +2,13 @@ package dat255.app.buzzter;
 
 import android.app.Activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.content.Intent;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Handler;
 
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+
+import static android.graphics.Color.parseColor;
 
 
 public class PostFragment extends Fragment {
@@ -149,6 +152,8 @@ public class PostFragment extends Fragment {
             }
         });
 
+        floatingActionButton.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{Color.rgb(170,102,204)}));
+
         btn = (Button) rootView.findViewById(R.id.getMorePosts);
 
 
@@ -181,7 +186,7 @@ public class PostFragment extends Fragment {
             }
         });
         //mSwipeRefreshLayout.setColorSchemeColors(android.R.color.holo_purple,android.R.color.holo_red_dark);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_purple,android.R.color.holo_red_dark);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_purple);
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -281,8 +286,15 @@ public class PostFragment extends Fragment {
 
     public void showOtherFragment()
     {
+        /*
         Fragment fr=new AddPostFragment();
         FragmentChangeListener fc=(FragmentChangeListener)getActivity();
         fc.replaceFragment(fr);
+        */
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AddPostFragment fragment = new AddPostFragment();
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
     }
 }

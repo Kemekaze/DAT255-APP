@@ -1,10 +1,9 @@
 package dat255.app.buzzter;
 
 
-import android.app.FragmentTransaction;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,9 +98,18 @@ public class AddPostFragment extends Fragment {
 
     public void showOtherFragment()
     {
+        /*
         Fragment fr=new PostFragment();
         FragmentChangeListener fc=(FragmentChangeListener)getActivity();
+
         fc.replaceFragment(fr);
+        */
+
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        PostFragment fragment = new PostFragment();
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
     }
 
 
