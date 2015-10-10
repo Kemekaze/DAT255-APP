@@ -131,7 +131,7 @@ public class PostFragment extends Fragment {
                     else post.decUpVotes();
                     msg = "Vote removed!";
                 }else{
-                    Toast.makeText(rootView.getContext(), "Already voted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(rootView.getContext(), "Already voted!", Toast.LENGTH_SHORT).show();
                     postsAdapter.updatedPosts();
                     return;
                 }
