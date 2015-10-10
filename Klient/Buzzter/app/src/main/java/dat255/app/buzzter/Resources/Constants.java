@@ -22,8 +22,11 @@ public class Constants {
         public static final String GET_POSTS = "getPosts";
         public static final String GET_POST = "getPost";
         public static final String SAVE_POST = "savePost";
-        public static final String VOTE_UP = "voteUp";
-        public static final String VOTE_DOWN = "voteDown";
+        public static final String INC_VOTES_UP = "incVotesUp";
+        public static final String DEC_VOTES_UP = "decVoteUp";
+        public static final String INC_VOTES_DOWN = "incVotesDown";
+        public static final String DEC_VOTES_DOWN = "decVoteDown";
+
 
         public static final String GET_COMMENTS = "getComments";
         public static final String SAVE_COMMENT = "saveComment";

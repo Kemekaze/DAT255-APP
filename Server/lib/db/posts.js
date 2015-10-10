@@ -90,14 +90,26 @@ exports.newModel = function(body,user,systemid,serviceid,date,type){
 	});
 	return post;
 }
-exports.voteUp = function(id,callback){
+exports.incVotesUp = function(id,callback){
 	PostModel.where({_id:id}).update({ $inc: { "meta.votes.up": 1 }}, function (err, p) {
 	  if (err) return console.error(err);
 	  callback(p);
 	});
 }
-exports.voteDown = function(id,callback){
+exports.decVotesUp = function(id,callback){
 	PostModel.where({_id:id}).update({ $inc: { "meta.votes.down": 1 }}, function (err, p) {
+	  if (err) return console.error(err);
+	  callback(p);
+	});
+}
+exports.incVotesDown = function(id,callback){
+	PostModel.where({_id:id}).update({ $inc: { "meta.votes.up": -1 }}, function (err, p) {
+	  if (err) return console.error(err);
+	  callback(p);
+	});
+}
+exports.decVotesDown = function(id,callback){
+	PostModel.where({_id:id}).update({ $inc: { "meta.votes.down": -1 }}, function (err, p) {
 	  if (err) return console.error(err);
 	  callback(p);
 	});

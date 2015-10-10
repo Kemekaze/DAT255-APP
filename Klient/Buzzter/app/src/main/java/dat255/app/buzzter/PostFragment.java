@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.os.Handler;
-
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -26,18 +25,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 import dat255.app.buzzter.Adapters.PostsAdapter;
+import dat255.app.buzzter.DB.VoteDBHandler;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
 import dat255.app.buzzter.Events.StatusEvent;
 import dat255.app.buzzter.Objects.Post;
+import dat255.app.buzzter.Objects.Vote;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
@@ -57,7 +57,7 @@ public class PostFragment extends Fragment {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private final String TAG = "dat255.app.buzzter.Main";
+    private final String TAG = "dat255.app.buzzter.PF";
     private Intent socketServiceIntent;
 
     private RecyclerView mRecyclerView;
@@ -65,7 +65,7 @@ public class PostFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Post> mArray;
 
-
+    private VoteDBHandler votesHandler;
 
     public PostFragment() {
         // Required empty public constructor
@@ -74,7 +74,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        votesHandler = new VoteDBHandler(getActivity().getApplicationContext(),null);
         new Thread(){
             public void run(){
                 socketServiceIntent = new Intent(getActivity().getApplicationContext(),SocketService.class);
@@ -114,25 +114,36 @@ public class PostFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                //Toast.makeText(rootView.getContext(),""+ direction, Toast.LENGTH_LONG).show();
-                //refreshPosts(rootView);
+
                 PostsAdapter postsAdapter = (PostsAdapter )mRecyclerView.getAdapter();
-                boolean like;
-                if(direction == 8){
-                    Toast.makeText(rootView.getContext(),"VoteUp", Toast.LENGTH_LONG).show();
-                    like = true;
-                    vote(postsAdapter.getItem(position),like);
-                }
+                Post post = postsAdapter.getItem(position);
+                boolean like = (direction == 8 )? true:false;
+                List<Boolean> exists = votesHandler.checkIfExists(post.getId());
+                String eventType = "undefined";
+                String msg;
+                if(exists.get(0) == false){
+                    votesHandler.addVote(new Vote(post.getId(),like));
+                    eventType = (like)? Constants.SocketEvents.INC_VOTES_UP: Constants.SocketEvents.INC_VOTES_DOWN;
+                    if(like) post.incUpVotes();
+                    else post.incDownVotes();
+                    msg = (like)?"Liked!":"Disliked!";
 
-                if(direction == 4){
-                    Toast.makeText(rootView.getContext(),"VoteDown", Toast.LENGTH_LONG).show();
-                    like = false;
-                    vote(postsAdapter.getItem(position),like);
+                }else if(exists.get(1) != like){
+                    votesHandler.removeVote(post.getId());
+                    eventType = (like)? Constants.SocketEvents.DEC_VOTES_DOWN: Constants.SocketEvents.DEC_VOTES_UP;
+                    if(like) post.decDownVotes();
+                    else post.decUpVotes();
+                    msg = "Vote removed!";
+                }else{
+                    Toast.makeText(rootView.getContext(),"Already voted!", Toast.LENGTH_LONG).show();
+                    postsAdapter.updatedPosts();
+                    return;
                 }
+                Toast.makeText(rootView.getContext(),msg, Toast.LENGTH_LONG).show();
+                EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
+                postsAdapter.refreshVotes(position, post);
 
-                refreshPosts(rootView);
-                //mArray.remove(position);
-               // mRecyclerView.getAdapter().notifyItemRemoved(position);
+
             }
         };
 
@@ -266,21 +277,6 @@ public class PostFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), event.getStatusText(), Toast.LENGTH_SHORT).show();
     }
 
-    private void vote(Post p, boolean like){
-        JSONObject data = new JSONObject();
-        try {
-            data.put("post_id",p.getId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        SendDataEvent ev;
-        if(like) {
-             ev = new SendDataEvent(Constants.SocketEvents.VOTE_UP, data);
-        }else{
-            ev = new SendDataEvent(Constants.SocketEvents.VOTE_DOWN, data);
-        }
-        EventBus.getDefault().post(ev);
-    }
 
 
     public void showOtherFragment()

@@ -192,23 +192,43 @@ io.on('connection', function(socket){
 	  	});
 	});
 	//votes
-	socket.on('voteUp', function (data) {
+	socket.on('incVotesUp', function (data) {
 		var post_id = data.post_id;
 		// validation here
 
-	  	lib.db.posts.voteUp(post_id,function(post){
-	  		console.log("Up voted post id: "+post_id);
-	  		socket.emit('voteUp', {status:"1"});
+	  	lib.db.posts.incVotesUp(post_id,function(post){
+	  		console.log("Increased up votes id: "+post_id);
+	  		socket.emit('incVotesUp', {status:"1"});
 	  	});
 
 	});
-	socket.on('voteDown', function (data) {
+	socket.on('incVotesDown', function (data) {
 		var post_id = data.post_id;
 		// validation here
 
-	  	lib.db.posts.voteDown(post_id,function(post){
-	  		console.log("Down voted post id: "+post_id);
-	  		socket.emit('voteDown', {status:"1"});
+	  	lib.db.posts.incVotesDown(post_id,function(post){
+	  		console.log("Increased down votes posts id: "+post_id);
+	  		socket.emit('incVotesDown', {status:"1"});
+	  	});
+
+	});
+	socket.on('decVotesUp', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.decVotesUp(post_id,function(post){
+	  		console.log("Decreased up votes post id: "+post_id);
+	  		socket.emit('decVoteUp', {status:"1"});
+	  	});
+
+	});
+	socket.on('decVotesDown', function (data) {
+		var post_id = data.post_id;
+		// validation here
+
+	  	lib.db.posts.decVotesDown(post_id,function(post){
+	  		console.log("Decreased down votes post id: "+post_id);
+	  		socket.emit('decVoteDown', {status:"1"});
 	  	});
 
 	});

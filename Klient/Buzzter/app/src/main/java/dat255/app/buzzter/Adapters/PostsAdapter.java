@@ -1,22 +1,17 @@
 package dat255.app.buzzter.Adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import dat255.app.buzzter.Objects.Post;
-
-
 import dat255.app.buzzter.R;
 
 
@@ -124,6 +119,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     }
     public void addPostBegining(Post post) {
         posts.add(0, post);
+        this.notifyDataSetChanged();
+    }
+    public void refreshVotes(int position, Post post) {
+        posts.set(position, post);
+        this.notifyDataSetChanged();
+    }
+
+    public void updatedPosts(){
         this.notifyDataSetChanged();
     }
     public void addPosts(List<Post> posts,int type) {

@@ -11,8 +11,8 @@ public class SendDataEvent {
         this.eventName = eventName;
         this.data = data;
     }
-    public SendDataEvent(String data) {
-        this.eventName = data;
+    public SendDataEvent(String eventName) {
+        this.eventName = eventName;
     }
 
     public String getEventName() {

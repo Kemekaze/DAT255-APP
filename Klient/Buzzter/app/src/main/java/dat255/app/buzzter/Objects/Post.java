@@ -89,6 +89,21 @@ public class Post {
     }
 
 
+    public void incUpVotes(){
+        this.votes[0]++;
+    }
+    public void decUpVotes(){
+        this.votes[0]--;
+    }
+    public void incDownVotes(){
+        this.votes[1]++;
+    }
+    public void decDownVotes(){
+        this.votes[1]--;
+    }
+
+
+
     public class Comment{
         private String _id;
         private String body;

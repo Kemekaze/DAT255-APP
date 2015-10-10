@@ -5,10 +5,15 @@ package dat255.app.buzzter;
  * Created by Rasmus on 2015-10-04.
  */
 
+import android.support.v7.app.AppCompatActivity;
+
+
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import android.content.Intent;
+
+
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -18,16 +23,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import android.widget.Toast;
 
 
-public class MainActivity extends  AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
 
+    private final String TAG = "dat255.app.buzzter.Main";
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
     private String[] planets;
@@ -36,8 +40,8 @@ public class MainActivity extends  AppCompatActivity implements AdapterView.OnIt
     private FragmentManager fragmentManager;
     private int mSelectedItem;
 
-    private final String TAG = "dat255.app.buzzter.Main";
-    private Intent socketServiceIntent;
+
+
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
