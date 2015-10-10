@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
@@ -52,7 +51,6 @@ public class AddPostFragment extends Fragment {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(),"Send", Toast.LENGTH_LONG).show();
                 getEditText(rootView);
             }
         });
@@ -87,7 +85,6 @@ public class AddPostFragment extends Fragment {
     public void savePostStatus(SavePostEvent event){
         Log.i(TAG, "savePostStatus");
         if(event.getStatus().equals("ok")){
-            Log.i(TAG, "savePostStatus");
             EventBus.getDefault().postSticky(new StatusEvent("Post saved!"));
             //getActivity().finish();
             showOtherFragment();
@@ -98,12 +95,6 @@ public class AddPostFragment extends Fragment {
 
     public void showOtherFragment()
     {
-        /*
-        Fragment fr=new PostFragment();
-        FragmentChangeListener fc=(FragmentChangeListener)getActivity();
-
-        fc.replaceFragment(fr);
-        */
 
         android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "dat255.app.buzzter"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -21,8 +21,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
-
     compile 'io.socket:socket.io-client:0.6.1'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'org.ocpsoft.prettytime:prettytime:4.0.0.Final'

@@ -1,4 +1,4 @@
-package dat255.app.buzzter;
+package dat255.app.buzzter.Services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-import dat255.app.buzzter.Events.GPSEvent;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;

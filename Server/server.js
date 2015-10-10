@@ -37,7 +37,7 @@ db.once('open', function (callback) {
   console.log("--------------- SERVER BOOTED ---------------");
 });
 
-lib.events.beginUpdateBuses();
+//lib.events.beginUpdateBuses();
 
 
 

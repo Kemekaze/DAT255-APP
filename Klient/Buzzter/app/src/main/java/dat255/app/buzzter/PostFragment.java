@@ -1,14 +1,10 @@
 package dat255.app.buzzter;
 
 import android.app.Activity;
-
-
 import android.content.Intent;
-
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -40,11 +35,10 @@ import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Objects.Vote;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
+import dat255.app.buzzter.Services.SocketService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-
-import static android.graphics.Color.parseColor;
 
 
 public class PostFragment extends Fragment {
@@ -81,10 +75,12 @@ public class PostFragment extends Fragment {
                 getActivity().startService(socketServiceIntent);
             }
         }.start();
-
-
-
-
+       /* new Thread(){
+            public void run(){
+                socketServiceIntent = new Intent(getActivity().getApplicationContext(),ChatHeadService.class);
+                getActivity().startService(socketServiceIntent);
+            }
+        }.start();*/
     }
 
     @Override
@@ -135,7 +131,7 @@ public class PostFragment extends Fragment {
                     else post.decUpVotes();
                     msg = "Vote removed!";
                 }else{
-                    Toast.makeText(rootView.getContext(),"Already voted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(rootView.getContext(), "Already voted!", Toast.LENGTH_LONG).show();
                     postsAdapter.updatedPosts();
                     return;
                 }
@@ -161,7 +157,7 @@ public class PostFragment extends Fragment {
             }
         });
 
-        floatingActionButton.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{Color.rgb(170,102,204)}));
+        floatingActionButton.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{Color.rgb(170, 102, 204)}));
 
         btn = (Button) rootView.findViewById(R.id.getMorePosts);
 
