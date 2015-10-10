@@ -93,9 +93,7 @@ public class AddPostFragment extends Fragment {
         else Log.e(TAG, "PostSaveError");
     }
 
-    public void showOtherFragment()
-    {
-
+    public void showOtherFragment(){
         android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PostFragment fragment = new PostFragment();
