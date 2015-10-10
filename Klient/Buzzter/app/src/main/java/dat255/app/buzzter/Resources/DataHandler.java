@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import dat255.app.buzzter.Objects.GPS;
 import dat255.app.buzzter.Objects.Post;
 
 /**
@@ -32,6 +33,18 @@ public class DataHandler {
         List<Post> posts = new ArrayList<>();
 
         posts.add(new Post(jsonObject));
+        return posts;
+    }
+
+    public static List<GPS> GPS (JSONArray jsonArray){
+        List<GPS> posts = new ArrayList<>();
+        for(int i = 0; i< jsonArray.length();i++){
+            try {
+                posts.add(new GPS(jsonArray.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         return posts;
     }
 }

@@ -10,9 +10,12 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import dat255.app.buzzter.Events.GPSEvent;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
+import dat255.app.buzzter.Objects.GPS;
+import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.DataHandler;
 import dat255.app.buzzter.Resources.ServerQueries;
@@ -135,7 +138,7 @@ public class SocketService extends Service {
             JSONObject data = (JSONObject)args[0];
             JSONArray posts = (JSONArray)data.opt("posts");
             int type = data.optInt("type");
-            EventBus.getDefault().post(new PostsEvent(DataHandler.jsonToPostArr(posts), type));
+            EventBus.getDefault().post(new PostsEvent(DataHandler.<Post>jsonToPostArr(posts), type));
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {
@@ -200,6 +203,12 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventGetBusesGPS");
             //vad den skall göra
+            JSONObject data = (JSONObject)args[0];
+            JSONArray gps = (JSONArray)data.opt("gps");
+
+            EventBus.getDefault().postSticky(new PostsEvent(DataHandler.<GPS>jsonToPostArr(gps)));
+
+
         }
     };
     private Emitter.Listener eventGetBusGPS = new Emitter.Listener() {
@@ -207,6 +216,9 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventGetBusGPS");
             //vad den skall göra
+
+
+
         }
     };
 

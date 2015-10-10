@@ -67,8 +67,6 @@ public class PostFragment extends Fragment {
 
 
 
-
-
     public PostFragment() {
         // Required empty public constructor
     }
@@ -239,6 +237,7 @@ public class PostFragment extends Fragment {
         Log.i(TAG, "getMorePosts");
         getPosts(view, 10, mAdapter.getItemCount());
     }
+
     private void getPosts(View view, int limit, int skip) {
         Log.i(TAG, String.valueOf(skip));
 
