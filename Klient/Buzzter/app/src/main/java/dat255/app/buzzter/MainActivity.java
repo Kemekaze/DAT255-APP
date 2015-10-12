@@ -5,20 +5,14 @@ package dat255.app.buzzter;
  * Created by Rasmus on 2015-10-04.
  */
 
-import android.support.v7.app.AppCompatActivity;
-
-
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-
-import android.content.Intent;
-
-
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +21,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import dat255.app.buzzter.Adapters.PostsAdapter;
+import dat255.app.buzzter.Objects.Post;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, FragmentChangeListener{
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         // DrawerLayout section start

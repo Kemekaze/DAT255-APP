@@ -1,4 +1,4 @@
-package dat255.app.buzzter.Services;
+package dat255.busster.Services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import dat255.app.buzzter.R;
 
 /**
  * Created by elias on 2015-10-10.
@@ -33,7 +31,7 @@ public class ChatHeadService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         chatHead = new ImageView(this);
-        chatHead.setImageResource(R.drawable.ic_action_directions_bus);
+        //chatHead.setImageResource(R.drawable.ic_action_directions_bus);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,

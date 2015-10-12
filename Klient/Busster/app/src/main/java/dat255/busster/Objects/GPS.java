@@ -1,4 +1,4 @@
-package dat255.app.buzzter.Objects;
+package dat255.busster.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
