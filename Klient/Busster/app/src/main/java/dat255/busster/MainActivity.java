@@ -3,6 +3,7 @@ package dat255.busster;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import dat255.busster.Adapters.FeedAdapter;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SendDataEvent;
+import dat255.busster.Events.StatusEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
@@ -147,6 +149,11 @@ public class MainActivity extends AppCompatActivity
         //update post list
         FeedAdapter postsAdapter = (FeedAdapter) mAdapter;
         postsAdapter.addPosts(event.posts, event.eventType);
+    }
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void statusEvent(StatusEvent event) {
+        Log.e(TAG, "statusEvent");
+        Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
     public void getMorePosts(View view){
         Log.i(TAG, "getMorePosts");
