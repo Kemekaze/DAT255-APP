@@ -15,7 +15,7 @@ import dat255.busster.R;
 
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
-    private static  final String TAG = "dat255.app.buzzter.A";
+    private static  final String TAG = "dat255.FeedAdapter";
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -26,6 +26,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public TextView time;
         public TextView votes_up;
         public TextView votes_down;
+        public TextView comment_count;
         public viewHolderClicks viewHolderClicks;
 
         public ViewHolder(View view, viewHolderClicks listner) {
@@ -36,6 +37,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             time = (TextView) view.findViewById(R.id.time);
             votes_up = (TextView) view.findViewById(R.id.votesUp);
             votes_down = (TextView) view.findViewById(R.id.votesDown);
+            comment_count = (TextView) view.findViewById(R.id.comments);
             view.setOnClickListener(this);
         }
 
@@ -83,7 +85,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.time.setText(posts.get(position).getRelativeTime());
         holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
         holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
-
+        holder.comment_count.setText(String.valueOf(posts.get(position).getCommentCount()));
         holder.votes_up.setTextColor(Color.GREEN);
         holder.votes_down.setTextColor(Color.RED);
     }

@@ -6,14 +6,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Post {
 
     private String _id ="";
     private String body = "";
     private String user = "";
-    private Comment[] comments;
+    private List<Comment> comments;
     private long time = -1;
     private int[] votes = {-1,-1};
     private int busLine = -1;
@@ -41,9 +43,9 @@ public class Post {
             this.time = post.getLong("date");
             JSONArray comments = post.getJSONArray("comments");
             int commentsSize = comments.length();
-            this.comments = new Comment[commentsSize];
+            this.comments = new ArrayList<Comment>();
             for (int i = 0; i < commentsSize; i++) {
-                this.comments[i] = new Comment(comments.getJSONObject(i));
+                this.comments.add(new Comment(comments.getJSONObject(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -63,8 +65,12 @@ public class Post {
         return busLine;
     }
 
-    public Comment[] getComments() {
+    public List<Comment> getComments() {
         return comments;
+    }
+
+    public int getCommentCount() {
+        return comments.size();
     }
 
     public long getTime() {
@@ -87,6 +93,7 @@ public class Post {
     public int[] getVotes() {
         return votes;
     }
+
 
 
     public void incUpVotes(){
