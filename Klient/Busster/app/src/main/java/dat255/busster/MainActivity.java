@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,13 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    SwipeRefreshLayout swipeLayout;
+
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int visibleThreshold = 5;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +59,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,8 +76,13 @@ public class MainActivity extends AppCompatActivity
             }
         }.start();
 
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_feed_container);
+        swipeLayout.setOnRefreshListener(refreshListener);
+        swipeLayout.setColorSchemeResources(R.color.orange_600, R.color.green_600, R.color.blue_600,R.color.red_600);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.post_feed);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addOnScrollListener(scrollListener);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         ArrayList<Post> mArray = new ArrayList<Post>();
@@ -87,7 +91,35 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+    public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            refreshPosts();
+        }
 
+    };
+    public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int firstVisibleItem, visibleItemCount, totalItemCount;
+
+            visibleItemCount = mLayoutManager.getChildCount();
+            totalItemCount = mLayoutManager.getItemCount();
+            firstVisibleItem = ((LinearLayoutManager)mLayoutManager).findFirstVisibleItemPosition();
+
+            Log.i(TAG,"Loading:"+String.valueOf(loading) );
+            Log.i(TAG,"visibleItemCount:"+String.valueOf(visibleItemCount) );
+            Log.i(TAG,"totalItemCount:"+String.valueOf(totalItemCount) );
+            Log.i(TAG,"firstVisibleItem:"+String.valueOf(firstVisibleItem) );
+            if (loading) {
+                if ( (visibleItemCount + firstVisibleItem) >= totalItemCount) {
+                    loading = false;
+                    getMorePosts();
+                }
+            }
+        }
+    };
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -144,23 +176,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
-    public void updatePostsEvent(PostsEvent event){
+    public void updatePostsEvent(PostsEvent event) {
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
         //update post list
         FeedAdapter postsAdapter = (FeedAdapter) mAdapter;
         postsAdapter.addPosts(event.posts, event.eventType);
+        loading = true;
+        swipeLayout.setRefreshing(false);
     }
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event) {
         Log.e(TAG, "statusEvent");
         Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
-    public void getMorePosts(View view){
+    public void getMorePosts(){
         Log.i(TAG, "getMorePosts");
-        getPosts(view, 10, mAdapter.getItemCount());
+        getPosts(10, mAdapter.getItemCount());
     }
 
-    private void getPosts(View view, int limit, int skip) {
+    private void getPosts(int limit, int skip) {
         Log.i(TAG, "getPosts");
         try {
             EventBus.getDefault().post(
@@ -172,9 +206,9 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-    public void refreshPosts(View view) {
+    public void refreshPosts() {
         Log.i(TAG, "refreshPosts");
-        getPosts(view, 10, 0);
+        getPosts(10, 0);
     }
     public void addPostActivity(View view){
         Intent intent = new Intent(getApplicationContext(), AddPost.class);

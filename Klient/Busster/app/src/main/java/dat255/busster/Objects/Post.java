@@ -1,30 +1,36 @@
 package dat255.busster.Objects;
 
 
+import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 
 public class Post {
 
     private String _id ="";
     private String body = "";
     private String user = "";
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<Comment>();
     private long time = -1;
     private int[] votes = {-1,-1};
     private int busLine = -1;
     private String type = "post";
-
+    private String color = "#039BE5";
 
 
 
     public Post(JSONObject post) {
+        /*try{
+            this.color = Constants.COLORS.get(new Random().nextInt(Constants.COLORS.size()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
 
         try {
             JSONObject meta = post.getJSONObject("meta");
@@ -43,13 +49,14 @@ public class Post {
             this.time = post.getLong("date");
             JSONArray comments = post.getJSONArray("comments");
             int commentsSize = comments.length();
-            this.comments = new ArrayList<Comment>();
             for (int i = 0; i < commentsSize; i++) {
                 this.comments.add(new Comment(comments.getJSONObject(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
 
 
 
@@ -81,9 +88,24 @@ public class Post {
         return type;
     }
 
-    public String getRelativeTime() {
-        PrettyTime p = new PrettyTime();
-        return p.format(new Date(time));
+    public String getTimeSince() {
+        Interval interval = new Interval(this.time,System.currentTimeMillis());
+        Period p = interval.toPeriod();
+        String time;
+        if(p.getYears() > 0)
+            time = p.getYears()+"Y";
+        else if(p.getMonths() > 0)
+            time = p.getMonths()+"M";
+        else if(p.getDays() > 0)
+            time = p.getDays()+"d";
+        else if(p.getHours() > 0)
+            time = p.getHours()+"h";
+        else if(p.getMinutes() > 0)
+            time = p.getMinutes()+"m";
+        else
+            time = p.getSeconds()+"s";
+
+        return time+" - ";
     }
 
     public String getUser() {
@@ -94,7 +116,9 @@ public class Post {
         return votes;
     }
 
-
+    public String getColor() {
+        return color;
+    }
 
     public void incUpVotes(){
         this.votes[0]++;
@@ -146,9 +170,8 @@ public class Post {
             return time;
         }
 
-        public String getRelativeTime() {
-            PrettyTime p = new PrettyTime();
-            return p.format(new Date(time));
+        public String getTimeSince() {
+            return "EMPTY";
         }
 
         public String getUser() {

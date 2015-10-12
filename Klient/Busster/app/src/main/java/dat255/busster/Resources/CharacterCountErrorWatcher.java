@@ -1,4 +1,4 @@
-package dat255.busster;
+package dat255.busster.Resources;
 
 import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;

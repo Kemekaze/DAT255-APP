@@ -1,6 +1,8 @@
 package dat255.busster.Resources;
 
 
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by elias on 2015-09-25.
@@ -38,6 +40,25 @@ public class Constants {
         public static final String GET_BUSES_GPS = "getBusesGPS";
         public static final String GET_BUS_GPS = "getBusGPS";
     }
-
+    public static List<String> COLORS = Arrays.asList(
+            "red_600",
+            "pink_600",
+            "purple_600",
+            "deep_purple_600",
+            "indigo_600",
+            "blue_600", "light_blue_600",
+            "cyan_600",
+            "teal_600",
+            "green_600",
+            "light_green_600",
+            "lime_600",
+            "yellow_600",
+            "amber_600",
+            "orange_600",
+            "deep_orange_600",
+            "brown_600",
+            "grey_600",
+            "blue_gray_600"
+    );
 
 }
