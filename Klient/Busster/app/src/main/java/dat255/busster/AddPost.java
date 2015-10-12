@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
+import dat255.busster.Resources.CharacterCountErrorWatcher;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
