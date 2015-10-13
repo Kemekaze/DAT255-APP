@@ -1,8 +1,6 @@
 package dat255.busster.Objects;
 
 
-import android.util.Log;
-
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.json.JSONArray;
@@ -89,7 +87,7 @@ public class Post {
         long tTime = this.time;
         long diff = System.currentTimeMillis()-tTime;
         if(diff<0) tTime+=diff;
-        Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
+        //Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
         Interval interval = new Interval(tTime,System.currentTimeMillis());
         Period p = interval.toPeriod();
         String time;

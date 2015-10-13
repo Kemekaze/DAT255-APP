@@ -175,9 +175,9 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         //holder.votes_up.setTextColor(R.color.green_600);
         //holder.votes_down.setTextColor(R.color.red_600);
 
-
         holder.comment_count.setText(String.valueOf(posts.get(position).getCommentCount()));
         holder.votes.setText(String.valueOf(posts.get(position).getVotes()[0] - posts.get(position).getVotes()[1]));
+
 
     }
 

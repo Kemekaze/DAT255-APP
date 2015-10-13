@@ -62,10 +62,12 @@ public class SelectWhereActivity extends AppCompatActivity {
         String displayName = ((EditText) findViewById(R.id.username)).getText().toString();
         AutoCompleteTextView destinationACTV = (AutoCompleteTextView) findViewById(R.id.destination);
         String destination="";
-        for(String stop : busStops) {
-            if(destinationACTV.getText().toString().equals(stop)){
-                destination=stop;
-                break;
+        if(busStops.length !=0) {
+            for (String stop : busStops) {
+                if (destinationACTV.getText().toString().equals(stop)) {
+                    destination = stop;
+                    break;
+                }
             }
         }
         if(displayName.equals(""))displayName = "Anonymous";
@@ -100,7 +102,6 @@ public class SelectWhereActivity extends AppCompatActivity {
         Log.i(TAG, "recieveStops");
         AutoCompleteTextView destinations = (AutoCompleteTextView) findViewById(R.id.destination);
         busStops = new String[event.stops.size()];
-        Log.i(TAG,"Size: "+event.stops.size());
         for(int i = 0; i < event.stops.size();i++){
             busStops[i] = event.stops.get(i).getName();
         }
