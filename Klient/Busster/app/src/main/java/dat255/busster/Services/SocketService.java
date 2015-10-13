@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import dat255.busster.Events.GPSEvent;
 import dat255.busster.Events.PostsEvent;
@@ -18,6 +19,7 @@ import dat255.busster.Events.StopsEvent;
 import dat255.busster.Objects.GPS;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Stop;
+import dat255.busster.Objects.UserPost;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.DataHandler;
 import dat255.busster.Resources.ServerQueries;
@@ -148,7 +150,9 @@ public class SocketService extends Service {
 
             int type = data.optInt("type");
             try {
-                EventBus.getDefault().post(new PostsEvent(DataHandler.<Post>jsonArrToObjArr(Post.class,posts), type));
+                List<UserPost> ups =DataHandler.<UserPost>jsonArrToObjArr(UserPost.class, posts);
+                List<? extends Post> posts1 = ups;
+                EventBus.getDefault().post(new PostsEvent((List<Post>)posts1, type));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -163,8 +167,9 @@ public class SocketService extends Service {
             JSONObject obj = (JSONObject)args[0];
 
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
-
-            EventBus.getDefault().postSticky(new PostsEvent(DataHandler.<Post>jsonToObjArr(Post.class, (JSONObject) obj.opt("post")), 2));
+            List<UserPost> ups =DataHandler.<UserPost>jsonToObjArr(UserPost.class, obj);
+            List<? extends Post> posts1 = ups;
+            EventBus.getDefault().postSticky(new PostsEvent((List<Post>)posts1, 2));
         }
     };
     private Emitter.Listener eventIncVotesUp = new Emitter.Listener() {

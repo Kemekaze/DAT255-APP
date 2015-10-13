@@ -53,6 +53,8 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
         public LinearLayout rightLayout;
         public LinearLayout leftLayout;
+        public TextView upArrow;
+        public TextView downArrow;
 
         public ViewHolder(View view) {
             super(view);
@@ -66,6 +68,8 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
             service = (TextView) view.findViewById(R.id.service);
             time = (TextView) view.findViewById(R.id.time);
             votes = (TextView) view.findViewById(R.id.votes);
+            upArrow = (TextView) view.findViewById(R.id.upArrow);
+            downArrow = (TextView) view.findViewById(R.id.downArrow);
             votes_up = (TextView) view.findViewById(R.id.votesUp);
             votes_down = (TextView) view.findViewById(R.id.votesDown);
             comment_count = (TextView) view.findViewById(R.id.comments);
@@ -181,11 +185,16 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
 
 
-
-        holder.comment_count.setText(String.valueOf(((UserPost) posts.get(position)).getCommentCount()));
-        holder.votes.setText(String.valueOf(((UserPost) posts.get(position)).getVotes()[0] - ((UserPost) posts.get(position)).getVotes()[1]));
-
-
+        if(posts.get(position) instanceof UserPost) {
+            UserPost userPost=  (UserPost) posts.get(position);
+            holder.comment_count.setText(String.valueOf(userPost.getCommentCount()));
+            holder.votes.setText(String.valueOf(userPost.getVotes()[0] - userPost.getVotes()[1]));
+        }else{
+            holder.votes.setVisibility(View.INVISIBLE);
+            holder.comment_count.setVisibility(View.INVISIBLE);
+            holder.upArrow.setVisibility(View.INVISIBLE);
+            holder.downArrow.setVisibility(View.INVISIBLE);
+        }
 
 
     }
