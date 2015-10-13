@@ -34,7 +34,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ShowSurveyResultActivity"
-            android:label="@string/show_result"
+            android:label="@string/show_survey_result_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".Services.SocketService" />
 

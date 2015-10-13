@@ -15,18 +15,17 @@ import dat255.busster.Events.StatusEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
-import static dat255.busster.R.id.result_toolbar;
 
 
 public class ShowSurveyResultActivity extends AppCompatActivity  {
-    private final String TAG = "dat255.ShowSurveyResultActivity";
+    private final String TAG = "dat255.SurveyResultA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_show_survey_result);
-        Toolbar toolbar = (Toolbar) findViewById(result_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.show_survey_result_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -37,7 +36,7 @@ public class ShowSurveyResultActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.show_result_actions, menu);
+        inflater.inflate(R.menu.show_survey_result, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
