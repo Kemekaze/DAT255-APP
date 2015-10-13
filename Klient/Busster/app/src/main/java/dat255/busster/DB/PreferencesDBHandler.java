@@ -45,7 +45,7 @@ public class PreferencesDBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_KEY, preference.get_key());
         values.put(COLUMN_VALUE, preference.get_value());
         SQLiteDatabase db = getWritableDatabase();
-        db.insertWithOnConflict(TABLE_PREFERENCES, null, values, SQLiteDatabase.CONFLICT_REPLACE );
+        db.insertWithOnConflict(TABLE_PREFERENCES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
         Log.i(TAG, "Completed addPreference");
     }
@@ -54,9 +54,16 @@ public class PreferencesDBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_PREFERENCES + " WHERE "+COLUMN_KEY+"= \""+skey+"\";";
         Cursor c = db.rawQuery(query,null);
         c.moveToFirst();
-        int id       = c.getInt(c.getColumnIndex(COLUMN_ID));
-        String key   = c.getString(c.getColumnIndex(COLUMN_KEY));
-        String value = c.getString(c.getColumnIndex(COLUMN_VALUE));
+        int id=0;
+        String key="";
+        String value="";
+        try {
+            id = c.getInt(c.getColumnIndex(COLUMN_ID));
+            key = c.getString(c.getColumnIndex(COLUMN_KEY));
+            value = c.getString(c.getColumnIndex(COLUMN_VALUE));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         c.close();
         db.close();
         Log.i(TAG, "Completed getPreference");

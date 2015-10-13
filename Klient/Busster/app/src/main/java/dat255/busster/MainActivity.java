@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import dat255.busster.Adapters.FeedAdapter;
+import dat255.busster.DB.PreferencesDBHandler;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
+    PreferencesDBHandler preferencesDBHandler;
 
 
 
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
-
-
+        preferencesDBHandler = new PreferencesDBHandler(this,null);
+        // set Display name in top
+        setTitle(preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

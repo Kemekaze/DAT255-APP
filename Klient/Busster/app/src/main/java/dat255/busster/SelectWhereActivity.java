@@ -45,6 +45,8 @@ public class SelectWhereActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextInputLayout usernameBody = (TextInputLayout) findViewById(R.id.username_body);
         usernameBody.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(usernameBody, 0, 12));
+        Preference displayname = preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME);
+        usernameBody.getEditText().setText(displayname.get_value());
    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,6 +68,7 @@ public class SelectWhereActivity extends AppCompatActivity {
                 break;
             }
         }
+        if(displayName.equals(""))displayName = "Anonymous";
         preferencesDBHandler.addPreference(new Preference(Constants.DB.PREFERENCES.DISPLAY_NAME,displayName));
         preferencesDBHandler.addPreference(new Preference(Constants.DB.PREFERENCES.DESTINATION,destination));
         preferencesDBHandler.close();

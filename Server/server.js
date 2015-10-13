@@ -158,15 +158,14 @@ io.on('connection', function(socket){
 	});
 	socket.on('savePost', function (data) {
 		console.log('savePost');
-		
-		var user = "Anon",
+		console.log(JSON.stringify(data));
+		var user = (data.user == undefined)? 'Anonymus':data.user,
 		    body = data.body,
 		    systemid  = socket.bus_id;
 		
 
 		lib.db.posts.save(body,user,systemid,function(post){
 			console.log("Post saved with id: "+post.get("id"));
-			console.log("Post : "+JSON.stringify(post));
 	  		socket.emit('savePost', {status:"ok",post:post});
 		});
 
