@@ -11,6 +11,7 @@ public class Survey extends Post {
 
 
     private HashMap<Answer, Integer> result ;
+    private int participants;
 
 
     private enum Answer{
@@ -28,13 +29,28 @@ public class Survey extends Post {
         result.put(Answer.CROSS,0);
         result.put(Answer.TWO,0);
 
+        participants = 0;
+
     }
 
 
     public void addResult(Answer answer){
 
         result.put(answer, result.get(answer) + 1);
-
+        participants++;
     }
+
+    public int getCount(){
+        return participants;
+    }
+
+
+    public String getType() {
+        return "Survey";
+    }
+
+
+
+
 
 }
