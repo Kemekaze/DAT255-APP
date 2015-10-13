@@ -32,6 +32,10 @@
             android:name=".AddPostActivity"
             android:label="@string/add_post_name"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShowResult"
+            android:label="@string/show_result"
+            android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".Services.SocketService" />
 
     </application>

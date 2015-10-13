@@ -15,6 +15,6 @@
 
 
     <string name="action_settings">Settings</string>
-
+    <string name="show_result">Show result</string>
 
 </resources>
