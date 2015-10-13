@@ -105,68 +105,71 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
-        holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        holder.swipeLayout.setRightSwipeEnabled(true);
-        holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
-        holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
 
-        holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+        if(posts.get(position) instanceof UserPost) {
+            holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            holder.swipeLayout.setRightSwipeEnabled(true);
+            holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
+            holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
 
-            @Override
-            public void onClose(SwipeLayout layout) {
-            }
+            holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
 
-            @Override
-            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                //you are swiping.
-            }
-
-            @Override
-            public void onStartOpen(SwipeLayout layout) {
-            }
-
-            @Override
-            public void onOpen(SwipeLayout layout) {
-
-                layout.close(true);
-                UserPost post = (UserPost)posts.get(pos);
-                boolean like = (layout.getDragEdge().name().equals("Left"))? true:false;
-                List<Boolean> exists = votesHandler.checkIfExists(post.getId());
-                Log.i(TAG,"onOpen e:"+exists.get(0)+" l:"+like);
-                String eventType = "undefined";
-                String msg;
-                if(exists.get(0) == false){
-                    votesHandler.addVote(new Vote(post.getId(),like));
-                    eventType = (like)? Constants.SocketEvents.INC_VOTES_UP: Constants.SocketEvents.INC_VOTES_DOWN;
-                    if(like) post.incUpVotes();
-                    else post.incDownVotes();
-                    msg = (like)?"Liked!":"Disliked!";
-
-                }else if(exists.get(1) != like){
-                    votesHandler.removeVote(post.getId());
-                    eventType = (like)? Constants.SocketEvents.DEC_VOTES_DOWN: Constants.SocketEvents.DEC_VOTES_UP;
-                    if(like) post.decDownVotes();
-                    else post.decUpVotes();
-                    msg = "Vote removed!";
-                }else{
-                    //EventBus.getDefault().post(new StatusEvent("Already voted!"));
-                    //updatedPosts();
-                    return;
+                @Override
+                public void onClose(SwipeLayout layout) {
                 }
-                EventBus.getDefault().post(new StatusEvent(msg));
-                EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
-                refreshVotes(pos, post);
-            }
 
-            @Override
-            public void onStartClose(SwipeLayout layout) {
-            }
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                    //you are swiping.
+                }
 
-            @Override
-            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                layout.close(true);
-            }
-        });
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                }
+
+                @Override
+                public void onOpen(SwipeLayout layout) {
+
+                    layout.close(true);
+                    UserPost post = (UserPost) posts.get(pos);
+                    boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
+                    List<Boolean> exists = votesHandler.checkIfExists(post.getId());
+                    Log.i(TAG, "onOpen e:" + exists.get(0) + " l:" + like);
+                    String eventType = "undefined";
+                    String msg;
+                    if (exists.get(0) == false) {
+                        votesHandler.addVote(new Vote(post.getId(), like));
+                        eventType = (like) ? Constants.SocketEvents.INC_VOTES_UP : Constants.SocketEvents.INC_VOTES_DOWN;
+                        if (like) post.incUpVotes();
+                        else post.incDownVotes();
+                        msg = (like) ? "Liked!" : "Disliked!";
+
+                    } else if (exists.get(1) != like) {
+                        votesHandler.removeVote(post.getId());
+                        eventType = (like) ? Constants.SocketEvents.DEC_VOTES_DOWN : Constants.SocketEvents.DEC_VOTES_UP;
+                        if (like) post.decDownVotes();
+                        else post.decUpVotes();
+                        msg = "Vote removed!";
+                    } else {
+                        //EventBus.getDefault().post(new StatusEvent("Already voted!"));
+                        //updatedPosts();
+                        return;
+                    }
+                    EventBus.getDefault().post(new StatusEvent(msg));
+                    EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
+                    refreshVotes(pos, post);
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                    layout.close(true);
+                }
+            });
+        }
 
         holder.view.setClickable(true);
         holder.view.setOnLongClickListener(clickListener);
@@ -177,23 +180,19 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.service.setText(String.valueOf(posts.get(position).getBusLine()));
         holder.time.setText(posts.get(position).getTimeSince());
 
-
-        //holder.votes_up.setText(String.valueOf(posts.get(position).getVotes()[0]));
-        //holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
-        //holder.votes_up.setTextColor(R.color.green_600);
-        //holder.votes_down.setTextColor(R.color.red_600);
-
-
-
         if(posts.get(position) instanceof UserPost) {
+
             UserPost userPost=  (UserPost) posts.get(position);
             holder.comment_count.setText(String.valueOf(userPost.getCommentCount()));
             holder.votes.setText(String.valueOf(userPost.getVotes()[0] - userPost.getVotes()[1]));
+
         }else{
+
             holder.votes.setVisibility(View.INVISIBLE);
             holder.comment_count.setVisibility(View.INVISIBLE);
             holder.upArrow.setVisibility(View.INVISIBLE);
             holder.downArrow.setVisibility(View.INVISIBLE);
+
         }
 
 
