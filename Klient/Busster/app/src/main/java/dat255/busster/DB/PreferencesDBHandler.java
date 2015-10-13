@@ -8,13 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import dat255.busster.Objects.Preference;
+import dat255.busster.Resources.Constants;
 
 
 public class PreferencesDBHandler extends SQLiteOpenHelper {
     public static final String TAG ="dat255.PrefDBHandler";
 
-    private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "busster.db";
     public static final String TABLE_PREFERENCES = "preferences";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_KEY = "key";
@@ -22,7 +21,7 @@ public class PreferencesDBHandler extends SQLiteOpenHelper {
 
 
     public PreferencesDBHandler(Context context, SQLiteDatabase.CursorFactory factory) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        super(context, Constants.DB.DB_NAME, factory, Constants.DB.VERSION);
     }
 
     @Override

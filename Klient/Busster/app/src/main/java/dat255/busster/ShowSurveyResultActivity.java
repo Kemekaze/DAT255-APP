@@ -3,7 +3,6 @@
 package dat255.busster;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,37 +11,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import dat255.busster.Events.SavePostEvent;
-import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
-import dat255.busster.Resources.CharacterCountErrorWatcher;
-import dat255.busster.Resources.Constants;
-import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 import static dat255.busster.R.id.result_toolbar;
 
 
-/**
- * Created by ido on 13/10/15.
- */
-public class ShowResult extends AppCompatActivity  {
-    private final String TAG = "dat255.ShowResult";
+public class ShowSurveyResultActivity extends AppCompatActivity  {
+    private final String TAG = "dat255.ShowSurveyResultActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        setContentView(R.layout.activity_shcdow_result);
+        setContentView(R.layout.activity_show_survey_result);
         Toolbar toolbar = (Toolbar) findViewById(result_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-//        TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
-        //body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
-
-
 
     }
 
@@ -58,10 +45,7 @@ public class ShowResult extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
                 this.finish();
-                return true;
-            case R.id.send_post_action:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

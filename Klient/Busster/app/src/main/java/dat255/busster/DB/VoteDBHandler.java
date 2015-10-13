@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dat255.busster.Objects.Vote;
+import dat255.busster.Resources.Constants;
 
 /**
  * Created by elias on 2015-10-10.
@@ -18,8 +19,6 @@ import dat255.busster.Objects.Vote;
 public class VoteDBHandler extends SQLiteOpenHelper {
     public static final String TAG ="dat255.VoteDBHandler";
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "busster.db";
     public static final String TABLE_VOTES = "votes";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_POST_ID = "postId";
@@ -27,7 +26,7 @@ public class VoteDBHandler extends SQLiteOpenHelper {
 
 
     public VoteDBHandler(Context context, SQLiteDatabase.CursorFactory factory) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        super(context, Constants.DB.DB_NAME, factory, Constants.DB.VERSION);
     }
 
     @Override

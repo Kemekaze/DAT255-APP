@@ -15,7 +15,7 @@ tools:context=".ShowResult">
 
 </android.support.design.widget.AppBarLayout>
 
-<include layout="@layout/content_show_result" />
+<include layout="@layout/content_show_survey_result" />
 
 
 </android.support.design.widget.CoordinatorLayout>

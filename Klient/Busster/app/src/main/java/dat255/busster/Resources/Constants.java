@@ -44,6 +44,8 @@ public class Constants {
 
     }
     public class DB{
+        public static final int VERSION = 2;
+        public static final String DB_NAME = "busster.db";
         public class PREFERENCES{
             public static final String DISPLAY_NAME = "displayName";
             public static final String DESTINATION = "destination";
