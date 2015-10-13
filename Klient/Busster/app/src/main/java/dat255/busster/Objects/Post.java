@@ -1,6 +1,8 @@
 package dat255.busster.Objects;
 
 
+import android.util.Log;
+
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.json.JSONArray;
@@ -69,7 +71,11 @@ public class Post {
     }
 
     public String getTimeSince() {
-        Interval interval = new Interval(this.time,System.currentTimeMillis());
+        long tTime = this.time;
+        long diff = System.currentTimeMillis()-tTime;
+        if(diff<0) tTime+=diff;
+        Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
+        Interval interval = new Interval(tTime,System.currentTimeMillis());
         Period p = interval.toPeriod();
         String time;
         if(p.getYears() > 0)
@@ -85,7 +91,7 @@ public class Post {
         else
             time = p.getSeconds()+"s";
 
-        return time+" - ";
+        return time+"";
     }
 
     public String getUser() {

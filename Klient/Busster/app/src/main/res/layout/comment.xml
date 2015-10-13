@@ -1,45 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/swipe"
-    android:layout_marginBottom="3dp"
-    >
-<LinearLayout
-    android:background="@color/red_600"
-    android:id="@+id/post_bottom_wrapper_left"
-    android:layout_width="160dp"
-    android:weightSum="1"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
-    >
-    <!--What you want to show-->
-</LinearLayout>
-<LinearLayout
-    android:background="@color/green_600"
-    android:id="@+id/post_bottom_wrapper_right"
-    android:layout_width="160dp"
-    android:weightSum="1"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
-    >
-    <!--What you want to show-->
-</LinearLayout>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/post"
+    android:layout_marginBottom="3dp"
+
     android:background="#c5cae9"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     android:paddingTop="17dp"
     android:paddingBottom="15dp"
-
-
     >
     <TextView
         android:layout_width="wrap_content"
@@ -47,14 +18,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Body"
         android:id="@+id/body"
+        android:width="300dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:minHeight="90dp"
         android:textColor="#FFF"
-        android:paddingBottom="25dp"
-        android:layout_marginTop="20dp"
-        android:minWidth="300dp"
-        android:maxWidth="370dp" />
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,7 +33,7 @@
         android:id="@+id/user"
         android:textColor="#EEE"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -101,7 +70,7 @@
         android:drawableLeft="@drawable/ic_action_directions_bus"
         android:drawablePadding="4dp"
         android:textColor="#EEE"
-        android:paddingTop="15dp" />
+        />
 
 
 
@@ -113,9 +82,10 @@
         android:id="@+id/time"
         android:gravity="right"
         android:textColor="#EEE"
-
         android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/downArrow" />
+        android:layout_toStartOf="@id/user"
+
+        />
 
 
     <TextView
@@ -166,6 +136,3 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
 </RelativeLayout>
-
-
-</com.daimajia.swipe.SwipeLayout>

@@ -9,18 +9,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import dat255.busster.DB.PreferencesDBHandler;
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Resources.CharacterCountErrorWatcher;
 import dat255.busster.Resources.Constants;
-import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 
-public class AddPost extends AppCompatActivity {
-    private final String TAG = "dat255.AddPost";
+public class AddPostActivity extends AppCompatActivity {
+    private final String TAG = "dat255.AddPostActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,18 @@ public class AddPost extends AppCompatActivity {
     }
     public void savePost() {
         TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, ServerQueries.query("body", body.getEditText().getText().toString())));
+        PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
+        // set Display name in top
+        try {
+            JSONObject query = new JSONObject();
+            query.put("body", body.getEditText().getText().toString());
+            query.put("user", preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
+
+            EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, query));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        preferencesDBHandler.close();
     }
     //Eventbus events
     @Subscribe
