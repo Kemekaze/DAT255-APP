@@ -105,7 +105,6 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
             @Override
             public void onClose(SwipeLayout layout) {
-                Log.i(TAG, "onClose");
             }
 
             @Override
@@ -141,7 +140,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                     else post.decUpVotes();
                     msg = "Vote removed!";
                 }else{
-                    EventBus.getDefault().post(new StatusEvent("Already voted!"));
+                    //EventBus.getDefault().post(new StatusEvent("Already voted!"));
                     //updatedPosts();
                     return;
                 }

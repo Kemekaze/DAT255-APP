@@ -19,6 +19,7 @@ public class DataHandler {
         List<Post> posts = new ArrayList<>();
         for(int i = 0; i< jsonArray.length();i++){
             try {
+
                 posts.add(new Post(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
                 e.printStackTrace();
