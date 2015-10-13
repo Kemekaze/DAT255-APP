@@ -86,8 +86,9 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         ArrayList<Post> mArray = new ArrayList<Post>();
-        mAdapter = new FeedAdapter(mArray,mRecyclerView);
+        mAdapter = new FeedAdapter(this,mArray,mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+
 
 
     }
@@ -186,7 +187,6 @@ public class MainActivity extends AppCompatActivity
     }
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event) {
-        Log.e(TAG, "statusEvent");
         Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
     public void getMorePosts(){
