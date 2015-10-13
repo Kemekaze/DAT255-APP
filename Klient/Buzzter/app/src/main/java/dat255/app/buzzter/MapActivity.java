@@ -108,11 +108,11 @@ public class MapActivity extends Fragment implements OnMapReadyCallback {
             Log.i(TAG, "getBusPos");
 
             List<GPS> busList = event.gpsList;
-            GPS bus = busList.get(0);
+            GPS bus = busList.get(5);
             LatLng busPos = new LatLng(bus.getLatitude(),bus.getLongitude());
             mMap.addMarker(new MarkerOptions().position(busPos).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(busPos));
-            event.gpsList.get(0);
+
 
     }
 

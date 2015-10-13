@@ -5,6 +5,7 @@ package dat255.app.buzzter;
  * Created by Rasmus on 2015-10-04.
  */
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -127,8 +128,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, planets[position] + "was selected", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, planets[position] + " was selected", Toast.LENGTH_LONG).show();
         mSelectedItem = position;
+        view.setBackgroundColor(Color.BLACK);
         selectItem(position);
 
     }

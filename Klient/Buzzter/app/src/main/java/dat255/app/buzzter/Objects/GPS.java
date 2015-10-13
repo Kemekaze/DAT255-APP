@@ -1,5 +1,7 @@
 package dat255.app.buzzter.Objects;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,13 +10,16 @@ import org.json.JSONObject;
  */
 public class GPS {
 
+    private final String TAG = "dat255.app.buzzter.GPS";
+
     private String name;
-    private int longitude;
-    private int latitude;
+    double longitude;
+    private double latitude;
     private String speed;
     private String course;
     private String altitude;
     private String systemId;
+
 
     public GPS(JSONObject jsonObject) {
 
@@ -22,9 +27,10 @@ public class GPS {
             String id = jsonObject.getString("id");
             systemId = jsonObject.getString("systemid");
             JSONObject gps = jsonObject.getJSONObject("gps");
-            this.longitude =  Integer.parseInt(gps.getString("longitude"));
-            this.latitude = Integer.parseInt(gps.getString("latitude"));
+            this.longitude =  Double.parseDouble(gps.getString("longitude"));
+            this.latitude = Double.parseDouble(gps.getString("latitude"));
             this.name = "Svante";
+            Log.i(TAG, gps.getString("longitude"));
 
 
         } catch (JSONException e) {
@@ -40,11 +46,11 @@ public class GPS {
         return name;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 

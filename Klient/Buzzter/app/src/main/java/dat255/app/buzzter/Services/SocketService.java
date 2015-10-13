@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import dat255.app.buzzter.Events.GPSEvent;
 import dat255.app.buzzter.Events.PostsEvent;
 import dat255.app.buzzter.Events.SavePostEvent;
 import dat255.app.buzzter.Events.SendDataEvent;
@@ -221,7 +222,7 @@ public class SocketService extends Service {
             JSONObject data = (JSONObject)args[0];
             JSONArray gps = (JSONArray)data.opt("gps");
 
-            EventBus.getDefault().post(new PostsEvent(DataHandler.<GPS>jsonToPostArr(gps)));
+            EventBus.getDefault().post(new GPSEvent(DataHandler.GPS(gps)));
 
 
         }
