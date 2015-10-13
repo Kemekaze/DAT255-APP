@@ -2,9 +2,7 @@ package dat255.busster.Objects;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Rasmus on 2015-10-13.
@@ -38,14 +36,5 @@ public class Survey extends Post {
         result.put(answer, result.get(answer) + 1);
 
     }
-
-    @Override
-    public String getType() {
-        return "UserPost";
-    }
-
-
-
-
 
 }

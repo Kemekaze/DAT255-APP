@@ -161,7 +161,7 @@ exports.eventBusesNextStop = function(callback){
 	});
 	function emitEvent(nstop,bus){
 		socketEvents.nextStop({
-			post: db.posts.newModel("Next stop "+nstop.name+" "+moment().to(nstop.time) ,"Alert",nstop.systemid,nstop.serviceid,nstop.time.unix(),"EventNextStop"), 
+			post: db.posts.newModel("Next stop "+nstop.name+" "+moment().to(nstop.time) ,"Alert",nstop.systemid,nstop.serviceid,nstop.time.unix(),"event"), 
 			systemid: nstop.systemid,
 			bus:bus
 		});
