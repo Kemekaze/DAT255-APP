@@ -39,6 +39,15 @@ public class Constants {
         public static final String GET_BUS_NEXT_STOP = "getBusNextStop";
         public static final String GET_BUSES_GPS = "getBusesGPS";
         public static final String GET_BUS_GPS = "getBusGPS";
+
+        public static final String GET_STOPS = "getStops";
+
+    }
+    public class DB{
+        public class PREFERENCES{
+            public static final String DISPLAY_NAME = "displayName";
+            public static final String DESTINATION = "destination";
+        }
     }
     public static List<String> COLORS = Arrays.asList(
             "red_600",

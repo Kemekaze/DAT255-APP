@@ -1,4 +1,4 @@
-package dat255.busster;
+/*package dat255.busster;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -152,8 +152,5 @@ public class ViewComments extends AppCompatActivity {
         Log.i(TAG, "refreshPosts");
         getPosts(10, 0);
     }
-    public void addPostActivity(View view){
-        Intent intent = new Intent(getApplicationContext(), AddPost.class);
-        this.startActivity(intent);
-    }
-}
+
+}*/

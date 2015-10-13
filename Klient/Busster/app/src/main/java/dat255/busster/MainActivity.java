@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         Log.i(TAG,"onStart");
         EventBus.getDefault().register(this);
+        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
         super.onStart();
     }
     @Override
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity
         getPosts(10, 0);
     }
     public void addPostActivity(View view){
-        Intent intent = new Intent(getApplicationContext(), AddPost.class);
+        Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
         this.startActivity(intent);
     }
 }

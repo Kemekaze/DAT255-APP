@@ -7,5 +7,14 @@
     <string name="add_post_name">Add Post</string>
     <string name="add_post_text_msg">Your text..</string>
     <string name="add_post_action">Send</string>
+
+    <string name="select_where_name">Preferences</string>
+    <string name="select_where_username_msg">Display name</string>
+    <string name="select_where_destination_msg">Destination</string>
+    <string name="select_where_action">Continue</string>
+
+
     <string name="action_settings">Settings</string>
+
+
 </resources>

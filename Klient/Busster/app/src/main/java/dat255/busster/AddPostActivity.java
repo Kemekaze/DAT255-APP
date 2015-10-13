@@ -19,8 +19,8 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 
-public class AddPost extends AppCompatActivity {
-    private final String TAG = "dat255.AddPost";
+public class AddPostActivity extends AppCompatActivity {
+    private final String TAG = "dat255.AddPostActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

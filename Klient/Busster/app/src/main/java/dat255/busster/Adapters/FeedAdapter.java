@@ -103,6 +103,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
 
         holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+
             @Override
             public void onClose(SwipeLayout layout) {
             }

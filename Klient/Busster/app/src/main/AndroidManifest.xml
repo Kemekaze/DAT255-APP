@@ -13,20 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
+            android:name=".SelectWhereActivity"
+            android:label="@string/select_where_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".AddPost"
+            android:name=".AddPostActivity"
             android:label="@string/add_post_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".Services.SocketService" />
+
     </application>
 
 </manifest>

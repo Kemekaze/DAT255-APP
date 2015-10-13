@@ -245,6 +245,12 @@ io.on('connection', function(socket){
 			socket.emit('getBusesGPS', {gps:gpsData,status:1});
 		});	 
 	});
+	socket.on('getStops', function (data) {
+		lib.db.stops.findAll(function(stops){
+			console.log("getStops "+stops.length);
+			socket.emit('getStops', {stops:stops,status:1});
+		});	 
+	});
 
  });
 
