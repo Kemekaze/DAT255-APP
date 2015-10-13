@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import dat255.busster.Objects.Post;
+import dat255.busster.Objects.UserPost;
 import dat255.busster.R;
 
 
@@ -27,10 +28,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public TextView votes_down;
         public TextView comment_count;
         public TextView votes;
-        public viewHolderClicks viewHolderClicks;
         public View view;
 
-        public ViewHolder(View view, viewHolderClicks listner) {
+        public ViewHolder(View view) {
             super(view);
             body = (TextView) view.findViewById(R.id.body);
             user = (TextView) view.findViewById(R.id.user);
@@ -41,25 +41,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             votes_down = (TextView) view.findViewById(R.id.votesDown);
             comment_count = (TextView) view.findViewById(R.id.comments);
             this.view = view;
-            view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            viewHolderClicks.onclick(v);
 
-        }
-
-        public static interface viewHolderClicks {
-            public void onclick(View v);
         }
     }
 
 
     public List<Post> posts;
+    public RecyclerView recyclerView;
 
-    public FeedAdapter(List<Post> posts) {
+    public FeedAdapter(List<Post> posts, RecyclerView mRecyclerView) {
         this.posts = posts;
+        this.recyclerView = mRecyclerView;
 
     }
     // Create new views (invoked by the layout manager)
@@ -69,13 +65,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_alt, parent, false);
 
-        ViewHolder vh = new ViewHolder(v, new ViewHolder.viewHolderClicks() {
-            @Override
-            public void onclick(View v) {
-                Log.i(TAG, String.valueOf(v.getId()));
-                //Toast.makeText(this.getApplicationContext(), v., Toast.LENGTH_SHORT).show();
-            }
-        });
+        ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
@@ -84,6 +74,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        holder.view.setOnClickListener(clickListener);
 
         holder.view.setBackgroundColor(Color.parseColor(posts.get(position).getColor()));
         holder.body.setText(posts.get(position).getBody());
@@ -94,10 +85,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         //holder.votes_down.setText(String.valueOf(posts.get(position).getVotes()[1]));
         //holder.votes_up.setTextColor(R.color.green_600);
         //holder.votes_down.setTextColor(R.color.red_600);
-        holder.comment_count.setText(String.valueOf(posts.get(position).getCommentCount()));
-        holder.votes.setText(String.valueOf(posts.get(position).getVotes()[0] - posts.get(position).getVotes()[1]));
+        Log.i(TAG, posts.get(position).getType());
+        if(posts.get(position).getType().equals("UserPost")) {
+
+            UserPost userPost = (UserPost) posts.get(position);
+            holder.comment_count.setText(String.valueOf(userPost.getCommentCount()));
+            holder.votes.setText(String.valueOf(userPost.getVotes()[0] - userPost.getVotes()[1]));
+        }
 
     }
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int position = recyclerView.getChildAdapterPosition(v);
+            Post p = getItem(position);
+            //starta comments activity
+        }
+    };
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

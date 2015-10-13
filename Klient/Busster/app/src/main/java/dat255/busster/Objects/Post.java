@@ -16,9 +16,7 @@ public class Post {
     private String _id ="";
     private String body = "";
     private String user = "";
-    private List<Comment> comments = new ArrayList<Comment>();
     private long time = -1;
-    private int[] votes = {-1,-1};
     private int busLine = -1;
     private String type = "post";
     private String color = "#039BE5";
@@ -34,7 +32,7 @@ public class Post {
 
         try {
             JSONObject meta = post.getJSONObject("meta");
-            JSONObject votes = meta.getJSONObject("votes");
+
             JSONObject bus = meta.getJSONObject("bus");
 
             this._id = post.getString("_id");
@@ -42,24 +40,12 @@ public class Post {
             this.user = post.getString("user");
             this.busLine = bus.getInt("serviceid");
             this.type = meta.getString("type");
-            this.votes = new int[]{
-                    votes.getInt("up"),
-                    votes.getInt("down")
-            };
+
             this.time = post.getLong("date");
-            JSONArray comments = post.getJSONArray("comments");
-            int commentsSize = comments.length();
-            for (int i = 0; i < commentsSize; i++) {
-                this.comments.add(new Comment(comments.getJSONObject(i)));
-            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
-
-
     }
     public String getId() {
         return _id;
@@ -72,13 +58,7 @@ public class Post {
         return busLine;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
 
-    public int getCommentCount() {
-        return comments.size();
-    }
 
     public long getTime() {
         return time;
@@ -112,26 +92,11 @@ public class Post {
         return user;
     }
 
-    public int[] getVotes() {
-        return votes;
-    }
 
     public String getColor() {
         return color;
     }
 
-    public void incUpVotes(){
-        this.votes[0]++;
-    }
-    public void decUpVotes(){
-        this.votes[0]--;
-    }
-    public void incDownVotes(){
-        this.votes[1]++;
-    }
-    public void decDownVotes(){
-        this.votes[1]--;
-    }
 
 
 

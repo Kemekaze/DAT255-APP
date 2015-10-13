@@ -24,4 +24,5 @@ public class PostsEvent {
         this.posts = posts;
     }
 
+
 }

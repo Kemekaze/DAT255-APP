@@ -12,18 +12,38 @@ import java.util.Map;
 public class Survey extends Post {
 
 
-    HashMap<Answer, Integer> result = new  HashMap<Answer, Integer>() ;
+    private HashMap<Answer, Integer> result ;
 
 
     private enum Answer{
         ONE,
         CROSS,
-        TWO
+        TWO;
     }
 
     public Survey(JSONObject post) {
         super(post);
+
+        result = new  HashMap<Answer, Integer>() ;
+
+        result.put(Answer.ONE,0);
+        result.put(Answer.CROSS,0);
+        result.put(Answer.TWO,0);
+
     }
+
+
+    public void addResult(Answer answer){
+
+        result.put(answer, result.get(answer) + 1);
+
+    }
+
+    @Override
+    public String getType() {
+        return "UserPost";
+    }
+
 
 
 

@@ -9,6 +9,8 @@ import java.util.List;
 
 import dat255.busster.Objects.GPS;
 import dat255.busster.Objects.Post;
+import dat255.busster.Objects.Survey;
+import dat255.busster.Objects.UserPost;
 
 /**
  * Created by Costas Pappas on 2015-09-30.
@@ -19,7 +21,18 @@ public class DataHandler {
         List<Post> posts = new ArrayList<>();
         for(int i = 0; i< jsonArray.length();i++){
             try {
-                posts.add(new Post(jsonArray.getJSONObject(i)));
+                JSONObject meta = jsonArray.getJSONObject(i).getJSONObject("meta");
+                String type =meta.getString("type");
+                switch (type){
+                    case "post":
+                        posts.add(new UserPost(jsonArray.getJSONObject(i)));
+                        break;
+                    case "survey":
+                        posts.add(new Survey(jsonArray.getJSONObject(i)));
+                        break;
+
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -32,7 +45,24 @@ public class DataHandler {
     public static List<Post> jsonToPostArr(JSONObject jsonObject){
         List<Post> posts = new ArrayList<>();
 
-        posts.add(new Post(jsonObject));
+        try {
+
+        JSONObject meta = jsonObject.getJSONObject("meta");
+        String type = meta.getString("type");
+
+        switch (type){
+            case "post":
+                posts.add(new UserPost(jsonObject));
+                break;
+            case "survey":
+                posts.add(new Survey(jsonObject));
+                break;
+        }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return posts;
     }
 

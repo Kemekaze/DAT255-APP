@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         ArrayList<Post> mArray = new ArrayList<Post>();
-        mAdapter = new FeedAdapter(mArray);
+        mAdapter = new FeedAdapter(mArray,mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
 

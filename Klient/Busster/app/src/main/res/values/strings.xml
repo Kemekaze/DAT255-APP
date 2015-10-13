@@ -12,5 +12,6 @@
     <!-- Strings for survey -->
     <string name="string_one">1</string>
     <string name="string_two">2</string>
+    <string name="title_activity_survey">SurveyActivity</string>
 
 </resources>
