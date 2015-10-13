@@ -55,11 +55,6 @@ public class Post {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
-
-
     }
     public String getId() {
         return _id;
