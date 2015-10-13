@@ -181,8 +181,11 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
 
 
+
         holder.comment_count.setText(String.valueOf(((UserPost) posts.get(position)).getCommentCount()));
         holder.votes.setText(String.valueOf(((UserPost) posts.get(position)).getVotes()[0] - ((UserPost) posts.get(position)).getVotes()[1]));
+
+
 
 
     }
