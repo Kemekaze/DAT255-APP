@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Busster</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="add_post_name">Add Post</string>
+    <string name="add_post_text_msg">Your text..</string>
+    <string name="add_post_action">Send</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings for survey -->
+    <string name="string_one">1</string>
+    <string name="string_two">2</string>
+
+</resources>

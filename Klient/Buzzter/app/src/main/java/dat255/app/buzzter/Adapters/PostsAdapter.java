@@ -113,14 +113,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public List<Post> getPosts() {
         return posts;
     }
-    public void addPost(Post post) {
-       posts.add(post);
-       this.notifyDataSetChanged();
-    }
-    public void addPostBegining(Post post) {
-        posts.add(0, post);
-        this.notifyDataSetChanged();
-    }
+
     public void refreshVotes(int position, Post post) {
         posts.set(position, post);
         this.notifyDataSetChanged();
@@ -130,25 +123,37 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         this.notifyDataSetChanged();
     }
     public void addPosts(List<Post> posts,int type) {
+        Log.d(TAG,"Type: "+String.valueOf(type));
         switch(type){
             case 1:
                 addPostsRefresh(posts);
                 break;
             case 2:
-                addPostsBegining(posts);
+                addPostsBeginning(posts);
                 break;
             default:
                 this.posts.addAll(posts);
                 break;
         }
-        this.notifyDataSetChanged();
+        //this.notifyDataSetChanged();
     }
-    private void addPostsBegining(List<Post> posts) {
-        this.posts.addAll(0,posts);
+    private void addPostsBeginning(List<Post> posts) {
+        Log.d(TAG,String.valueOf(this.posts.size()));
+        this.posts.addAll(0, posts);
+        Log.d(TAG, String.valueOf(this.posts.size()));
         this.notifyDataSetChanged();
     }
     private void addPostsRefresh(List<Post> posts) {
         this.posts = posts;
+        this.notifyDataSetChanged();
+    }
+    public void addPost(Post post) {
+        posts.add(post);
+        this.notifyDataSetChanged();
+    }
+    public void addPostBegining(Post post) {
+        posts.add(0, post);
+
         this.notifyDataSetChanged();
     }
 

@@ -35,6 +35,7 @@ import dat255.app.buzzter.Objects.Post;
 import dat255.app.buzzter.Objects.Vote;
 import dat255.app.buzzter.Resources.Constants;
 import dat255.app.buzzter.Resources.ServerQueries;
+import dat255.app.buzzter.Services.ChatHeadService;
 import dat255.app.buzzter.Services.SocketService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -75,30 +76,40 @@ public class PostFragment extends Fragment {
                 getActivity().startService(socketServiceIntent);
             }
         }.start();
-        /*new Thread(){
+        new Thread(){
             public void run(){
-                socketServiceIntent = new Intent(getActivity().getApplicationContext(),ChatHeadService.class);
-                getActivity().startService(socketServiceIntent);
+                getActivity().startService(new Intent(getActivity().getApplicationContext(),ChatHeadService.class));
             }
-        }.start();*/
+        }.start();
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.i(TAG,"onCreateView");
         final View rootView = inflater.inflate(R.layout.fragment_post, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.posts);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(rootView.getContext());
+        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mArray = new ArrayList<Post>();
+        List<Post> mArray = new ArrayList<Post>();
         mAdapter = new PostsAdapter(mArray);
         mRecyclerView.setAdapter(mAdapter);
 
 
 
-// Extend the Callback class
+
+
+        // Extend the Callback class
         ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
 

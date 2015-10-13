@@ -94,6 +94,7 @@ public class AddPostFragment extends Fragment {
     }
 
     public void showOtherFragment(){
+        Log.i(TAG,"showOtherFragment");
         android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PostFragment fragment = new PostFragment();
