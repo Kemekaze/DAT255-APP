@@ -93,6 +93,7 @@
                       <th>#</th>
                       <th>Body</th>
                       <th>User</th>
+                      <th>Comments</th>
                       <th>Up</th>
                       <th>Down</th>
                       <th>Date</th>
@@ -186,7 +187,7 @@
         socket.emit('authenticate', { token: 'lewebtoken', web:true });
       });
       socket.on('authorized', function (data) {
-        socket.emit('getPosts', { limit: 30 });
+        socket.emit('getPosts', { limit: 100 });
         socket.emit('getTotalPostCount');
         socket.emit('getClientCount');
       });
@@ -198,7 +199,11 @@
       });
       socket.on('removePost', function (data) {
           console.log("Post removed!");
-          socket.emit('getPosts', { limit: 30 });
+          socket.emit('getPosts', { limit: 100 });
+      });
+      socket.on('updatePostFeed', function (data) {
+          console.log("updatePostFeed");
+          socket.emit('getPosts', { limit: 100 });
       });
       socket.on('getPosts', function (data) {
         $("#getPosts").html("");
@@ -215,11 +220,17 @@
           } else{
             var votes=post.meta.votes;
           }
+          if(post.comments === undefined){
+            var commentCount = null;
+          } else{
+            var commentCount = post.comments.length;
+          }
           
           $("#getPosts").append('<tr id="'+post._id+'">'+
                   '<td>'+post._id+'</td>'+
-                  '<td class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
+                  '<td style="overflow:hidden;max-width:30%;"class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
                   '<td class="post_user">'+getAnchor(post._id,"user","text",post.user)+'</td>'+
+                  '<td class="post_comments">'+commentCount+'</td>'+
                   '<td>'+votes.up+'</td>'+
                   '<td>'+votes.down+'</td>'+
                   '<td class="post_date">'+getAnchor(post._id,"date","text",post.date)+'</td>'+

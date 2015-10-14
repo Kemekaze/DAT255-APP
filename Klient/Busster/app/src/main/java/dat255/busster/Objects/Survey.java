@@ -32,6 +32,7 @@ public class Survey extends Post {
             for(int i = 1; i <= this.options; i++){
                 JSONObject option = answers.getJSONObject("option"+i);
                 this.participants+=option.getInt("count");
+
                 alternatives.add(option.getString("text"));
                 result.add(i-1,option.getInt("count"));
             }

@@ -48,7 +48,16 @@ var app = express();
 var http = http.Server(app);
 var io = socketIO(http);
 
+lib.db.posts.schema.post('save', function(next) {
+  console.log("wopwop");
+  updateWebGui();
 
+});
+function updateWebGui(){
+	for (var i = 0; i < webGuiclients.length; i++) {
+		webGuiclients[i].emit("updatePostFeed");
+	};
+}
 
 
 function checkAuthToken(token ,callback){
@@ -154,17 +163,14 @@ io.on('connection', function(socket){
 	});
 	socket.on('savePost', function (data) {
 		console.log('savePost');
-		console.log(JSON.stringify(data));
 		var user = (data.user == undefined)? 'Anonymus':data.user,
 		    body = data.body,
 		    systemid  = socket.bus_id;
-		
 
 		lib.db.posts.save(body,user,systemid,function(post){
 			console.log("Post saved with id: "+post.get("id"));
 	  		socket.emit('savePost', {status:"ok",post:post});
 		});
-
 	});
 	socket.on('getComments', function (data) {
 		var post_id = data.post_id;
@@ -294,7 +300,14 @@ io.on('connection', function(socket){
 	});
 	socket.on('updateSurvey', function (data) {
 		console.log('updateSurvey');
-		console.log(JSON.stringify(data));		
+		console.log(JSON.stringify(data));
+		var option = data.option,
+			post_id = data.post_id;
+
+		lib.db.posts.addVoteSurvey(post_id,option,function(comments){
+			console.log("Voted survey "+post_id);
+	  		socket.emit('updateSurvey', {status:1,data:null});
+	  	})		
 	});
 
  });

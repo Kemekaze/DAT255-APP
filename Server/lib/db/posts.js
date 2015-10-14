@@ -6,7 +6,7 @@ var exports = module.exports = {};
 //
 // Schemas definitions
 //
-var PostSchema = new Schema({
+var PostSchema = exports.schema = new Schema({
   body: { type: String},
   user: { type: String},  
   comments: [{ 
@@ -205,4 +205,14 @@ exports.countTotal = function(callback){
 		if (err) return console.error(err);
 		callback(count);
 	});
+}
+exports.addVoteSurvey = function(id,option,callback){
+	var key = "meta.survey.answers.option"+option+".count";
+	var updateData = {};
+	updateData[key] = 1;
+	PostModel.where({_id:id}).update({ $inc: updateData}, function (err, p) {
+	  if (err) return console.error(err);
+	  callback(p);
+	});
 }  
+
