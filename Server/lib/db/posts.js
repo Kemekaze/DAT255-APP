@@ -182,18 +182,27 @@ exports.saveComment = function(post_id,body,user,callback){
 	  if (err) return console.error(err);
 	  callback(p);
 	});
-
 } 
 exports.getComments = function(post_id,callback){
 	exports.findById(post_id,function(post){
 		callback(post.comments);
-	})
-
+	});
+}
+exports.remove = function(post_id,callback){
+	PostModel.remove({_id:post_id}, function(err, p){
+		if (err) return console.error(err);
+		callback(p);
+	});
+}
+exports.findOneAndUpdate = function(post_id,updateData,callback){
+	PostModel.findOneAndUpdate({_id:post_id},updateData, function (err, p) {
+	  if (err) return console.error(err);
+	  callback(p);
+	});
 }
 exports.countTotal = function(callback){
 	PostModel.count({},function(err,count){
 		if (err) return console.error(err);
 		callback(count);
 	});
-
 }  

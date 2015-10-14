@@ -186,7 +186,7 @@ io.on('connection', function(socket){
 	  		socket.emit('commentSaved', comment);
 	  	});
 	});
-	//votes
+
 	socket.on('incVotesUp', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -246,6 +246,7 @@ io.on('connection', function(socket){
 			socket.emit('getStops', {stops:stops,status:1});
 		});	 
 	});
+	//Primary for web ui
 	socket.on('getTotalPostCount', function (data) {
 		console.log('getPostCount');
 		lib.db.posts.countTotal(function(count){
@@ -272,6 +273,28 @@ io.on('connection', function(socket){
 		  if (err) return console.error(err);
 		  console.log(JSON.stringify(su));	
 		});	
+	});
+	socket.on('updatePost', function (data, fn) {	
+		var updateData = {};
+		updateData[data.name] = data.value;
+		var post_id = data.pk;
+		fn({status:'ok'});
+	  	lib.db.posts.findOneAndUpdate(post_id,updateData,function(p){
+	  		
+	  	});
+	});
+	socket.on('removePost', function (data) {
+		var post_id = data.post_id;
+				// validation here
+
+	  	lib.db.posts.remove(post_id,function(comments){
+	  		console.log("Removed post "+post_id);
+	  		socket.emit('removePost', {status:1,data:null});
+	  	});
+	});
+	socket.on('updateSurvey', function (data) {
+		console.log('updateSurvey');
+		console.log(JSON.stringify(data));		
 	});
 
  });

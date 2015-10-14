@@ -16,6 +16,7 @@
 
     <!-- Custom styles for this template -->
     <link href="assets/css/dashboard.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -59,60 +60,56 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Stats</h1>
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
+          <div class="row ">
+            <div class="col-xs-6 col-sm-3 ">
               <h4 id="clientCount">2</h4>
               <span class="text-muted">Clients</span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <div class="col-xs-6 col-sm-3 ">
               <h4 id="totalPostCount">3</h4>
               <span class="text-muted">Posts</span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <div class="col-xs-6 col-sm-3 ">
               <h4>4</h4>
               <span class="text-muted">Something else</span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <div class="col-xs-6 col-sm-3 ">
               <h4>5</h4>
               <span class="text-muted">Something else</span>
             </div>
           </div> 
-          <h1 class="page-header">Actions</h1>
+          <h2 class="sub-header">Posts</h2>
+          <div class="row ">
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <div class="col-xs-6 col-sm-3">
               <button type="button" class="btn btn-default "data-toggle="modal" data-target="#surveyModal">New Survey</button>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <div class="col-xs-12 col-sm-12">
               
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Body</th>
+                      <th>User</th>
+                      <th>Up</th>
+                      <th>Down</th>
+                      <th>Date</th>
+                      <th>Type</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="getPosts">
+                    
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           </div>
         
-          <h2 class="sub-header">Posts</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Body</th>
-                  <th>User</th>
-                  <th>Up</th>
-                  <th>Down</th>
-                  <th>Date</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody id="getPosts">
-                
-              </tbody>
-            </table>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -169,6 +166,7 @@
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary" id="sendSurvey" >Send</button>
             </div>
+
           </div>
         </div>
       </div>
@@ -177,7 +175,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
     <script>
+    $.fn.editable.defaults.mode = 'inline';
       var socket = io('http://81.232.129.196:3000');
 
       socket.on('connect', function (data) {
@@ -194,9 +196,18 @@
       socket.on('getClientCount', function (data) {
           $("#clientCount").text(data.count);
       });
+      socket.on('removePost', function (data) {
+          console.log("Post removed!");
+          socket.emit('getPosts', { limit: 30 });
+      });
       socket.on('getPosts', function (data) {
+        $("#getPosts").html("");
+        console.log("Posts Updated");
+        function getAnchor(id,name,type,text){
+            return '<a href="#"  data-pk="'+id+'" class="editablePost" data-name="'+name+'" data-type="'+type+'" data-pk="1">'+text+'</a>';
+        }
         for (var i = 0; i< data.posts.length; i++) {
-          console.log(data.posts[i]);
+          //console.log(data.posts[i]);
           var post = data.posts[i];
 
           if(post.meta.votes === undefined){
@@ -204,20 +215,24 @@
           } else{
             var votes=post.meta.votes;
           }
-
-          $("#getPosts").append('<tr>'+
+          
+          $("#getPosts").append('<tr id="'+post._id+'">'+
                   '<td>'+post._id+'</td>'+
-                  '<td>'+post.body+'</td>'+
-                  '<td>'+post.user+'</td>'+
+                  '<td class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
+                  '<td class="post_user">'+getAnchor(post._id,"user","text",post.user)+'</td>'+
                   '<td>'+votes.up+'</td>'+
                   '<td>'+votes.down+'</td>'+
-                  '<td>'+post.date+'</td>'+
+                  '<td class="post_date">'+getAnchor(post._id,"date","text",post.date)+'</td>'+
                   '<td>'+post.meta.type+'</td>'+
+                  '<td class="post_remove"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>'+
                 '</tr>');
         };
         
       });
-      var myRadioValue;
+      $("#getPosts").delegate(".post_remove","click",function(){
+            var post = $( this ).closest("tr").attr('id');
+            socket.emit("removePost",{post_id:post});
+      });
 
       $(document).ready(function () {
         $("#sendSurvey").click(function(){
@@ -233,15 +248,34 @@
                       $('#option4text').val()
                 ]
               } 
-          });
-           
-          $("#surveyModal").modal('hide'); //hide popup  
-                
+          });           
+          $("#surveyModal").modal('hide');                 
         });
       });
     </script>
     
-    <script src="assets/js/bootstrap.min.js"></script>
-
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $.fn.editable.defaults.mode = 'inline';
+        $('#getPosts').editable({
+            selector: 'a',
+            pk: 1,
+            url: function(data) {
+                    var d = $.Deferred();
+                    socket.emit('updatePost', data, function (data) {
+                      console.log(data);
+                      if(data.status == 'ok') {
+                          d.resolve();
+                      } else {
+                          d.reject(data.error || 'unknown error');
+                      }
+                    });
+                    return d.promise();
+                }       
+        }); 
+     
+      });
+    </script>
   </body>
 </html>
