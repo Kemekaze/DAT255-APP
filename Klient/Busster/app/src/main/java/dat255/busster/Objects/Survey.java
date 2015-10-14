@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Survey extends Post {
 
 
-    private HashMap<String, Integer> result ;
+    private ArrayList<Integer> result;
     private int participants;
     private ArrayList<String> alternatives = new ArrayList<String>();
     private int options;
@@ -28,24 +28,36 @@ public class Survey extends Post {
             JSONObject surveyData = meta.getJSONObject("survey");
             this.options = surveyData.getInt("options");
             JSONObject answers = surveyData.getJSONObject("answers");
+            result = new ArrayList<Integer>() ;
             for(int i = 1; i <= this.options; i++){
                 JSONObject option = answers.getJSONObject("option"+i);
                 this.participants+=option.getInt("count");
                 alternatives.add(option.getString("text"));
+                result.add(i-1,option.getInt("count"));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        result = new  HashMap<String, Integer>() ;
+
     }
 
 
-    public void addResult(String answer){
-        if(result.get(answer) != null) {
-            result.put(answer, result.get(answer) + 1);
+    public void addResult(int pos){
+
+            result.add(result.get(pos)+1);
             participants++;
-        }
+
+    }
+
+    public int getTotalCount(){
+
+        return participants;
+    }
+
+    public int getCount(int pos){
+
+        return result.get(pos);
     }
 
     public ArrayList<String> getAlternatives() {

@@ -33,6 +33,9 @@ public class Constants {
         public static final String SAVE_COMMENT = "saveComment";
 
 
+        public static final String UPDATE_SURVEY = "updateSurvey";
+
+
         public static final String GET_BUSES = "getBuses";
         public static final String GET_BUS = "getBus";
         public static final String GET_BUS_NEXT_STOP = "getBusNextStop";

@@ -15,11 +15,14 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
+import dat255.busster.Events.SurveyEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
@@ -206,13 +209,18 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
 
             if(p instanceof Survey){
-                //Survey survey = (Survey)p;
+                Survey survey = (Survey)p;
                 Intent intent = new Intent(context, SurveyActivity.class);
                 intent.putExtra("Body",p.getBody());
                 intent.putExtra("Answers",((Survey) p).getAlternatives());
                 intent.putExtra("Count",((Survey) p).getCount());
                 intent.putExtra("User",p.getUser());
-                intent.putExtra("Time",p.getTimeSince());
+                intent.putExtra("Time", p.getTimeSince());
+
+
+                EventBus.getDefault().postSticky(new SurveyEvent(Arrays.asList(survey)));
+
+
                 context.startActivity(intent);
 
             }else if(p instanceof UserPost){

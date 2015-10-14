@@ -5,15 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dat255.busster.Adapters.AnswerAdapter;
+import dat255.busster.Events.SendDataEvent;
+import dat255.busster.Events.SurveyEvent;
 import dat255.busster.Objects.Survey;
+import dat255.busster.Resources.Constants;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class SurveyActivity extends AppCompatActivity {
 
@@ -53,7 +60,7 @@ public class SurveyActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AnswerAdapter(this,mArray,mRecyclerView,survey);
+        mAdapter = new AnswerAdapter(this,mArray,mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -61,6 +68,26 @@ public class SurveyActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "onStart");
+        EventBus.getDefault().register(this);
+        List<Survey> surveyEvents = (EventBus.getDefault().getStickyEvent(SurveyEvent.class)).surveys;
+        ((AnswerAdapter) mAdapter).setSurvey(surveyEvents.get(0));
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        Log.i(TAG,"onStop");
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void surveyEvent(SurveyEvent surveyEvent){
+        Log.i(TAG,"SurveyEventDone");
     }
 
 

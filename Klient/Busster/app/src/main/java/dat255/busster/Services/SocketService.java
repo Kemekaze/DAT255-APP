@@ -66,6 +66,8 @@ public class SocketService extends Service {
         socket.on(Constants.SocketEvents.INC_VOTES_DOWN, eventIncVotesDown);
         socket.on(Constants.SocketEvents.DEC_VOTES_UP, eventDecVotesUp);
         socket.on(Constants.SocketEvents.DEC_VOTES_DOWN, eventDecVotesDown);
+        //Survey
+        socket.on(Constants.SocketEvents.UPDATE_SURVEY, eventUpdateSurvey);
         //Comments
         socket.on(Constants.SocketEvents.GET_COMMENTS, eventGetComments);
         socket.on(Constants.SocketEvents.SAVE_COMMENT, eventSaveComment);
@@ -198,6 +200,13 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventIncVotesUp");
             //vad den skall göra
+        }
+    };
+
+    private Emitter.Listener eventUpdateSurvey = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
         }
     };
 
