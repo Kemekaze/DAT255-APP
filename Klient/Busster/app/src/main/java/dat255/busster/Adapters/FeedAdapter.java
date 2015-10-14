@@ -1,6 +1,7 @@
 package dat255.busster.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,11 +17,13 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.util.List;
 
+import dat255.busster.AddPostActivity;
 import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Objects.Post;
 
+import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
 
 import dat255.busster.Objects.Vote;
@@ -28,6 +31,7 @@ import dat255.busster.Objects.Vote;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
+import dat255.busster.SurveyActivity;
 import de.greenrobot.event.EventBus;
 
 
@@ -82,8 +86,10 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     public RecyclerView recyclerView;
     private Context mContext;
     private VoteDBHandler votesHandler;
+    private Context context;
 
     public FeedAdapter(Context context, List<Post> posts, RecyclerView mRecyclerView) {
+        this.context = context;
         this.posts = posts;
         this.mContext = context;
         this.recyclerView = mRecyclerView;
@@ -106,7 +112,8 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
 
-        if(posts.get(position) instanceof UserPost) {
+
+        if(posts.get(pos) instanceof UserPost) {
             holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
             holder.swipeLayout.setRightSwipeEnabled(true);
             holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
@@ -131,6 +138,8 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                 public void onOpen(SwipeLayout layout) {
 
                     layout.close(true);
+
+
                     UserPost post = (UserPost) posts.get(pos);
                     boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
                     List<Boolean> exists = votesHandler.checkIfExists(post.getId());
@@ -204,6 +213,19 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
             int position = recyclerView.getChildAdapterPosition(v);
             Log.i(TAG,"onClick : "+ position);
             Post p = getItem(position);
+
+
+            if(p instanceof Survey){
+                //Survey survey = (Survey)p;
+                Intent intent = new Intent(context, SurveyActivity.class);
+                intent.putExtra("id", p.getId());
+                intent.putExtra("body", p.getBody());
+                intent.putExtra("user", p.getUser());
+                intent.putExtra("time", p.getTimeSince());
+
+                context.startActivity(intent);
+
+            }
             return true;
         }
     };

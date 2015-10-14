@@ -2,6 +2,8 @@ package dat255.busster.Objects;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,34 +12,31 @@ import java.util.HashMap;
 public class Survey extends Post {
 
 
-    private HashMap<Answer, Integer> result ;
+    private HashMap<String, Integer> result ;
     private int participants;
+    private ArrayList<String> alternatives;
 
 
-    private enum Answer{
-        ONE,
-        CROSS,
-        TWO;
-    }
 
-    public Survey(JSONObject post) {
-        super(post);
+    public Survey(JSONObject survey) {
+        super(survey);
 
-        result = new  HashMap<Answer, Integer>() ;
+        //alternatives =survey.get("alternatives");
 
-        result.put(Answer.ONE,0);
-        result.put(Answer.CROSS,0);
-        result.put(Answer.TWO,0);
+
+        result = new  HashMap<String, Integer>() ;
+
 
         participants = 0;
 
     }
 
 
-    public void addResult(Answer answer){
-
-        result.put(answer, result.get(answer) + 1);
-        participants++;
+    public void addResult(String answer){
+        if(result.get(answer) != null) {
+            result.put(answer, result.get(answer) + 1);
+            participants++;
+        }
     }
 
     public int getCount(){
