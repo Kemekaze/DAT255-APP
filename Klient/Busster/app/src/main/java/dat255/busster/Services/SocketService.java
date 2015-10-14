@@ -149,15 +149,17 @@ public class SocketService extends Service {
             JSONArray posts = (JSONArray)data.opt("posts");
 
             int type = data.optInt("type");
-            try {
+            EventBus.getDefault().post(new PostsEvent(DataHandler.postToRposts(posts), type));
+            /*try {
                 List<UserPost> ups =DataHandler.<UserPost>jsonArrToObjArr(UserPost.class, posts);
                 List<? extends Post> posts1 = ups;
                 EventBus.getDefault().post(new PostsEvent((List<Post>)posts1, type));
+
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {

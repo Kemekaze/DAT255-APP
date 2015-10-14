@@ -11,7 +11,6 @@ public class Constants {
 
 
     public static final String SERVER_IP = "81.232.129.196";
-
     public static final String SERVER_PORT = "3000";
 
 

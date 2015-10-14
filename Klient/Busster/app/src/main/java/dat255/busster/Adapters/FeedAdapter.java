@@ -20,11 +20,8 @@ import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Objects.Post;
-
 import dat255.busster.Objects.UserPost;
-
 import dat255.busster.Objects.Vote;
-
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
@@ -169,32 +166,26 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                     layout.close(true);
                 }
             });
-        }
-
-        holder.view.setClickable(true);
-        holder.view.setOnLongClickListener(clickListener);
-
-        holder.postLayout.setBackgroundColor(Color.parseColor(posts.get(position).getColor()));
-        holder.body.setText(posts.get(position).getBody());
-        holder.user.setText(posts.get(position).getUser());
-        holder.service.setText(String.valueOf(posts.get(position).getBusLine()));
-        holder.time.setText(posts.get(position).getTimeSince());
-
-        if(posts.get(position) instanceof UserPost) {
 
             UserPost userPost=  (UserPost) posts.get(position);
+            holder.service.setText(String.valueOf(userPost.getBusLine()));
             holder.comment_count.setText(String.valueOf(userPost.getCommentCount()));
             holder.votes.setText(String.valueOf(userPost.getVotes()[0] - userPost.getVotes()[1]));
-
-        }else{
-
+        }else {
+            holder.swipeLayout.setLeftSwipeEnabled(false);
+            holder.service.setText("All");
             holder.votes.setVisibility(View.INVISIBLE);
             holder.comment_count.setVisibility(View.INVISIBLE);
             holder.upArrow.setVisibility(View.INVISIBLE);
             holder.downArrow.setVisibility(View.INVISIBLE);
-
         }
 
+        holder.view.setClickable(true);
+        holder.view.setOnLongClickListener(clickListener);
+        holder.postLayout.setBackgroundColor(Color.parseColor(posts.get(position).getColor()));
+        holder.body.setText(posts.get(position).getBody());
+        holder.user.setText(posts.get(position).getUser());
+        holder.time.setText(posts.get(position).getTimeSince());
 
     }
 

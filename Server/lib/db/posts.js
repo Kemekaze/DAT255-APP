@@ -25,6 +25,27 @@ var PostSchema = new Schema({
     	systemid: { type: Number},
     	serviceid: { type: Number}
     },
+    survey: {
+  		options: Number,
+  		answers: {
+  			option1: {
+  				text: String,
+  				count: Number
+  			},
+  			option2: {
+  				text: String,
+  				count: Number
+  			},
+  			option3: {
+  				text: String,
+  				count: Number
+  			},
+  			option4: {
+  				text: String,
+  				count: Number
+  			}
+  		}
+  	},
     type: { type: String}
   }
 
@@ -90,6 +111,39 @@ exports.newModel = function(body,user,systemid,serviceid,date,type){
 	});
 	return post;
 }
+exports.newSurvey = function(body,user,options,answers){
+	var post = new PostModel({
+	      body: body,
+		  user: user,  
+		  date: (new Date).getTime(),
+		  hidden: false,
+		  meta: {
+		  	survey: {
+		  		options: options,
+		  		answers: {
+		  			option1: {
+		  				text: answers[0],
+		  				count: 0
+		  			},
+		  			option2: {
+		  				text: answers[1],
+		  				count: 0
+		  			},
+		  			option3: {
+		  				text: answers[2],
+		  				count: 0
+		  			},
+		  			option4: {
+		  				text: answers[3],
+		  				count: 0
+		  			}
+		  		}
+		  	},		    
+    		type: "survey"
+		  }
+	});
+	return post;
+}
 exports.incVotesUp = function(id,callback){
 	PostModel.where({_id:id}).update({ $inc: { "meta.votes.up": 1 }}, function (err, p) {
 	  if (err) return console.error(err);
@@ -131,4 +185,11 @@ exports.getComments = function(post_id,callback){
 		callback(post.comments);
 	})
 
-} 
+}
+exports.countTotal = function(callback){
+	PostModel.count({},function(err,count){
+		if (err) return console.error(err);
+		callback(count);
+	});
+
+}  

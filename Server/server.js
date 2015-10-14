@@ -18,6 +18,8 @@ var DB_NAME   = "App";
 var clients = {};
 var clients_total= 0;
 var buses_total;
+var webGuiclients = [];
+
 
 //Database
 	
@@ -64,30 +66,14 @@ exports.socket.events.nextStop = function(nsData,bus){
 				socketid.emit("getBusNextStop",nsData.post);
 		});
 	}
-
-
-
-	/*for (var i = 0; i < buses.length; i++) {
-		if(clients[buses[i]].length == 0){
-			continue;
-		} 
-		console.log("Fetching next stop for bus '%s'",buses[i]);
-		lib.events.nextStop(buses[i],function(nextStop){
-			
-			
-		});
-	};*/
-
-	
 }
-
-//setInterval(events, 5000);
 
 
 app.get('/',function(req,res){
-	res.sendFile(__dirname + '/testConnection.html');
-	console.log("User on '/' ");
+	res.sendFile(__dirname + '/web/dashboard/index.html');
 });
+app.use('/assets', express.static(__dirname + '/web/dashboard/assets/'));
+
 io.on('connection', function(socket){ 
 	console.log("Connected: '"+socket.id); 
 	
@@ -97,10 +83,15 @@ io.on('connection', function(socket){
 	        if (!err && success){
 	            console.log("Authenticated: ", socket.id);
 	            socket.auth = true;
-
-	            var bus_id = socket.bus_id = data.bus_id;
-	            clients[bus_id].push(socket);
-	            clients_total++;
+	            if(data.web === undefined){
+	            	var bus_id = socket.bus_id = data.bus_id;
+		            clients[bus_id].push(socket);
+		            clients_total++;
+	            }else{
+	            	socket.web = true;
+	            	webGuiclients.push(socket);
+	            }
+	            
 
 	            console.log("Clients: "+ clients_total);
 	            socket.emit("authorized");
@@ -119,10 +110,15 @@ io.on('connection', function(socket){
 
 	socket.on('disconnect', function () { 
 		console.log("Disconnected: '"+socket.id);
-		if(socket.auth == true){
-		    var i = clients[socket.bus_id].indexOf(socket);
-		    clients[socket.bus_id].splice(i,1);
-		    clients_total--;
+		if(socket.auth == true ){
+			if(socket.web === undefined){
+			    var i = clients[socket.bus_id].indexOf(socket);
+			    clients[socket.bus_id].splice(i,1);
+			    clients_total--;
+			}else{
+				var i = webGuiclients.indexOf(socket);
+			    webGuiclients.splice(i,1);
+			}
 		}
 	    console.log("Clients: "+ clients_total);
 	});
@@ -249,6 +245,33 @@ io.on('connection', function(socket){
 			console.log("getStops "+stops.length);
 			socket.emit('getStops', {stops:stops,status:1});
 		});	 
+	});
+	socket.on('getTotalPostCount', function (data) {
+		console.log('getPostCount');
+		lib.db.posts.countTotal(function(count){
+			socket.emit('getTotalPostCount', {count:count});
+		});
+	});
+	socket.on('getClientCount', function (data) {
+		console.log('getClientCount');
+		var count=0;
+		for(var bus in clients){
+			for(var client in clients[bus]){
+				count++;
+			}
+		}
+		socket.emit('getClientCount', {count:count});
+		
+	});
+	socket.on('saveSurvey', function (data) {
+		console.log('saveSurvey');
+		console.log(JSON.stringify(data));
+		var data = data.survey;	
+		var survey = lib.db.posts.newSurvey(data.question,data.user,data.options,data.answers);
+	  	survey.save(function (err, su) {
+		  if (err) return console.error(err);
+		  console.log(JSON.stringify(su));	
+		});	
 	});
 
  });
