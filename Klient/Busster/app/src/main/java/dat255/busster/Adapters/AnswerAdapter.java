@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import dat255.busster.DB.SurveyDBHandler;
-import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Objects.Survey;
 import dat255.busster.R;
@@ -77,7 +76,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
             if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
                 JSONObject query = new JSONObject();
                 try {
-                    query.put("option", position);
+                    query.put("option", position+1);
                     query.put("post_id", survey.getId());
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dat255.busster.Adapters.AnswerAdapter;
-import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.SurveyEvent;
 import dat255.busster.Objects.Survey;
-import dat255.busster.Resources.Constants;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
