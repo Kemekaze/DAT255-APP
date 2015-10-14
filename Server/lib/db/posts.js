@@ -116,8 +116,12 @@ exports.newSurvey = function(body,user,options,answers){
 	      body: body,
 		  user: user,  
 		  date: (new Date).getTime(),
-		  hidden: false,
+		  hidden: false,		  
 		  meta: {
+		  	bus:{
+		    	systemid: -1,
+		    	serviceid: -1
+		    },
 		  	survey: {
 		  		options: options,
 		  		answers: {

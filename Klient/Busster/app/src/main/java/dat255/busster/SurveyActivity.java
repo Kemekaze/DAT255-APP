@@ -1,22 +1,32 @@
 package dat255.busster;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
 
-import dat255.busster.R;
-import de.greenrobot.event.EventBus;
+import java.util.ArrayList;
+
+import dat255.busster.Adapters.AnswerAdapter;
+import dat255.busster.Objects.Survey;
 
 public class SurveyActivity extends AppCompatActivity {
 
-    private final String TAG = "dat255.ServeyActivity";
+    private final String TAG = "dat255.SurveyActivity";
+    private String id = "0";
+    private String body;
+    private String user;
+    private String time;
+    private int count;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private Survey survey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +34,28 @@ public class SurveyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_survey);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Survey survey = getIntent().getParcelableExtra("survey");
+        body =  getIntent().getStringExtra("Body");
+        user =  getIntent().getStringExtra("User");
+        time =  getIntent().getStringExtra("Time");
+        count =  getIntent().getIntExtra("Count", 0);
+        ArrayList<String> mArray = getIntent().getStringArrayListExtra("Answers");
+        TextView bodyView = (TextView) findViewById(R.id.body);
+        TextView userView = (TextView) findViewById(R.id.user);
+        TextView timeView = (TextView) findViewById(R.id.time);
+
+        bodyView.setText(body);
+        userView.setText(user);
+        timeView.setText(time);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.post_feed);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new AnswerAdapter(this,mArray,mRecyclerView,survey);
+        mRecyclerView.setAdapter(mAdapter);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -42,17 +74,19 @@ public class SurveyActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void onClick(View view){
 
-        switch (view.getId()){
-            case R.id.resOne:
-                break;
-            case R.id.resCross:
-                break;
-            case R.id.resTwo:
-                break;
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
     }
 
 }

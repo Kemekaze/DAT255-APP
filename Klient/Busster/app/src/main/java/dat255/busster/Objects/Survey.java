@@ -1,7 +1,9 @@
 package dat255.busster.Objects;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,34 +12,48 @@ import java.util.HashMap;
 public class Survey extends Post {
 
 
-    private HashMap<Answer, Integer> result ;
+    private HashMap<String, Integer> result ;
     private int participants;
+    private ArrayList<String> alternatives = new ArrayList<String>();
+    private int options;
 
 
-    private enum Answer{
-        ONE,
-        CROSS,
-        TWO;
+
+    public Survey(JSONObject survey) {
+        super(survey);
+
+        //alternatives =survey.get("alternatives");
+        try {
+            JSONObject meta = survey.getJSONObject("meta");
+            JSONObject surveyData = meta.getJSONObject("survey");
+            this.options = surveyData.getInt("options");
+            JSONObject answers = surveyData.getJSONObject("answers");
+            for(int i = 1; i <= this.options; i++){
+                JSONObject option = answers.getJSONObject("option"+i);
+                this.participants+=option.getInt("count");
+                alternatives.add(option.getString("text"));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        result = new  HashMap<String, Integer>() ;
     }
 
-    public Survey(JSONObject post) {
-        super(post);
 
-        result = new  HashMap<Answer, Integer>() ;
-
-        result.put(Answer.ONE,0);
-        result.put(Answer.CROSS,0);
-        result.put(Answer.TWO,0);
-
-        participants = 0;
-
+    public void addResult(String answer){
+        if(result.get(answer) != null) {
+            result.put(answer, result.get(answer) + 1);
+            participants++;
+        }
     }
 
+    public ArrayList<String> getAlternatives() {
+        return alternatives;
+    }
 
-    public void addResult(Answer answer){
-
-        result.put(answer, result.get(answer) + 1);
-        participants++;
+    public int getOptions() {
+        return options;
     }
 
     public int getCount(){

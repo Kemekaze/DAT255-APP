@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Post {
+public class Post /*implements Parcelable*/{
 
     private String _id ="";
     private String body = "";
@@ -96,9 +96,6 @@ public class Post {
     public String getColor() {
         return color;
     }
-
-
-
 
     public class Comment{
         private String _id;
