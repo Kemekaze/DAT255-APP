@@ -67,7 +67,6 @@ function checkAuthToken(token ,callback){
 //Socket EVENTS
 
 exports.socket.events.nextStop = function(data){
-	console.log("clients of %s, %s", data.systemid, clients[data.systemid].length)
     if(clients[data.systemid].length != 0){
     	console.log("Sending next stop to %s clients for bus '%s'",clients[data.systemid].length, data.bus.regnr);
 	    var busSocket = clients[data.systemid];
