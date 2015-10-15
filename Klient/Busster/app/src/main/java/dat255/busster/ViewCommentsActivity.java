@@ -102,7 +102,6 @@ public class ViewCommentsActivity extends AppCompatActivity {
     public void addCommentActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
         this.startActivity(intent);
-        overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
     @Override

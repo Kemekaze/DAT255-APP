@@ -52,7 +52,7 @@ public class AddCommentActivity extends AppCompatActivity {
     }
     //Eventbus events
     @Subscribe
-    public void savePostStatus(SavePostEvent event){
+    public void saveCommentStatus(SavePostEvent event){
         Log.i(TAG, "savePostStatus");
         if(event.getStatus().equals("ok")){
             EventBus.getDefault().postSticky(new StatusEvent("Post saved!"));

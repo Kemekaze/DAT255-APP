@@ -1,5 +1,6 @@
 package dat255.busster.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -250,8 +251,10 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
             }else if(p instanceof UserPost){
                 //open comments
-                Intent commentIntent = new Intent(context, ViewCommentsActivity.class);
+                Activity activity = (Activity) context;
+                Intent commentIntent = new Intent(activity, ViewCommentsActivity.class);
                 context.startActivity(commentIntent);
+                activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
 
             }/*else if(p instanceof EventPost){
                 //open event
