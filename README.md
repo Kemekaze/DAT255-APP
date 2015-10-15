@@ -18,7 +18,7 @@ git clone git://github.com/Kemekaze/DAT255-APP.git
 ### Server side 
 Install Mongodb and Nodejs
 Run mongodb (mongod.exe)
-Open any shell and cd to root directory off where you cloned git.
+Open any shell and cd to Server directory off where you cloned git.
 
 Run:
 ```bash
@@ -26,7 +26,7 @@ Run:
 ```
 Start the server:
 ```bash
-  node server/server.js
+  node server.js
 ```
 (in order for bus specificoperations to work you need to add some buses )
 ### Client side 
