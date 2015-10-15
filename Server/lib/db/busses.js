@@ -111,7 +111,6 @@ BusSchema.methods.resetEvents = function (callback) {
 	    if (!err) 
 	    	callback({status:"Events reseted for'"+bus.regnr+"'",data:bus})
 	});
-
 }
 BusSchema.methods.updateJourney = function(stops,callback){
 	var bus = this;
