@@ -31,7 +31,8 @@ Start the server:
 (in order for bus specificoperations to work you need to add some buses )
 ### Client side 
 Run the app Busster in Klient folder
-
+#### optional
+Open the webgui at http://localhost:3000 in a webbrowser to edit and see posts, buses etc
 
 
 ## Massor med UIS
