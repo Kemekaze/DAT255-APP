@@ -1,138 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="3dp"
+    android:layout_height="match_parent">
 
-    android:background="#c5cae9"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:paddingTop="17dp"
-    android:paddingBottom="15dp"
-    >
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/post"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Body"
-        android:id="@+id/body"
-        android:width="300dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:minHeight="90dp"
-        android:textColor="#FFF"
-        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="USER"
-        android:id="@+id/user"
-        android:textColor="#EEE"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        android:layout_marginBottom="5dp"
+        android:minHeight="100dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="U"
-        android:id="@+id/votesUp"
-        android:textColor="#EEE"
-        android:layout_alignTop="@+id/votesDown"
-        android:layout_alignEnd="@+id/body"
-        android:visibility="gone"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:id="@+id/comment">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Body"
+                android:id="@+id/body"
+                android:width="280dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:minHeight="40dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="D"
-        android:id="@+id/votesDown"
-        android:layout_alignBottom="@+id/service"
-        android:layout_alignStart="@+id/user"
-        android:visibility="gone"
-        android:textColor="#EEE"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="S"
-        android:id="@+id/service"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:drawableLeft="@drawable/ic_action_directions_bus"
-        android:drawablePadding="4dp"
-        android:textColor="#EEE"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="USER"
+                android:id="@+id/user"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="T"
+                android:id="@+id/time"
+                android:layout_alignParentBottom="true"
+                android:layout_alignEnd="@+id/user"
+                android:gravity="right"
+                />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="T"
-        android:id="@+id/time"
-        android:gravity="right"
-        android:textColor="#EEE"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@id/user"
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
-        />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="C"
-        android:id="@+id/comments"
-        android:drawableLeft="@drawable/ic_action_comment_b"
-        android:drawablePadding="4dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/user"
-        android:layout_marginEnd="100dp"
-        android:textColor="#EEE"
-        android:visibility="gone"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="V"
-        android:id="@+id/votes"
-        android:gravity="right"
-        android:textColor="#EEE"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/downArrow" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/upArrow"
-        android:text=""
-        android:drawableLeft="@drawable/ic_action_arrow_drop_up"
-        android:paddingRight="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/votes" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/downArrow"
-        android:text=""
-        android:singleLine="false"
-        android:drawableRight="@drawable/ic_action_arrow_drop_down"
-        android:paddingLeft="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
-</RelativeLayout>
+</LinearLayout>
