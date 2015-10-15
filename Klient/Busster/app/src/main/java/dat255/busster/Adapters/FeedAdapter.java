@@ -31,6 +31,7 @@ import dat255.busster.R;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
 import dat255.busster.SurveyActivity;
+import dat255.busster.ViewCommentsActivity;
 import de.greenrobot.event.EventBus;
 
 
@@ -249,6 +250,9 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
             }else if(p instanceof UserPost){
                 //open comments
+                Intent commentIntent = new Intent(context, ViewCommentsActivity.class);
+                context.startActivity(commentIntent);
+
             }/*else if(p instanceof EventPost){
                 //open event
             }*/
