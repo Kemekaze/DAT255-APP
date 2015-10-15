@@ -62,7 +62,7 @@ public class SelectWhereActivity extends AppCompatActivity {
         String displayName = ((EditText) findViewById(R.id.username)).getText().toString();
         AutoCompleteTextView destinationACTV = (AutoCompleteTextView) findViewById(R.id.destination);
         String destination="";
-        if(busStops.length !=0) {
+        if(busStops != null) {
             for (String stop : busStops) {
                 if (destinationACTV.getText().toString().equals(stop)) {
                     destination = stop;

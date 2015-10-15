@@ -240,7 +240,7 @@ BusSchema.methods.nextStop = function (callback) {
 	var bus = this;
 	var stops = bus.journey.stops;	
     var nextStop = getNextStop(stops);
-    callback(nextStop);
+    callback({stop:nextStop,bus:bus});
 	
 	function getNextStop(stops){
 		var now = moment();

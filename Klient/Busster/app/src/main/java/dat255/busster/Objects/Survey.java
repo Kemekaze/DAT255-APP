@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Rasmus on 2015-10-13.
@@ -16,7 +15,8 @@ public class Survey extends Post {
     private int participants;
     private ArrayList<String> alternatives = new ArrayList<String>();
     private int options;
-
+    private String color = "#43a047";
+    private String type = "survey";
 
 
     public Survey(JSONObject survey) {
@@ -43,6 +43,10 @@ public class Survey extends Post {
 
     }
 
+    @Override
+    public String getColor() {
+        return this.color;
+    }
 
     public void addResult(int pos){
 
@@ -75,7 +79,7 @@ public class Survey extends Post {
 
 
     public String getType() {
-        return "Survey";
+        return this.type;
     }
 
 

@@ -19,7 +19,7 @@ var GPS_UPDATE_TIME = 5;
 var EVENT_NEXTSTOP_TIME = 10;
 
 exports.beginUpdateBuses = function(){
-	setInterval(updateConsole, 1000);
+	//setInterval(updateConsole, 1000);
 	//console.log("-----BEGIN UPDATEING BUSES-----");
 
 	//update all busses on startup so the api is not overloaded with requests
@@ -133,22 +133,21 @@ exports.eventBusesNextStop = function(callback){
 	db.busses.findAll(function(buses){
 		buses.forEach(function(bus){
 			bus.nextStop(function(nstop){
-				if(nstop != null){					
-					bus.findEvent(nstop.routeidx,function(ev){
-
-						if(nstop.time.diff(moment(), 'seconds') <= 60){
+				if(nstop.stop != null){					
+					bus.findEvent(nstop.stop.routeidx,function(ev){
+						if(nstop.stop.time.diff(moment(), 'seconds') <= 60){
 							if(ev != null){
 								if(ev.min1Stop == false){
 									ev.min1Stop = true;
-									bus.save(function (err, res) {
+									nstop.bus.save(function (err, res) {
 										if (err) console.error(err);
-										emitEvent(nstop,bus);								    
+										emitEvent(nstop);								    
 									});
 								}									
 							}
 							else{
-								bus.saveEvent({routeIdx: nstop.routeidx, min1Stop: true},function(evS){
-									emitEvent(nstop,bus);
+								bus.saveEvent({routeIdx: nstop.stop.routeidx, min1Stop: true},function(evS){
+									emitEvent(nstop);
 								});
 							}
 						}
@@ -159,11 +158,11 @@ exports.eventBusesNextStop = function(callback){
 			});
 		});
 	});
-	function emitEvent(nstop,bus){
+	function emitEvent(nstop){
 		socketEvents.nextStop({
-			post: db.posts.newModel("Next stop "+nstop.name+" "+moment().to(nstop.time) ,"Alert",nstop.systemid,nstop.serviceid,nstop.time.unix(),"event"), 
-			systemid: nstop.systemid,
-			bus:bus
+			post: db.posts.newModel(""+nstop.stop.name+" \n"+moment().to(nstop.stop.time) ,"Next stop",nstop.stop.systemid,nstop.stop.serviceid,nstop.stop.time.unix(),"event"), 
+			systemid: nstop.stop.systemid,
+			bus:nstop.bus
 		});
 	}	
 }

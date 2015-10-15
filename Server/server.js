@@ -39,7 +39,7 @@ db.once('open', function (callback) {
   console.log("--------------- SERVER BOOTED ---------------");
 });
 
-//lib.events.beginUpdateBuses();
+lib.events.beginUpdateBuses();
 
 
 
@@ -66,13 +66,13 @@ function checkAuthToken(token ,callback){
 }
 //Socket EVENTS
 
-exports.socket.events.nextStop = function(nsData,bus){
-    if(clients[nsData.systemid].length != 0){
-    	console.log(bus);
-    	console.log("Sending next stop to %s clients for bus '%s'",clients[nsData.systemid].length, bus.regnr);
-	    var busSocket = clients[nsData.systemid];
+exports.socket.events.nextStop = function(data){
+	console.log("clients of %s, %s", data.systemid, clients[data.systemid].length)
+    if(clients[data.systemid].length != 0){
+    	console.log("Sending next stop to %s clients for bus '%s'",clients[data.systemid].length, data.bus.regnr);
+	    var busSocket = clients[data.systemid];
 		busSocket.forEach(function(socketid){
-				socketid.emit("getBusNextStop",nsData.post);
+				socketid.emit("getBusNextStop",data.post);
 		});
 	}
 }

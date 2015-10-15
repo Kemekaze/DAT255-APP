@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dat255.busster.Objects.Event;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
@@ -59,6 +60,8 @@ public class DataHandler {
                     posts.add(new UserPost(jsonArray.getJSONObject(i)));
                 else if(meta.getString("type").equals("survey"))
                     posts.add(new Survey(jsonArray.getJSONObject(i)));
+                else if(meta.getString("type").equals("event"))
+                    posts.add(new Event(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

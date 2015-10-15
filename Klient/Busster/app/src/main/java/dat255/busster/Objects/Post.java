@@ -36,7 +36,6 @@ public class Post /*implements Parcelable*/{
             this.user = post.getString("user");
             this.busLine = bus.getInt("serviceid");
             this.type = meta.getString("type");
-
             this.time = post.getLong("date");
 
         } catch (JSONException e) {

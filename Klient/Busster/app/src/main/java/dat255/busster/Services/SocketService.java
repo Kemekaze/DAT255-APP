@@ -238,8 +238,9 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventNextStop");
             JSONObject post = (JSONObject)args[0];
+            JSONArray  posts = new JSONArray().put(post);
             int type = 2;
-            EventBus.getDefault().post(new PostsEvent(DataHandler.<Post>jsonToObjArr(Post.class, post), type));
+            EventBus.getDefault().post(new PostsEvent(DataHandler.postToRposts(posts), type));
         }
     };
     private Emitter.Listener eventGetBusesGPS = new Emitter.Listener() {
