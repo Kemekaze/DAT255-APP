@@ -25,8 +25,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public CommentsAdapter(List<Post.Comment> comments, RecyclerView mRecyclerView) {
         this.comments = comments;
         this.recyclerView = mRecyclerView;
-
-
         notifyDataSetChanged();
     }
 
