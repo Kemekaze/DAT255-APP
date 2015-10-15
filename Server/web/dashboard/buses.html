@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Busster</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">DAT255</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Settings</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">            
+            <li><a href="/">Overview</a></li>
+            <li class="active"><a href="#">Busses <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">         
+          <h2 class="sub-header">Busses</h2>
+          <div class="row ">            
+            <div class="col-xs-12 col-sm-12">
+              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Bus</th>
+                      <th>Service</th>
+                      <th>Direction</th>                      
+                      <th>Next stop name</th>
+                      <th>Next stop in</th>
+                      <th>GID</th>
+                    </tr>
+                  </thead>
+                  <tbody id="busses_tbody">
+                    
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        
+          
+        </div>
+      </div>
+    </div>    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+    <script>
+      var socket = io('http://81.232.129.196:3000');
+
+      socket.on('connect', function (data) {
+        socket.emit('authenticate', { token: 'lewebtoken', web:true });
+      });
+      socket.on('authorized', function (data) {
+        socket.emit('getBuses');
+      });
+      
+      socket.on('getBuses', function (data) {
+        $("#getPosts").html("");       
+        for (var i = 0; i< data.buses.length; i++) {
+          console.log(data.buses[i]);
+          var bus = data.buses[i];
+          if(bus.journey.ids !== undefined  ){
+            var service = (bus.journey.ids.serviceid === undefined)? "Not in traffic": bus.journey.ids.serviceid;
+            var gid = (bus.journey.ids.id === undefined)? "N/A": bus.journey.ids.id;
+          }else{
+            var service = "N/A",
+                gid = "N/A";
+          }          
+          var direction = (bus.journey.name === undefined)? "N/A": bus.journey.name;
+          var stops     = (bus.journey.stops === undefined)? "N/A": bus.journey.stops;
+          if(typeof stops == 'object'){
+            for(var stop in bus.journey.stops){
+
+            }
+          }
+          
+
+
+          $("#busses_tbody").append(
+                  '<tr id="'+                   bus._id  +'">'+
+                  '<td class="bus_id">'+        bus._id  +'</td>'+
+                  '<td class="bus_bus">'+       bus.regnr  +'</td>'+
+                  '<td class="bus_service">'+   service  +'</td>'+
+                  '<td class="bus_direction">'+ direction  +'</td>'+
+                  '<td class="bus_stop_name">'+ ""  +'</td>'+
+                  '<td class="bus_stop_time">'+ ""  +'</td>'+
+                  '<td class="bus_gid">'+       gid  +'</td>'+
+                '</tr>');
+        };
+        
+      });      
+
+    </script>
+    
+  </body>
+</html>

@@ -261,32 +261,35 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     };
     private void voteUserPost(int pos,boolean like){
 
-        UserPost post = (UserPost) posts.get(pos);
+        Post p= posts.get(pos);
 
-        List<Boolean> exists = votesHandler.checkIfExists(post.getId());
-        Log.i(TAG, "onOpen e:" + exists.get(0) + " l:" + like);
-        String eventType = "undefined";
-        String msg;
-        if (exists.get(0) == false) {
-            votesHandler.addVote(new Vote(post.getId(), like));
-            eventType = (like) ? Constants.SocketEvents.INC_VOTES_UP : Constants.SocketEvents.INC_VOTES_DOWN;
-            if (like) post.incUpVotes();
-            else post.incDownVotes();
-            msg = (like) ? "Liked!" : "Disliked!";
+        if(p instanceof UserPost) {
+            UserPost post = (UserPost) p;
+            List<Boolean> exists = votesHandler.checkIfExists(post.getId());
+            Log.i(TAG, "onOpen e:" + exists.get(0) + " l:" + like);
+            String eventType = "undefined";
+            String msg;
+            if (exists.get(0) == false) {
+                votesHandler.addVote(new Vote(post.getId(), like));
+                eventType = (like) ? Constants.SocketEvents.INC_VOTES_UP : Constants.SocketEvents.INC_VOTES_DOWN;
+                if (like) post.incUpVotes();
+                else post.incDownVotes();
+                msg = (like) ? "Liked!" : "Disliked!";
 
-        } else if (exists.get(1) != like) {
-            votesHandler.removeVote(post.getId());
-            eventType = (like) ? Constants.SocketEvents.DEC_VOTES_DOWN : Constants.SocketEvents.DEC_VOTES_UP;
-            if (like) post.decDownVotes();
-            else post.decUpVotes();
-            msg = "Vote removed!";
-        } else {
-            //EventBus.getDefault().post(new StatusEvent("Already voted!"));
-            return;
+            } else if (exists.get(1) != like) {
+                votesHandler.removeVote(post.getId());
+                eventType = (like) ? Constants.SocketEvents.DEC_VOTES_DOWN : Constants.SocketEvents.DEC_VOTES_UP;
+                if (like) post.decDownVotes();
+                else post.decUpVotes();
+                msg = "Vote removed!";
+            } else {
+                //EventBus.getDefault().post(new StatusEvent("Already voted!"));
+                return;
+            }
+            EventBus.getDefault().post(new StatusEvent(msg));
+            EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
+            refreshVotes(pos, post);
         }
-        EventBus.getDefault().post(new StatusEvent(msg));
-        EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
-        refreshVotes(pos, post);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

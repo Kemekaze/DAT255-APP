@@ -80,6 +80,18 @@ exports.socket.events.nextStop = function(data){
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/web/dashboard/index.html');
 });
+app.get('/busses',function(req,res){
+	res.sendFile(__dirname + '/web/dashboard/buses.html');
+});
+app.get('/posts',function(req,res){
+	res.sendFile(__dirname + '/web/dashboard/index.html');
+});
+app.get('/events',function(req,res){
+	res.sendFile(__dirname + '/web/dashboard/index.html');
+});
+app.get('/surveys',function(req,res){
+	res.sendFile(__dirname + '/web/dashboard/index.html');
+});
 app.use('/assets', express.static(__dirname + '/web/dashboard/assets/'));
 
 io.on('connection', function(socket){ 
@@ -232,6 +244,9 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
+
+
 	socket.on('getBusGPS', function (data) {
 		var bus_id = data.bus_id;
 	  	lib.db.busses.find({systemid:bus_id},function(bus){
@@ -307,6 +322,11 @@ io.on('connection', function(socket){
 			console.log("Voted survey "+post_id);
 	  		socket.emit('updateSurvey', {status:1,data:null});
 	  	})		
+	});
+	socket.on('getBuses', function (data) {
+	  	lib.db.busses.findAll(function(buses){
+	  		socket.emit('getBuses', {buses:buses,status:1});
+	  	});
 	});
 
  });
