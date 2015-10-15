@@ -94,6 +94,7 @@
     <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/moment.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
     <script>
@@ -103,14 +104,19 @@
         socket.emit('authenticate', { token: 'lewebtoken', web:true });
       });
       socket.on('authorized', function (data) {
-        socket.emit('getBuses');
+        socket.emit('getBusesInfo');
       });
-      
-      socket.on('getBuses', function (data) {
-        $("#getPosts").html("");       
-        for (var i = 0; i< data.buses.length; i++) {
-          console.log(data.buses[i]);
-          var bus = data.buses[i];
+      function getBusesInfo(){
+        console.log("Updateing Buses");
+          socket.emit('getBusesInfo');
+      }
+      setInterval(getBusesInfo, 10*1000)
+      socket.on('getBusesInfo', function (data) {
+        $("#busses_tbody").html("");       
+        for (var i = 0; i< data.stops.length; i++) {
+          
+          var bus = data.stops[i].bus;
+          
           if(bus.journey.ids !== undefined  ){
             var service = (bus.journey.ids.serviceid === undefined)? "Not in traffic": bus.journey.ids.serviceid;
             var gid = (bus.journey.ids.id === undefined)? "N/A": bus.journey.ids.id;
@@ -119,13 +125,12 @@
                 gid = "N/A";
           }          
           var direction = (bus.journey.name === undefined)? "N/A": bus.journey.name;
-          var stops     = (bus.journey.stops === undefined)? "N/A": bus.journey.stops;
-          if(typeof stops == 'object'){
-            for(var stop in bus.journey.stops){
-
-            }
+          var stopName = "N/A";
+          var stopTime = "N/A";
+          if(data.stops[i].stop != null){
+            stopName = data.stops[i].stop.name;
+            stopTime = moment(data.stops[i].stop.time).format("HH:mm");
           }
-          
 
 
           $("#busses_tbody").append(
@@ -134,8 +139,8 @@
                   '<td class="bus_bus">'+       bus.regnr  +'</td>'+
                   '<td class="bus_service">'+   service  +'</td>'+
                   '<td class="bus_direction">'+ direction  +'</td>'+
-                  '<td class="bus_stop_name">'+ ""  +'</td>'+
-                  '<td class="bus_stop_time">'+ ""  +'</td>'+
+                  '<td class="bus_stop_name">'+ stopName  +'</td>'+
+                  '<td class="bus_stop_time">'+ stopTime  +'</td>'+
                   '<td class="bus_gid">'+       gid  +'</td>'+
                 '</tr>');
         };

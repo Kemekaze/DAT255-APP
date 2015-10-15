@@ -80,13 +80,10 @@ exports.socket.events.nextStop = function(data){
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/web/dashboard/index.html');
 });
-app.get('/busses',function(req,res){
+app.get('/buses',function(req,res){
 	res.sendFile(__dirname + '/web/dashboard/buses.html');
 });
 app.get('/posts',function(req,res){
-	res.sendFile(__dirname + '/web/dashboard/index.html');
-});
-app.get('/events',function(req,res){
 	res.sendFile(__dirname + '/web/dashboard/index.html');
 });
 app.get('/surveys',function(req,res){
@@ -323,11 +320,29 @@ io.on('connection', function(socket){
 	  		socket.emit('updateSurvey', {status:1,data:null});
 	  	})		
 	});
-	socket.on('getBuses', function (data) {
+	socket.on('getBusesInfo', function (data) {
 	  	lib.db.busses.findAll(function(buses){
-	  		socket.emit('getBuses', {buses:buses,status:1});
+	  		var stops=[];
+			var count=0;
+		  	lib.db.busses.findAll(function(buses){
+		  		buses.forEach(function(bus){
+					bus.nextStop(function(stop){
+						count++;
+						stops.push(stop);
+						if(count == buses.length){
+							socket.emit('getBusesInfo', {
+					  			stops: stops,
+					  			status:1
+					  		});
+						}						
+					});
+				});
+		  		
+		  	});
+	  		
 	  	});
 	});
+	
 
  });
 
