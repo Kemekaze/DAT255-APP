@@ -13,7 +13,6 @@
     android:weightSum="1"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:gravity="center"
     >
     <!--What you want to show-->
 </LinearLayout>
@@ -37,135 +36,130 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     android:paddingTop="17dp"
-    android:paddingBottom="15dp"
+    android:paddingBottom="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Body"
+            android:id="@+id/body"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:minHeight="90dp"
+            android:textColor="#FFF"
+            android:paddingBottom="25dp"
+            android:layout_marginTop="20dp"
+            android:minWidth="300dp"
+            android:maxWidth="370dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="USER"
+            android:id="@+id/user"
+            android:textColor="#EEE"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Body"
-        android:id="@+id/body"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:minHeight="90dp"
-        android:textColor="#FFF"
-        android:paddingBottom="25dp"
-        android:layout_marginTop="20dp"
-        android:minWidth="300dp"
-        android:maxWidth="370dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="U"
+            android:id="@+id/votesUp"
+            android:textColor="#EEE"
+            android:layout_alignTop="@+id/votesDown"
+            android:layout_alignEnd="@+id/body"
+            android:visibility="gone"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="USER"
-        android:id="@+id/user"
-        android:textColor="#EEE"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="D"
+            android:id="@+id/votesDown"
+            android:layout_alignBottom="@+id/service"
+            android:layout_alignStart="@+id/user"
+            android:visibility="gone"
+            android:textColor="#EEE"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="U"
-        android:id="@+id/votesUp"
-        android:textColor="#EEE"
-        android:layout_alignTop="@+id/votesDown"
-        android:layout_alignEnd="@+id/body"
-        android:visibility="gone"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="D"
-        android:id="@+id/votesDown"
-        android:layout_alignBottom="@+id/service"
-        android:layout_alignStart="@+id/user"
-        android:visibility="gone"
-        android:textColor="#EEE"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="S"
-        android:id="@+id/service"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:drawableLeft="@drawable/ic_action_directions_bus"
-        android:drawablePadding="4dp"
-        android:textColor="#EEE"
-        android:paddingTop="15dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="S"
+            android:id="@+id/service"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:drawableLeft="@drawable/ic_action_directions_bus"
+            android:drawablePadding="4dp"
+            android:textColor="#EEE"
+            android:paddingTop="15dp" />
 
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="T"
-        android:id="@+id/time"
-        android:gravity="right"
-        android:textColor="#EEE"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="T"
+            android:id="@+id/time"
+            android:gravity="right"
+            android:textColor="#EEE"
 
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/downArrow" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="C"
-        android:id="@+id/comments"
-        android:drawableLeft="@drawable/ic_action_comment_b"
-        android:drawablePadding="4dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/upArrow"
-        android:layout_marginEnd="100dp"
-        android:textColor="#EEE"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="V"
-        android:id="@+id/votes"
-        android:gravity="right"
-        android:textColor="#EEE"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/downArrow" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/upArrow"
-        android:text=""
-        android:drawableLeft="@drawable/ic_action_arrow_drop_up"
-        android:paddingRight="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/votes" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/downArrow"
-        android:text=""
-        android:singleLine="false"
-        android:drawableRight="@drawable/ic_action_arrow_drop_down"
-        android:paddingLeft="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
-
-</RelativeLayout>
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/downArrow" />
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="C"
+            android:id="@+id/comments"
+            android:drawableLeft="@drawable/ic_action_comment_b"
+            android:drawablePadding="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/upArrow"
+            android:layout_marginEnd="100dp"
+            android:textColor="#EEE"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="V"
+            android:id="@+id/votes"
+            android:gravity="right"
+            android:textColor="#EEE"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/downArrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/upArrow"
+            android:text=""
+            android:drawableLeft="@drawable/ic_action_arrow_drop_up"
+            android:paddingRight="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/votes" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/downArrow"
+            android:text=""
+            android:singleLine="false"
+            android:drawableRight="@drawable/ic_action_arrow_drop_down"
+            android:paddingLeft="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
