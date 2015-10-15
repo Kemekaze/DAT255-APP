@@ -14,6 +14,8 @@ public class UserPost extends Post{
 
     private List<Comment> comments = new ArrayList<Comment>();
     private int[] votes = {-1,-1};
+    private String color = "#039BE5";
+    private String type = "userpost";
 
     public UserPost(JSONObject post) {
         super(post);
@@ -42,9 +44,13 @@ public class UserPost extends Post{
 
     @Override
     public String getType() {
-        return "UserPost";
+        return this.type;
     }
 
+    @Override
+    public String getColor() {
+        return this.color;
+    }
 
     public int[] getVotes() {
         return votes;
