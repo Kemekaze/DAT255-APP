@@ -40,6 +40,12 @@
         <service android:name=".Services.SocketService" />
 
         <activity
+            android:name=".AddCommentActivity"
+            android:label="@string/title_activity_add_comment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <service android:name=".Services.SocketService" />
+
+        <activity
             android:name=".SurveyActivity"
             android:label="@string/title_activity_survey"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -52,6 +58,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".Services.SocketService" />
 
+        <activity
+            android:name=".ViewCommentsActivity"
+            android:label="@string/title_activity_add_comment"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
 
     </application>
 
