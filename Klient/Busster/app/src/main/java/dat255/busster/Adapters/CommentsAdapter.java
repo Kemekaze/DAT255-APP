@@ -36,15 +36,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.comments = comments;
         this.recyclerView = mRecyclerView;
 
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-
         notifyDataSetChanged();
     }
 
