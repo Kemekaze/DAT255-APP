@@ -1,26 +1,16 @@
 package dat255.busster.Adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.json.JSONObject;
 
 import java.util.List;
 
-import dat255.busster.DB.VoteDBHandler;
-import dat255.busster.Events.SendDataEvent;
-import dat255.busster.Events.StatusEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.R;
-import dat255.busster.Resources.Constants;
-import dat255.busster.Resources.ServerQueries;
-import de.greenrobot.event.EventBus;
 
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
@@ -36,14 +26,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.comments = comments;
         this.recyclerView = mRecyclerView;
 
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
-        this.comments.add(new Post.Comment(new JSONObject()));
 
         notifyDataSetChanged();
     }

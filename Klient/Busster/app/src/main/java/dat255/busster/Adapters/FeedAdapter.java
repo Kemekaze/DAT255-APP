@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Events.SurveyEvent;
+import dat255.busster.Objects.Event;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
@@ -109,81 +109,29 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final int pos = position;
 
-
-        if(posts.get(pos) instanceof UserPost) {
-            holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-            holder.swipeLayout.setRightSwipeEnabled(true);
-            holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
-            holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
-
-            holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-
-                @Override
-                public void onClose(SwipeLayout layout) {
-                }
-
-                @Override
-                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //you are swiping.
-                }
-
-                @Override
-                public void onStartOpen(SwipeLayout layout) {
-                }
-
-                @Override
-                public void onOpen(SwipeLayout layout) {
-
-                    layout.close(true);
-
-
-                    UserPost post = (UserPost) posts.get(pos);
-                    boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
-                    List<Boolean> exists = votesHandler.checkIfExists(post.getId());
-                    Log.i(TAG, "onOpen e:" + exists.get(0) + " l:" + like);
-                    String eventType = "undefined";
-                    String msg;
-                    if (exists.get(0) == false) {
-                        votesHandler.addVote(new Vote(post.getId(), like));
-                        eventType = (like) ? Constants.SocketEvents.INC_VOTES_UP : Constants.SocketEvents.INC_VOTES_DOWN;
-                        if (like) post.incUpVotes();
-                        else post.incDownVotes();
-                        msg = (like) ? "Liked!" : "Disliked!";
-
-                    } else if (exists.get(1) != like) {
-                        votesHandler.removeVote(post.getId());
-                        eventType = (like) ? Constants.SocketEvents.DEC_VOTES_DOWN : Constants.SocketEvents.DEC_VOTES_UP;
-                        if (like) post.decDownVotes();
-                        else post.decUpVotes();
-                        msg = "Vote removed!";
-                    } else {
-                        //EventBus.getDefault().post(new StatusEvent("Already voted!"));
-                        //updatedPosts();
-                        return;
-                    }
-                    EventBus.getDefault().post(new StatusEvent(msg));
-                    EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
-                    refreshVotes(pos, post);
-                }
-
-                @Override
-                public void onStartClose(SwipeLayout layout) {
-                }
-
-                @Override
-                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    layout.close(true);
-                }
-            });
-
+        if(posts.get(position).getType().equals("post")) {
             UserPost userPost=  (UserPost) posts.get(position);
+
+            swipe(holder,position);
+
             holder.service.setText(String.valueOf(userPost.getBusLine()));
             holder.comment_count.setText(String.valueOf(userPost.getCommentCount()));
             holder.votes.setText(String.valueOf(userPost.getVotes()[0] - userPost.getVotes()[1]));
-        }else {
+        }else if(posts.get(position).getType().equals("event")) {
+            Event eventPost=  (Event) posts.get(position);
+
+            holder.service.setText(String.valueOf(eventPost.getBusLine()));
             holder.swipeLayout.setLeftSwipeEnabled(false);
+            holder.swipeLayout.setRightSwipeEnabled(false);
+            holder.votes.setVisibility(View.INVISIBLE);
+            holder.comment_count.setVisibility(View.INVISIBLE);
+            holder.upArrow.setVisibility(View.INVISIBLE);
+            holder.downArrow.setVisibility(View.INVISIBLE);
+        }else{
+
+            holder.swipeLayout.setLeftSwipeEnabled(false);
+            holder.swipeLayout.setRightSwipeEnabled(false);
             holder.service.setText("All");
             holder.votes.setVisibility(View.INVISIBLE);
             holder.comment_count.setVisibility(View.INVISIBLE);
@@ -198,6 +146,72 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.user.setText(posts.get(position).getUser());
         holder.time.setText(posts.get(position).getTimeSince());
 
+    }
+    private void swipe(ViewHolder holder, int position){
+        final int pos = position;
+        holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        holder.swipeLayout.setRightSwipeEnabled(true);
+        holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
+        holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
+
+        holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+            @Override
+            public void onClose(SwipeLayout layout) {
+            }
+
+            @Override
+            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                //you are swiping.
+            }
+
+            @Override
+            public void onStartOpen(SwipeLayout layout) {
+            }
+
+            @Override
+            public void onOpen(SwipeLayout layout) {
+
+                layout.close(true);
+
+
+                UserPost post = (UserPost) posts.get(pos);
+                boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
+                List<Boolean> exists = votesHandler.checkIfExists(post.getId());
+                Log.i(TAG, "onOpen e:" + exists.get(0) + " l:" + like);
+                String eventType = "undefined";
+                String msg;
+                if (exists.get(0) == false) {
+                    votesHandler.addVote(new Vote(post.getId(), like));
+                    eventType = (like) ? Constants.SocketEvents.INC_VOTES_UP : Constants.SocketEvents.INC_VOTES_DOWN;
+                    if (like) post.incUpVotes();
+                    else post.incDownVotes();
+                    msg = (like) ? "Liked!" : "Disliked!";
+
+                } else if (exists.get(1) != like) {
+                    votesHandler.removeVote(post.getId());
+                    eventType = (like) ? Constants.SocketEvents.DEC_VOTES_DOWN : Constants.SocketEvents.DEC_VOTES_UP;
+                    if (like) post.decDownVotes();
+                    else post.decUpVotes();
+                    msg = "Vote removed!";
+                } else {
+                    //EventBus.getDefault().post(new StatusEvent("Already voted!"));
+                    //updatedPosts();
+                    return;
+                }
+                EventBus.getDefault().post(new StatusEvent(msg));
+                EventBus.getDefault().post(new SendDataEvent(eventType, ServerQueries.query("post_id", post.getId())));
+                refreshVotes(pos, post);
+            }
+
+            @Override
+            public void onStartClose(SwipeLayout layout) {
+            }
+
+            @Override
+            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                layout.close(true);
+            }
+        });
     }
 
     private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
