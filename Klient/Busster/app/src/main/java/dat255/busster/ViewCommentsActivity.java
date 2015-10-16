@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,10 +30,13 @@ public class ViewCommentsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayout parentPostLayout;
 
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
+    private TextView body;
+    private TextView user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,11 @@ public class ViewCommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        body = (TextView) parentPostLayout.findViewById(R.id.body);
+        user = (TextView) parentPostLayout.findViewById(R.id.user);
+        body.setText(getIntent().getStringExtra("body"));
+        user.setText(getIntent().getStringExtra("user"));
+        parentPostLayout = (LinearLayout) mRecyclerView.findViewById(R.id.parent_post);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
         mLayoutManager = new LinearLayoutManager(this);
