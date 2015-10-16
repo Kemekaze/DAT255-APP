@@ -26,5 +26,11 @@
     <string name="title_activity_view_comments">Comments</string>
     <string name="title_activity_add_comment">Add Comment</string>
 
+    <!-- strings for main overflow menu-->
+    <string name="main_menu_1">All</string>
+    <string name="main_menu_2">Posts</string>
+    <string name="main_menu_3">Surveys</string>
+    <string name="main_menu_4">No stops</string>
+
 
 </resources>

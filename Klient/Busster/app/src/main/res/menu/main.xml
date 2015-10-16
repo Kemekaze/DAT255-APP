@@ -1,6 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/main_menu_filter_1"
+            android:orderInCategory="1"
+            app:showAsAction="never"
+            android:title="@string/main_menu_1"
+            android:checked="true"
+            />
+        <item
+            android:id="@+id/main_menu_filter_2"
+            android:orderInCategory="2"
+            app:showAsAction="never"
+            android:title="@string/main_menu_2"
+            />
+        <item
+            android:id="@+id/main_menu_filter_3"
+            android:orderInCategory="3"
+            app:showAsAction="never"
+            android:title="@string/main_menu_3"
+            />
+
+    </group>
 </menu>

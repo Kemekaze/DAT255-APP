@@ -84,7 +84,8 @@ exports.getAllDepForAll = function(callback){
         				break;
         			}         			
         		}
-        		stopDepartures.push({stop:stop,deps:response.data.DepartureBoard.Departure});
+        		var deps = (response.data.DepartureBoard.Departure != null)? response.data.DepartureBoard.Departure: [];
+        		stopDepartures.push({stop: stop,deps: deps});
         		//Primitive sync functionallity
         		if(recieved == stops.length){
 		        	callback(stopDepartures);

@@ -147,7 +147,7 @@ io.on('connection', function(socket){
 			limit = (data.limit === undefined || typeof(data.limit) != 'number')? 10 : data.limit,
 			skip  = (data.skip === undefined || typeof(data.skip) != 'number')? 0 : data.skip,
 			sort  = (data.sort === undefined || typeof(data.sort) != 'object')? {date: -1} : data.sort;
-		
+
 
 		
 		console.log(JSON.stringify(query)+" | "+limit+" | "+skip+" | "+JSON.stringify(query));	
