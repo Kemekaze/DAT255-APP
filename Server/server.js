@@ -71,7 +71,14 @@ exports.socket.events.nextStop = function(data){
     	console.log("Sending next stop to %s clients for bus '%s'",clients[data.systemid].length, data.bus.regnr);
 	    var busSocket = clients[data.systemid];
 		busSocket.forEach(function(socketid){
-				socketid.emit("getBusNextStop",data.post);
+				var stopid = data.stopid.substring(4,data.stopid.length-3);
+				var userstopid = (socketid.endStop != "")? socketid.endStop.substring(4,socketid.endStop.length-3):"";
+
+				console.log(userstopid+" | "+stopid);
+				if(userstopid == stopid)
+					socketid.emit("getBusNextStop",data.post_alt);
+				else
+					socketid.emit("getBusNextStop",data.post);
 		});
 	}
 }
@@ -102,6 +109,7 @@ io.on('connection', function(socket){
 	            socket.auth = true;
 	            if(data.web === undefined){
 	            	var bus_id = socket.bus_id = data.bus_id;
+	            	socket.endStop="";
 		            clients[bus_id].push(socket);
 		            clients_total++;
 	            }else{
@@ -139,7 +147,11 @@ io.on('connection', function(socket){
 		}
 	    console.log("Clients: "+ clients_total);
 	});
-
+	socket.on('setUserStop', function (data) {
+		var i = clients[socket.bus_id].indexOf(socket);
+		clients[socket.bus_id][i].endStop=data.stopid;
+		console.log("Set stop: "+data.stopid);
+	});
 	//POSTS
 	socket.on('getPosts', function (data) {
 		if(data == null) data = {}

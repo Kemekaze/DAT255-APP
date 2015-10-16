@@ -102,7 +102,7 @@ public class SocketService extends Service {
 
             Log.i(TAG, "eventConnected");
 
-            long busId = 2501069758l;
+            long busId = 2501069303l;
 
             JSONObject query = ServerQueries.add(ServerQueries.query("token", "this should be a token"),"bus_id", busId);
 

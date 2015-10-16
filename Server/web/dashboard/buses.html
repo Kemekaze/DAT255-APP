@@ -67,6 +67,7 @@
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th>Systemid</th>
                       <th>Bus</th>
                       <th>Service</th>
                       <th>Direction</th>                      
@@ -136,6 +137,7 @@
           $("#busses_tbody").append(
                   '<tr id="'+                   bus._id  +'">'+
                   '<td class="bus_id">'+        bus._id  +'</td>'+
+                  '<td class="bus_systemid">'+        bus.systemid  +'</td>'+
                   '<td class="bus_bus">'+       bus.regnr  +'</td>'+
                   '<td class="bus_service">'+   service  +'</td>'+
                   '<td class="bus_direction">'+ direction  +'</td>'+

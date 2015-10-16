@@ -43,6 +43,7 @@ public class Constants {
         public static final String GET_BUS_GPS = "getBusGPS";
 
         public static final String GET_STOPS = "getStops";
+        public static final String SET_USER_STOP = "setUserStop";
 
     }
     public class DB{

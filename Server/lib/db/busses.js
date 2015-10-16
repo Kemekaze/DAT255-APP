@@ -265,6 +265,7 @@ BusSchema.methods.nextStop = function (callback) {
 					time: rtArrTime,
 					serviceid: bus.journey.ids.serviceid,
 					systemid: bus.systemid,
+					stopid: stops[i].stopid,
 					routeidx: stops[i].routeIdx
 				};
 				break;

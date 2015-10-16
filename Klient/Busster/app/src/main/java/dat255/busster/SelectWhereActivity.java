@@ -13,7 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import dat255.busster.DB.PreferencesDBHandler;
+import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StopsEvent;
 import dat255.busster.Objects.Preference;
 import dat255.busster.Resources.CharacterCountErrorWatcher;
@@ -26,7 +30,8 @@ import de.greenrobot.event.ThreadMode;
 
 public class SelectWhereActivity extends AppCompatActivity {
     private final String TAG = "dat255.SelectWhere";
-    private String[] busStops;
+    private String[] busStopsName;
+    private String[] busStopsid;
     PreferencesDBHandler preferencesDBHandler;
 
     @Override
@@ -62,10 +67,16 @@ public class SelectWhereActivity extends AppCompatActivity {
         String displayName = ((EditText) findViewById(R.id.username)).getText().toString();
         AutoCompleteTextView destinationACTV = (AutoCompleteTextView) findViewById(R.id.destination);
         String destination="";
-        if(busStops != null) {
-            for (String stop : busStops) {
-                if (destinationACTV.getText().toString().equals(stop)) {
-                    destination = stop;
+        //Store the stopid in the database
+        if(busStopsName != null) {
+            for (int i = 0; i< busStopsName.length;i++) {
+                if (destinationACTV.getText().toString().equals(busStopsName[i])) {
+                    destination = busStopsName[i];
+                    try {
+                        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SET_USER_STOP,new JSONObject().put("stopid",busStopsid[i])));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -101,12 +112,14 @@ public class SelectWhereActivity extends AppCompatActivity {
     public void recieveStops(StopsEvent event) {
         Log.i(TAG, "recieveStops");
         AutoCompleteTextView destinations = (AutoCompleteTextView) findViewById(R.id.destination);
-        busStops = new String[event.stops.size()];
+        busStopsName = new String[event.stops.size()];
+        busStopsid = new String[event.stops.size()];
         for(int i = 0; i < event.stops.size();i++){
-            busStops[i] = event.stops.get(i).getName();
+            busStopsName[i] = event.stops.get(i).getName();
+            busStopsid[i] = event.stops.get(i).getStopid();
         }
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, busStops);
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, busStopsName);
         destinations.setAdapter(adapter);
 
     }
