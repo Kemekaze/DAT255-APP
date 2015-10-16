@@ -1,5 +1,7 @@
 package dat255.busster;
 
+import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity
     private boolean loading = true;
     private int visibleThreshold = 5;
     PreferencesDBHandler preferencesDBHandler;
+
+    private AlertDialog.Builder dialogBuilder;
+    private String strName;
 
 
 
@@ -146,6 +153,28 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                filterDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+       /* //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Log.i(TAG, "settings clicked");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    */
+    }
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -155,6 +184,7 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+    */
     @Override
     protected void onStart() {
         Log.i(TAG,"onStart");
@@ -164,7 +194,7 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     protected void onStop() {
-        Log.i(TAG,"onStop");
+        Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -217,6 +247,55 @@ public class MainActivity extends AppCompatActivity
     public void addPostActivity(View view){
         Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
         this.startActivity(intent);
+    }
+
+    private void filterDialog()
+    {
+        final CharSequence[] items = {" Surveys "," UserPosts "," Västtrafik "," GANGSTAS "};
+        final ArrayList seletedItems = new ArrayList();
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final EditText txtInput = new EditText(this);
+        strName = "Filter: ";
+        dialogBuilder.setTitle("Choose your filters");
+
+        dialogBuilder.setMultiChoiceItems(items, null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    // indexSelected contains the index of item (of which checkbox checked)
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, add it to the selected items
+                            // write your code when user checked the checkbox
+                            seletedItems.add(indexSelected);
+                        } else if (seletedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            // write your code when user Uchecked the checkbox
+                            seletedItems.remove(Integer.valueOf(indexSelected));
+                        }
+                    }
+                });
+        //dialogBuilder.setView(txtInput);
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                strName += txtInput.getText().toString();
+                Toast.makeText(getApplicationContext(), "Filter has been set", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "No changes", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        AlertDialog filterDialog = dialogBuilder.create();
+        filterDialog.show();
+
+
     }
 
 
