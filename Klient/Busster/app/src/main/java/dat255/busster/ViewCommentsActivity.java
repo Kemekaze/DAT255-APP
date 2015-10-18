@@ -50,7 +50,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         time = (TextView) findViewById(R.id.comment_time);
 
         body.setText(getIntent().getStringExtra("body"));
-        user.setText(getIntent().getStringExtra("user"));
+        user.setText("");
         time.setText(getIntent().getStringExtra("time"));
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
