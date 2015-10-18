@@ -34,20 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="USER"
-                android:id="@+id/comment_user"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="T"
                 android:id="@+id/comment_time"
                 android:layout_alignParentBottom="true"
-                android:layout_alignEnd="@+id/comment_user"
+                android:layout_alignParentLeft="true"
                 android:gravity="right"
                 />
 

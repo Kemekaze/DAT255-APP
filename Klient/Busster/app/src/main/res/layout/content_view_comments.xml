@@ -7,9 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" tools:context=".ViewComments">
 
-    <include layout="@layout/comment"
-        android:id="@+id/parent_post" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/comments_feed"
         android:layout_width="match_parent"

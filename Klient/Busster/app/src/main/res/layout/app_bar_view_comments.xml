@@ -18,7 +18,29 @@
             <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
                 android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
                 app:layout_collapseMode="pin" app:popupTheme="@style/AppTheme.PopupOverlay" />
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="24sp"
+                    android:text="U"
+                    android:id="@+id/comment_parent_user"
+                    android:layout_margin="@dimen/fab_margin"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="16sp"
+                    android:text="T"
+                    android:id="@+id/comment_parent_body"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:layout_below="@+id/comment_parent_user"
+                    />
+            </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
