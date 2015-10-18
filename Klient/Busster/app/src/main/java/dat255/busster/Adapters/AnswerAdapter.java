@@ -20,6 +20,7 @@ import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Objects.Survey;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
+import dat255.busster.SurveyActivity;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -76,8 +77,10 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
             if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
                 JSONObject query = new JSONObject();
                 try {
-                    query.put("option", position+1);
+                    query.put("option", position + 1);
                     query.put("post_id", survey.getId());
+                    SurveyActivity surveyActivity =(SurveyActivity) context;
+                    surveyActivity.resultDialog(surveyHandler.checkIfExists(survey.getId()).get(0));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

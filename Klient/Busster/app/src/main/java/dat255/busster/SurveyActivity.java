@@ -1,6 +1,8 @@
 package dat255.busster;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,18 +35,22 @@ public class SurveyActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Survey survey;
+    private AlertDialog.Builder dialogBuilder;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Survey survey = getIntent().getParcelableExtra("survey");
-        body =  getIntent().getStringExtra("Body");
-        user =  getIntent().getStringExtra("User");
-        time =  getIntent().getStringExtra("Time");
-        count =  getIntent().getIntExtra("Count", 0);
+        body = getIntent().getStringExtra("Body");
+        user = getIntent().getStringExtra("User");
+        time = getIntent().getStringExtra("Time");
+        count = getIntent().getIntExtra("Count", 0);
         ArrayList<String> mArray = getIntent().getStringArrayListExtra("Answers");
         TextView bodyView = (TextView) findViewById(R.id.body);
         TextView userView = (TextView) findViewById(R.id.user);
@@ -58,7 +65,7 @@ public class SurveyActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AnswerAdapter(this,mArray,mRecyclerView);
+        mAdapter = new AnswerAdapter(this, mArray, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -76,18 +83,18 @@ public class SurveyActivity extends AppCompatActivity {
         ((AnswerAdapter) mAdapter).setSurvey(surveyEvents.get(0));
         super.onStart();
     }
+
     @Override
     protected void onStop() {
-        Log.i(TAG,"onStop");
+        Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Subscribe
-    public void surveyEvent(SurveyEvent surveyEvent){
-        Log.i(TAG,"SurveyEventDone");
+    public void surveyEvent(SurveyEvent surveyEvent) {
+        Log.i(TAG, "SurveyEventDone");
     }
-
 
 
     @Override
@@ -98,8 +105,6 @@ public class SurveyActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
 
     @Override
@@ -113,5 +118,32 @@ public class SurveyActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    public void resultDialog(int result) {
+
+        final ArrayList seletedItems = new ArrayList();
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final EditText txtInput = new EditText(this);
+
+        dialogBuilder.setTitle("Resultat");
+        dialogBuilder.setMessage(result + " andra röstade som du");
+
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        dialogBuilder.set
+        dialogBuilder.create();
+        dialogBuilder.show();
+
+
+    }
+
 
 }
