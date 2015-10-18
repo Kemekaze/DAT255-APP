@@ -76,20 +76,25 @@ exports.getAllDepForAll = function(callback){
 		var stopDepartures=[];
 		for(var i = 0;i<stops.length;i++){        	
         	vt.get("departureBoard",{id:stops[i].get("stopid")},function(response){
-        		recieved++;        		
-        		var stop;
-        		for(var s = 0;s<stops.length;s++){ 
-        			if(stops[s].get("stopid") == response.input.id){
-        				stop = stops[s];
-        				break;
-        			}         			
+        		if(response.data != null){
+        			recieved++;        		
+	        		var stop;
+	        		for(var s = 0;s<stops.length;s++){ 
+	        			if(stops[s].get("stopid") == response.input.id){
+	        				stop = stops[s];
+	        				break;
+	        			}         			
+	        		}
+	        		var deps = (response.data.DepartureBoard.Departure != null)? response.data.DepartureBoard.Departure: [];
+	        		stopDepartures.push({stop: stop,deps: deps});
+	        		//Primitive sync functionallity
+	        		if(recieved == stops.length){
+			        	callback(stopDepartures);
+			        }
+        		}else{
+        			callback([]);
         		}
-        		var deps = (response.data.DepartureBoard.Departure != null)? response.data.DepartureBoard.Departure: [];
-        		stopDepartures.push({stop: stop,deps: deps});
-        		//Primitive sync functionallity
-        		if(recieved == stops.length){
-		        	callback(stopDepartures);
-		        }
+        		
         	});        	
         }
 	});

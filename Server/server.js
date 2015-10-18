@@ -49,9 +49,7 @@ var http = http.Server(app);
 var io = socketIO(http);
 
 lib.db.posts.schema.post('save', function(next) {
-  console.log("wopwop");
   updateWebGui();
-
 });
 function updateWebGui(){
 	for (var i = 0; i < webGuiclients.length; i++) {

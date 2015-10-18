@@ -194,37 +194,6 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.time.setText(posts.get(position).getTimeSince());
 
     }
-   /* private SwipeLayout.SwipeListener swipeListener = new SwipeLayout.SwipeListener() {
-            @Override
-            public void onClose(SwipeLayout layout) {
-            }
-
-            @Override
-            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                //you are swiping.
-            }
-
-            @Override
-            public void onStartOpen(SwipeLayout layout) {
-            }
-
-            @Override
-            public void onOpen(SwipeLayout layout) {
-                layout.close(true);
-                boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
-                voteUserPost(pos,like);
-            }
-
-            @Override
-            public void onStartClose(SwipeLayout layout) {
-            }
-
-            @Override
-            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                layout.close(true);
-            }
-    };*/
-
 
     private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
         @Override

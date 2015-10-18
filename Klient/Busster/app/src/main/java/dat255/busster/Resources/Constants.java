@@ -47,11 +47,28 @@ public class Constants {
 
     }
     public class DB{
-        public static final int VERSION = 3;
+        public static final int VERSION = 4;
         public static final String DB_NAME = "busster.db";
         public class PREFERENCES{
             public static final String DISPLAY_NAME = "displayName";
             public static final String DESTINATION = "destination";
+
+            public static final String TABLE = "preferences";
+            public static final String COLUMN_ID = "_id";
+            public static final String COLUMN_KEY = "key";
+            public static final String COLUMN_VALUE = "value";
+        }
+        public class VOTES{
+            public static final String TABLE = "votes";
+            public static final String COLUMN_ID = "_id";
+            public static final String COLUMN_POST_ID = "postId";
+            public static final String COLUMN_LIKE = "like";
+        }
+        public class SURVEY{
+            public static final String TABLE = "votes";
+            public static final String COLUMN_ID = "_id";
+            public static final String COLUMN_POST_ID = "postId";
+            public static final String COLUMN_OPTION = "like";
         }
     }
     public static List<String> COLORS = Arrays.asList(
