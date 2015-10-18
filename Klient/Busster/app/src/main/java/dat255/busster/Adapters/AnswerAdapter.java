@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -18,6 +19,7 @@ import java.util.List;
 import dat255.busster.DB.SurveyDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Objects.Survey;
+import dat255.busster.Objects.SurveyVote;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
 import de.greenrobot.event.EventBus;
@@ -26,15 +28,19 @@ import de.greenrobot.event.EventBus;
  * Created by Rasmus on 2015-10-14.
  */
 public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder> {
+    public static final String TAG ="dat255.AnswerAdapter";
     private  List<String> answers;
     private  Context context;
     private  RecyclerView recyclerView;
     public Survey survey;
     private SurveyDBHandler surveyHandler;
 
+    private static RadioButton lastChecked = null;
+
+
     @Override
     public AnswerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer_layout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -43,7 +49,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         // each data item is just a string in this case
 
         public TextView id;
-        public TextView answer;
+        public RadioButton option;
 
         public View view;
 
@@ -51,7 +57,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
 
-            answer = (TextView) view.findViewById(R.id.answer);
+            option = (RadioButton) view.findViewById(R.id.option);
 
             this.view = view;
         }
@@ -65,36 +71,53 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
 
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int position = recyclerView.getChildAdapterPosition(v);
-            Log.i("Survey", "onClick : " + position);
-            String answer = getItem(position);
-            //survey.addResult(position);
-
-            if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
-                JSONObject query = new JSONObject();
-                try {
-                    query.put("option", position+1);
-                    query.put("post_id", survey.getId());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.UPDATE_SURVEY, query));
-
-
-                Log.i("Survey", survey.getCount() + "");
-            }
-
-        }
-    };
 
     @Override
-    public void onBindViewHolder(AnswerAdapter.ViewHolder viewHolder, int position) {
-        viewHolder.answer.setText(getItem(position));
-        viewHolder.view.setOnClickListener(clickListener);
+    public void onBindViewHolder(final AnswerAdapter.ViewHolder viewHolder, int position) {
+
+        viewHolder.option.setText(getItem(position));
+        List<Integer> exists = surveyHandler.checkIfExists(survey.getId());
+        Log.i(TAG,"0: "+exists.get(0));
+        if(exists.get(0) == 1) {
+            Log.i(TAG,"0: "+exists.get(0)+" 1: "+exists.get(1)+" pos: "+position);
+            if(position == exists.get(1)){
+                viewHolder.option.setChecked(true);
+                lastChecked = viewHolder.option;
+            }
+        }
+
+        viewHolder.option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RadioButton checked = (RadioButton)v;
+                if(lastChecked != null){
+                    if(lastChecked != checked)
+                        checked.setChecked(false);
+                    return;
+                }
+                lastChecked = checked;
+                int position = recyclerView.getChildAdapterPosition(viewHolder.view);
+                Log.i("Survey", "onClick : " + position);
+                String answer = getItem(position);
+                //survey.addResult(position);
+
+                if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
+                    JSONObject query = new JSONObject();
+                    try {
+                        query.put("option", position+1);
+                        query.put("post_id", survey.getId());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    surveyHandler.addVote(new SurveyVote(survey.getId(),position));
+                    EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.UPDATE_SURVEY, query));
+
+
+                    Log.i("Survey", survey.getCount() + "");
+                }
+
+            }
+        });
     }
 
     @Override

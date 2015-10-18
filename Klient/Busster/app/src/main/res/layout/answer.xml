@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/post"
-    android:background="#c5cae9"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     android:paddingTop="17dp"
@@ -13,12 +12,13 @@
     android:layout_marginBottom="3dp">
 
 
-    <TextView
+    <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Answer"
-        android:id="@+id/answer"
-        android:layout_alignParentTop="true" />
+        android:text="Option"
+        android:id="@+id/option"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
-    </RelativeLayout>
+
+</RelativeLayout>
