@@ -60,7 +60,7 @@
 
         <activity
             android:name=".ViewCommentsActivity"
-            android:label="@string/title_activity_add_comment"
+            android:label="@string/title_activity_view_comments"
             android:theme="@style/AppTheme.NoActionBar" >
 
         </activity>
