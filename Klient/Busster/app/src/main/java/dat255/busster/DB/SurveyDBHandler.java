@@ -65,6 +65,7 @@ public class SurveyDBHandler extends DBHandler {
         exist.add(0);
         return exist;
     }
+
     public void removeVote(String postId){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + Constants.DB.SURVEY.TABLE + " WHERE "+ Constants.DB.SURVEY.COLUMN_POST_ID + "= \"" + postId + "\";");

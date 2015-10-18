@@ -1,6 +1,8 @@
 package dat255.busster;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,23 +30,27 @@ public class SurveyActivity extends AppCompatActivity {
     private String body;
     private String user;
     private String time;
+    private ArrayList<String> mArray;
     private int count;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Survey survey;
+    private AlertDialog.Builder dialogBuilder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Survey survey = getIntent().getParcelableExtra("survey");
-        body =  getIntent().getStringExtra("Body");
-        user =  getIntent().getStringExtra("User");
-        time =  getIntent().getStringExtra("Time");
-        count =  getIntent().getIntExtra("Count", 0);
+        body = getIntent().getStringExtra("Body");
+        user = getIntent().getStringExtra("User");
+        time = getIntent().getStringExtra("Time");
+        count = getIntent().getIntExtra("Count", 0);
         ArrayList<String> mArray = getIntent().getStringArrayListExtra("Answers");
         TextView bodyView = (TextView) findViewById(R.id.body);
         TextView userView = (TextView) findViewById(R.id.user);
@@ -58,7 +65,7 @@ public class SurveyActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AnswerAdapter(this,mArray,mRecyclerView);
+        mAdapter = new AnswerAdapter(this, mArray, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -73,21 +80,23 @@ public class SurveyActivity extends AppCompatActivity {
         Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
         List<Survey> surveyEvents = (EventBus.getDefault().getStickyEvent(SurveyEvent.class)).surveys;
-        ((AnswerAdapter) mAdapter).setSurvey(surveyEvents.get(0));
+        survey = surveyEvents.get(0);
+        ((AnswerAdapter) mAdapter).setSurvey(survey);
+
         super.onStart();
     }
+
     @Override
     protected void onStop() {
-        Log.i(TAG,"onStop");
+        Log.i(TAG, "onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Subscribe
-    public void surveyEvent(SurveyEvent surveyEvent){
-        Log.i(TAG,"SurveyEventDone");
+    public void surveyEvent(SurveyEvent surveyEvent) {
+        Log.i(TAG, "SurveyEventDone");
     }
-
 
 
     @Override
@@ -98,8 +107,6 @@ public class SurveyActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
 
     @Override
@@ -113,5 +120,38 @@ public class SurveyActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    public void resultDialog(Survey sur) {
+
+
+        dialogBuilder = new AlertDialog.Builder(this);
+
+
+        dialogBuilder.setTitle("Resultat");
+        dialogBuilder.setMessage(sur.getCount(0) + " röstade på " + sur.getAlternatives().get(0));
+        String print = "";
+        for(int i = 0; i< sur.getOptions(); i++) {
+            print += sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i)+ "\n\n";
+
+        }
+        dialogBuilder.setMessage(print);
+
+
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+
+        dialogBuilder.create();
+        dialogBuilder.show();
+
+
+    }
+
 
 }

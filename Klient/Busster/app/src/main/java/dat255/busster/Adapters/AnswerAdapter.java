@@ -22,6 +22,7 @@ import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.SurveyVote;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
+import dat255.busster.SurveyActivity;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -72,6 +73,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
     }
 
 
+
     @Override
     public void onBindViewHolder(final AnswerAdapter.ViewHolder viewHolder, int position) {
 
@@ -104,8 +106,9 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
                 if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
                     JSONObject query = new JSONObject();
                     try {
-                        query.put("option", position+1);
+                        query.put("option", position + 1);
                         query.put("post_id", survey.getId());
+                        showResult();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -118,6 +121,19 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
 
             }
         });
+
+        if(isVoted()){
+            showResult();
+        }
+    }
+
+    public void showResult(){
+        SurveyActivity surveyActivity =(SurveyActivity) context;
+        surveyActivity.resultDialog(survey);
+    }
+
+    public boolean isVoted(){
+        return surveyHandler.checkIfExists(survey.getId()).get(0) == 1;
     }
 
     @Override

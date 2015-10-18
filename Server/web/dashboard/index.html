@@ -53,10 +53,10 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li ><a href="/Posts">Posts</span></a></li>
-            <li ><a href="/buses">Buses</span></a></li>
-            <li ><a href="/surveys">Surveys</span></a></li>
+            <li class="active"><a href="#">Overview</a></li>
+            <li ><a href="/Posts">Posts</a></li>
+            <li ><a href="/buses">Buses</a></li>
+            <li ><a href="/surveys">Surveys</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -95,9 +95,7 @@
                       <th>#</th>
                       <th>Body</th>
                       <th>User</th>
-                      <th>Comments</th>
-                      <th>Up</th>
-                      <th>Down</th>
+                      <th>Comments</th>                      
                       <th>Date</th>
                       <th>Type</th>
                       <th>Actions</th>
@@ -233,9 +231,7 @@
                   '<td style="overflow:hidden;max-width:30%;"class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
                   '<td class="post_user">'+getAnchor(post._id,"user","text",post.user)+'</td>'+
                   '<td class="post_comments">'+commentCount+'</td>'+
-                  '<td>'+votes.up+'</td>'+
-                  '<td>'+votes.down+'</td>'+
-                  '<td class="post_date">'+getAnchor(post._id,"date","text",post.date)+'</td>'+
+                  '<td class="post_date">'+/*getAnchor(post._id,"date","text",post.date)*/post.date+'</td>'+
                   '<td>'+post.meta.type+'</td>'+
                   '<td class="post_remove"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>'+
                 '</tr>');

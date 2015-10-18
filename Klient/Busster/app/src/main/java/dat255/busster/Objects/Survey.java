@@ -48,12 +48,6 @@ public class Survey extends Post {
         return this.color;
     }
 
-    public void addResult(int pos){
-
-            result.add(result.get(pos)+1);
-            participants++;
-
-    }
 
     public int getTotalCount(){
 
