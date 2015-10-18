@@ -35,11 +35,25 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="16sp"
-                android:text="T"
-                android:id="@+id/comment_parent_body"
-                android:layout_below="@+id/comment_parent_user"
+                    android:textStyle="italic"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:text="T"
+                    android:id="@+id/comment_parent_body"
+                    android:layout_below="@+id/comment_parent_user"
                 />
             </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comment_parent_time"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="right"
+                android:layout_marginTop="22dp"
+                android:layout_marginRight="@dimen/fab_margin"
+
+                />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

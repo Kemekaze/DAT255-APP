@@ -35,22 +35,23 @@ public class ViewCommentsActivity extends AppCompatActivity {
     private boolean loading = true;
     private int visibleThreshold = 5;
 
-    private TextView user;
-    private TextView body;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        user = (TextView) findViewById(R.id.comment_parent_user);
-        body = (TextView) findViewById(R.id.comment_parent_body);
-        user.setText(getIntent().getStringExtra("user"));
-        body.setText(getIntent().getStringExtra("body"));
+
+        ((TextView) findViewById(R.id.comment_parent_user)).setText(
+                getIntent().getStringExtra("user")
+        );
+        ((TextView) findViewById(R.id.comment_parent_body)).setText(
+                getIntent().getStringExtra("body")
+        );
+        ((TextView) findViewById(R.id.comment_parent_time)).setText(
+                getIntent().getStringExtra("time")
+        );
         getSupportActionBar().hide();
-        //time.setText(getIntent().getStringExtra("time"));
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
         mLayoutManager = new LinearLayoutManager(this);
