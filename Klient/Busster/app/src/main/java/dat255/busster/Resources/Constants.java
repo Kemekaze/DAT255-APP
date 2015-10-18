@@ -47,7 +47,7 @@ public class Constants {
 
     }
     public class DB{
-        public static final int VERSION = 4;
+        public static final int VERSION = 6;
         public static final String DB_NAME = "busster.db";
         public class PREFERENCES{
             public static final String DISPLAY_NAME = "displayName";
@@ -65,7 +65,7 @@ public class Constants {
             public static final String COLUMN_LIKE = "like";
         }
         public class SURVEY{
-            public static final String TABLE = "votes";
+            public static final String TABLE = "survey";
             public static final String COLUMN_ID = "_id";
             public static final String COLUMN_POST_ID = "postId";
             public static final String COLUMN_OPTION = "like";
