@@ -35,11 +35,10 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="16sp"
-                    android:text="T"
-                    android:id="@+id/comment_parent_body"
-                    android:layout_margin="@dimen/fab_margin"
-                    android:layout_below="@+id/comment_parent_user"
-                    />
+                android:text="T"
+                android:id="@+id/comment_parent_body"
+                android:layout_below="@+id/comment_parent_user"
+                />
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
