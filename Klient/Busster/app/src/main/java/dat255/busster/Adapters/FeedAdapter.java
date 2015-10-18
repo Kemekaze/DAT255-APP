@@ -222,8 +222,9 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                 //open comments
                 Activity activity = (Activity) context;
                 Intent commentIntent = new Intent(activity, ViewCommentsActivity.class);
-                //commentIntent.putExtra("Body",p.getBody());
-               // commentIntent.putExtra("User", p.getUser());
+                commentIntent.putExtra("body",p.getBody());
+                commentIntent.putExtra("user", p.getUser());
+                commentIntent.putExtra("time", p.getTimeSince());
                 context.startActivity(commentIntent);
                 activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
 

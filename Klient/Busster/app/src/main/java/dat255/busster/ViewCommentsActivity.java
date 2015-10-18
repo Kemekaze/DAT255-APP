@@ -34,6 +34,10 @@ public class ViewCommentsActivity extends AppCompatActivity {
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
+    private TextView body;
+    private TextView user;
+    private TextView time;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,13 @@ public class ViewCommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        body = (TextView) findViewById(R.id.comment_body);
+        user = (TextView) findViewById(R.id.comment_user);
+        time = (TextView) findViewById(R.id.comment_time);
+
+        body.setText(getIntent().getStringExtra("body"));
+        user.setText(getIntent().getStringExtra("user"));
+        time.setText(getIntent().getStringExtra("time"));
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
         mLayoutManager = new LinearLayoutManager(this);
