@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Busster</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">DAT255</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Settings</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li ><a href="/">Overview</a></li>
+            <li class="active"><a href="/posts">Posts</a></li>
+            <li ><a href="/buses">Buses</a></li>
+            <li ><a href="/surveys">Surveys</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          
+          <h1 class="sub-header">Posts</h1>
+          <div class="row ">
+            <div class="col-xs-12 col-sm-12">
+              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Body</th>
+                      <th>User</th>
+                      <th>Comments</th>
+                      <th>Up</th>
+                      <th>Down</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="getPosts">
+                    
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        
+          
+        </div>
+      </div>
+    </div>
+    <!-- Survey Modal -->
+      <div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-labelledby="Survey">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="surveyModalLabel">New Survey</h4>
+            </div>
+            <div class="modal-body">
+            <form class="survey" name="survey">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Question</label>
+                <textarea id="surveyQuestion"name="question" class="form-control" ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">User</label>
+                <input id="surveyUser" type="text" class="form-control"name="name" >
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Answer options</label><br/>
+                <label class="radio-inline">
+                  <input type="radio" name="options" id="inlineRadio1" value="2"> 2
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="options" id="inlineRadio2" value="3"> 3
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="options" id="inlineRadio3" value="4"> 4
+                </label>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Option 1 Text</label>
+                <input id="option1text" class="form-control" ></input>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Option 2 Text</label>
+                <input id="option2text" class="form-control" ></input>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Option 3 Text</label>
+                <input id="option3text" class="form-control" ></input>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Option 4 Text</label>
+                <input id="option4text" class="form-control" ></input>
+              </div> 
+            </form>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="sendSurvey" >Send</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+    <script>
+    $.fn.editable.defaults.mode = 'inline';
+      var socket = io('http://81.232.129.196:3000');
+
+      socket.on('connect', function (data) {
+        socket.emit('authenticate', { token: 'lewebtoken', web:true });
+      });
+      socket.on('authorized', function (data) {
+        getPosts({"meta.type":"post"},100,0);
+      });
+      socket.on('getTotalPostCount', function (data) {
+          $("#totalPostCount").text(data.count);
+      });
+      socket.on('getClientCount', function (data) {
+          $("#clientCount").text(data.count);
+      });
+      socket.on('removePost', function (data) {
+          console.log("Post removed!");
+          getPosts({"meta.type":"post"},100,0);
+      });
+      socket.on('updatePostFeed', function (data) {
+          console.log("updatePostFeed");
+          getPosts({"meta.type":"post"},100,0);          
+      });
+      function getPosts(query,limit,skip){
+        socket.emit('getPosts', {query:query, limit: limit,skip:skip });
+      }
+      socket.on('getPosts', function (data) {
+        $("#getPosts").html("");
+        console.log("Posts Updated");
+        function getAnchor(id,name,type,text){
+            return '<a href="#"  data-pk="'+id+'" class="editablePost" data-name="'+name+'" data-type="'+type+'" data-pk="1">'+text+'</a>';
+        }
+        for (var i = 0; i< data.posts.length; i++) {
+          //console.log(data.posts[i]);
+          var post = data.posts[i];
+          var votes=post.meta.votes;
+          var commentCount = post.comments.length;
+          
+          $("#getPosts").append('<tr id="'+post._id+'">'+
+                  '<td>'+post._id+'</td>'+
+                  '<td style="overflow:hidden;max-width:30%;"class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
+                  '<td class="post_user">'+getAnchor(post._id,"user","text",post.user)+'</td>'+
+                  '<td class="post_comments">'+commentCount+'</td>'+
+                  '<td class="post_votes_up">'+getAnchor(post._id,"meta.votes.up","text",votes.up)+'</td>'+
+                  '<td class="post_votes_down">'+getAnchor(post._id,"meta.votes.down","text",votes.down)+'</td>'+
+                  '<td class="post_date">'+/*getAnchor(post._id,"date","text",post.date)*/post.date+'</td>'+
+                  '<td class="post_remove"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>'+
+                '</tr>');
+        };
+        
+      });
+      $("#getPosts").delegate(".post_remove","click",function(){
+            var post = $( this ).closest("tr").attr('id');
+            socket.emit("removePost",{post_id:post});
+      });
+
+      $(document).ready(function () {
+        $("#sendSurvey").click(function(){
+            socket.emit('saveSurvey', { 
+              survey: {
+                question: $('#surveyQuestion').val(),
+                user: $('#surveyUser').val(),
+                options: $("input:radio[name=options]:checked").val(),
+                answers: [
+                      $('#option1text').val(),
+                      $('#option2text').val(),
+                      $('#option3text').val(),
+                      $('#option4text').val()
+                ]
+              } 
+          });           
+          $("#surveyModal").modal('hide');                 
+        });
+      });
+    </script>
+    
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $.fn.editable.defaults.mode = 'inline';
+        $('#getPosts').editable({
+            selector: 'a',
+            pk: 1,
+            url: function(data) {
+                    var d = $.Deferred();
+                    socket.emit('updatePost', data, function (data) {
+                      console.log(data);
+                      if(data.status == 'ok') {
+                          d.resolve();
+                      } else {
+                          d.reject(data.error || 'unknown error');
+                      }
+                    });
+                    return d.promise();
+                }       
+        }); 
+     
+      });
+    </script>
+  </body>
+</html>

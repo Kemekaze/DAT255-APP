@@ -89,10 +89,10 @@ app.get('/buses',function(req,res){
 	res.sendFile(__dirname + '/web/dashboard/buses.html');
 });
 app.get('/posts',function(req,res){
-	res.sendFile(__dirname + '/web/dashboard/index.html');
+	res.sendFile(__dirname + '/web/dashboard/posts.html');
 });
 app.get('/surveys',function(req,res){
-	res.sendFile(__dirname + '/web/dashboard/index.html');
+	res.sendFile(__dirname + '/web/dashboard/surveys.html');
 });
 app.use('/assets', express.static(__dirname + '/web/dashboard/assets/'));
 
