@@ -30,13 +30,13 @@ public class SurveyActivity extends AppCompatActivity {
     private String body;
     private String user;
     private String time;
+    private ArrayList<String> mArray;
     private int count;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Survey survey;
     private AlertDialog.Builder dialogBuilder;
-
 
 
     @Override
@@ -80,7 +80,9 @@ public class SurveyActivity extends AppCompatActivity {
         Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
         List<Survey> surveyEvents = (EventBus.getDefault().getStickyEvent(SurveyEvent.class)).surveys;
-        ((AnswerAdapter) mAdapter).setSurvey(surveyEvents.get(0));
+        survey = surveyEvents.get(0);
+        ((AnswerAdapter) mAdapter).setSurvey(survey);
+
         super.onStart();
     }
 
@@ -120,15 +122,21 @@ public class SurveyActivity extends AppCompatActivity {
     }
 
 
-    public void resultDialog(int result) {
+    public void resultDialog(Survey sur) {
 
-        final ArrayList seletedItems = new ArrayList();
 
         dialogBuilder = new AlertDialog.Builder(this);
-        final EditText txtInput = new EditText(this);
+
 
         dialogBuilder.setTitle("Resultat");
-        dialogBuilder.setMessage(result + " andra röstade som du");
+        dialogBuilder.setMessage(sur.getCount(0) + " röstade på " + sur.getAlternatives().get(0));
+        String print = "";
+        for(int i = 0; i< sur.getOptions(); i++) {
+            print += sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i)+ "\n\n";
+
+        }
+        dialogBuilder.setMessage(print);
+
 
 
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -138,7 +146,7 @@ public class SurveyActivity extends AppCompatActivity {
             }
         });
 
-        dialogBuilder.set
+
         dialogBuilder.create();
         dialogBuilder.show();
 

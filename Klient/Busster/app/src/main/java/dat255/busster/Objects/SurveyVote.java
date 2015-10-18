@@ -15,7 +15,7 @@ public class SurveyVote {
         this._postId = _postId;
     }
 
-    public SurveyVote(String _postId,Boolean _like) {
+    public SurveyVote(String _postId,int _option) {
         this._option = _option;
         this._postId = _postId;
     }
