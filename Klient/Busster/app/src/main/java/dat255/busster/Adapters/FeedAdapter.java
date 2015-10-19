@@ -23,6 +23,7 @@ import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Events.SurveyEvent;
+import dat255.busster.Events.UserPostEvent;
 import dat255.busster.Objects.Event;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
@@ -220,11 +221,10 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
             }else if(p instanceof UserPost){
                 //open comments
+                UserPost userPost = (UserPost)p;
                 Activity activity = (Activity) context;
                 Intent commentIntent = new Intent(activity, ViewCommentsActivity.class);
-                commentIntent.putExtra("body",p.getBody());
-                commentIntent.putExtra("user", p.getUser());
-                commentIntent.putExtra("time", p.getTimeSince());
+                EventBus.getDefault().postSticky(new UserPostEvent(Arrays.asList(userPost)));
                 context.startActivity(commentIntent);
                 activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
 

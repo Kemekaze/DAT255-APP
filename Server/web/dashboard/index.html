@@ -83,9 +83,6 @@
           <h2 class="sub-header">Last 10 Posts</h2>
           <div class="row ">
 
-            <div class="col-xs-6 col-sm-3">
-              <button type="button" class="btn btn-default "data-toggle="modal" data-target="#surveyModal">New Survey</button>
-            </div>
             <div class="col-xs-12 col-sm-12">
               
               <div class="table-responsive">
@@ -95,10 +92,10 @@
                       <th>#</th>
                       <th>Body</th>
                       <th>User</th>
-                      <th>Comments</th>                      
+                      <th>Comments</th>
+                      <th>Type</th>                      
                       <th>Date</th>
-                      <th>Type</th>
-                      <th>Actions</th>
+                      
                     </tr>
                   </thead>
                   <tbody id="getPosts">
@@ -115,62 +112,7 @@
       </div>
     </div>
     <!-- Survey Modal -->
-      <div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-labelledby="Survey">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="surveyModalLabel">New Survey</h4>
-            </div>
-            <div class="modal-body">
-            <form class="survey" name="survey">
-              <div class="form-group">
-                <label for="exampleInputEmail1">Question</label>
-                <textarea id="surveyQuestion"name="question" class="form-control" ></textarea>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">User</label>
-                <input id="surveyUser" type="text" class="form-control"name="name" >
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Answer options</label><br/>
-                <label class="radio-inline">
-                  <input type="radio" name="options" id="inlineRadio1" value="2"> 2
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="options" id="inlineRadio2" value="3"> 3
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="options" id="inlineRadio3" value="4"> 4
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Option 1 Text</label>
-                <input id="option1text" class="form-control" ></input>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Option 2 Text</label>
-                <input id="option2text" class="form-control" ></input>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Option 3 Text</label>
-                <input id="option3text" class="form-control" ></input>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Option 4 Text</label>
-                <input id="option4text" class="form-control" ></input>
-              </div> 
-            </form>
-              
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="sendSurvey" >Send</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -207,10 +149,7 @@
       });
       socket.on('getPosts', function (data) {
         $("#getPosts").html("");
-        console.log("Posts Updated");
-        function getAnchor(id,name,type,text){
-            return '<a href="#"  data-pk="'+id+'" class="editablePost" data-name="'+name+'" data-type="'+type+'" data-pk="1">'+text+'</a>';
-        }
+        console.log("Posts Updated");        
         for (var i = 0; i< data.posts.length; i++) {
           //console.log(data.posts[i]);
           var post = data.posts[i];
@@ -228,63 +167,15 @@
           
           $("#getPosts").append('<tr id="'+post._id+'">'+
                   '<td>'+post._id+'</td>'+
-                  '<td style="overflow:hidden;max-width:30%;"class="post_body">'+getAnchor(post._id,"body","textarea",post.body)+'</td>'+
-                  '<td class="post_user">'+getAnchor(post._id,"user","text",post.user)+'</td>'+
+                  '<td style="overflow:hidden;max-width:30%;"class="post_body">'+post.body+'</td>'+
+                  '<td class="post_user">'+post.user+'</td>'+
                   '<td class="post_comments">'+commentCount+'</td>'+
-                  '<td class="post_date">'+/*getAnchor(post._id,"date","text",post.date)*/post.date+'</td>'+
                   '<td>'+post.meta.type+'</td>'+
-                  '<td class="post_remove"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>'+
+                  '<td class="post_date">'+post.date+'</td>'+                  
                 '</tr>');
-        };
-        
-      });
-      $("#getPosts").delegate(".post_remove","click",function(){
-            var post = $( this ).closest("tr").attr('id');
-            socket.emit("removePost",{post_id:post});
-      });
-
-      $(document).ready(function () {
-        $("#sendSurvey").click(function(){
-            socket.emit('saveSurvey', { 
-              survey: {
-                question: $('#surveyQuestion').val(),
-                user: $('#surveyUser').val(),
-                options: $("input:radio[name=options]:checked").val(),
-                answers: [
-                      $('#option1text').val(),
-                      $('#option2text').val(),
-                      $('#option3text').val(),
-                      $('#option4text').val()
-                ]
-              } 
-          });           
-          $("#surveyModal").modal('hide');                 
-        });
+        };        
       });
     </script>
     
-    
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $.fn.editable.defaults.mode = 'inline';
-        $('#getPosts').editable({
-            selector: 'a',
-            pk: 1,
-            url: function(data) {
-                    var d = $.Deferred();
-                    socket.emit('updatePost', data, function (data) {
-                      console.log(data);
-                      if(data.status == 'ok') {
-                          d.resolve();
-                      } else {
-                          d.reject(data.error || 'unknown error');
-                      }
-                    });
-                    return d.promise();
-                }       
-        }); 
-     
-      });
-    </script>
   </body>
 </html>

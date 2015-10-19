@@ -251,7 +251,17 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+	socket.on('saveComment', function (data) {
+		var post_id = data.post_id;
+		var user = data.user;
+		var body = data.body;
 
+	  	lib.db.posts.findById(post_id,function(post){
+	  		post.saveComment(body,user,function(p){
+	  			socket.emit('saveComment', {status:"1"});
+	  		});	  		
+	  	});
+	});
 
 
 	socket.on('getBusGPS', function (data) {

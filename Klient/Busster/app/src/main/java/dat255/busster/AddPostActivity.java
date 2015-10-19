@@ -86,6 +86,9 @@ public class AddPostActivity extends AppCompatActivity {
         }catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+
         preferencesDBHandler.close();
     }
     //Eventbus events
