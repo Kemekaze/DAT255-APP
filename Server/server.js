@@ -169,6 +169,7 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('getPost', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -179,6 +180,7 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('savePost', function (data) {
 		console.log('savePost');
 		var user = (data.user == undefined)? 'Anonymus':data.user,
@@ -190,6 +192,7 @@ io.on('connection', function(socket){
 	  		socket.emit('savePost', {status:"ok",post:post});
 		});
 	});
+
 	socket.on('getComments', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -199,6 +202,7 @@ io.on('connection', function(socket){
 	  		socket.emit('comments', comments);
 	  	});
 	});
+
 	socket.on('saveComment', function (data) {
 		var post_id = data.post_id;	
 		var user    = data.user;
@@ -221,6 +225,7 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('incVotesDown', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -231,6 +236,7 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('decVotesUp', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -241,6 +247,7 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('decVotesDown', function (data) {
 		var post_id = data.post_id;
 		// validation here
@@ -251,15 +258,13 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('saveComment', function (data) {
 		var post_id = data.post_id;
 		var user = data.user;
 		var body = data.body;
-
-	  	lib.db.posts.findById(post_id,function(post){
-	  		post.saveComment(body,user,function(p){
-	  			socket.emit('saveComment', {status:"1"});
-	  		});	  		
+	  	lib.db.posts.saveComment(post_id,body,user,function(post){
+	  			socket.emit('saveComment', {status:"1"});	  		 		
 	  	});
 	});
 
@@ -271,18 +276,21 @@ io.on('connection', function(socket){
 	  	});
 
 	});
+
 	socket.on('getBusesGPS', function (data) {
 		lib.db.busses.getGpsAll(function(gpsData){
 			console.log("getBusesGPS "+gpsData.length);
 			socket.emit('getBusesGPS', {gps:gpsData,status:1});
 		});	 
 	});
+
 	socket.on('getStops', function (data) {
 		lib.db.stops.findAll(function(stops){
 			console.log("getStops "+stops.length);
 			socket.emit('getStops', {stops:stops,status:1});
 		});	 
 	});
+
 	//Primary for web ui
 	socket.on('getTotalPostCount', function (data) {
 		console.log('getPostCount');
@@ -290,6 +298,7 @@ io.on('connection', function(socket){
 			socket.emit('getTotalPostCount', {count:count});
 		});
 	});
+
 	socket.on('getClientCount', function (data) {
 		console.log('getClientCount');
 		var count=0;
@@ -301,6 +310,7 @@ io.on('connection', function(socket){
 		socket.emit('getClientCount', {count:count});
 		
 	});
+
 	socket.on('saveSurvey', function (data) {
 		console.log('saveSurvey');
 		console.log(JSON.stringify(data));
@@ -311,6 +321,7 @@ io.on('connection', function(socket){
 		  console.log(JSON.stringify(su));	
 		});	
 	});
+
 	socket.on('updatePost', function (data, fn) {	
 		var updateData = {};
 		updateData[data.name] = data.value;
@@ -320,6 +331,7 @@ io.on('connection', function(socket){
 	  		
 	  	});
 	});
+
 	socket.on('removePost', function (data) {
 		var post_id = data.post_id;
 				// validation here
@@ -329,6 +341,7 @@ io.on('connection', function(socket){
 	  		socket.emit('removePost', {status:1,data:null});
 	  	});
 	});
+
 	socket.on('updateSurvey', function (data) {
 		console.log('updateSurvey');
 		console.log(JSON.stringify(data));
@@ -340,6 +353,7 @@ io.on('connection', function(socket){
 	  		socket.emit('updateSurvey', {status:1,data:null});
 	  	})		
 	});
+
 	socket.on('getBusesInfo', function (data) {
 	  	lib.db.busses.findAll(function(buses){
 	  		var stops=[];
@@ -362,8 +376,6 @@ io.on('connection', function(socket){
 	  		
 	  	});
 	});
-	
-
  });
 
 http.listen(SERVER_PORT,function(){
