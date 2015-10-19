@@ -45,9 +45,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
 
-            body = (TextView) view.findViewById(R.id.body);
-            user = (TextView) view.findViewById(R.id.user);
-            time = (TextView) view.findViewById(R.id.time);
+            body = (TextView) view.findViewById(R.id.comment_body);
+            user = (TextView) view.findViewById(R.id.comment_user);
+            time = (TextView) view.findViewById(R.id.comment_time);
             this.view = view;
         }
     }
@@ -63,10 +63,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.view.setClickable(true);
         //holder.view.setOnLongClickListener(clickListener);
-
+        Log.i(TAG, Integer.toString(comments.size()));
         holder.body.setText(comments.get(position).getBody());
         holder.user.setText(comments.get(position).getUser());
         holder.time.setText(comments.get(position).getTimeSince());
+        // holder.user.setText(comments.get(position).getUser());
     }
 
     private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
@@ -119,13 +120,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 this.comments.addAll(comments);
                 break;
         }
-        this.notifyDataSetChanged();
     }
     private void addCommentsBeginning(List<Post.Comment> comments) {
         this.comments.addAll(0, comments);
+        this.notifyDataSetChanged();
     }
-    private void addCommentsRefresh(List<Post.Comment> comments) {
+    public void addCommentsRefresh(List<Post.Comment> comments) {
         this.comments = comments;
+        this.notifyDataSetChanged();
     }
 
     public void addComment(Post.Comment comment) {

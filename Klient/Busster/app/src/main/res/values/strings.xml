@@ -25,6 +25,7 @@
     <!-- strings for comments -->
     <string name="title_activity_view_comments">Comments</string>
     <string name="title_activity_add_comment">Add Comment</string>
+    <string name="add_comment_action">Send</string>
 
     <!-- strings for main overflow menu-->
     <string name="main_menu_1">All</string>

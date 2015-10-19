@@ -7,8 +7,15 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import dat255.busster.DB.PreferencesDBHandler;
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
@@ -31,9 +38,34 @@ public class AddCommentActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body);
+        TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_comment_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            case R.id.send_comment_action:
+                saveComment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart");
@@ -46,9 +78,20 @@ public class AddCommentActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-    public void savePost() {
-        TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_POST, ServerQueries.query("body", body.getEditText().getText().toString())));
+    public void saveComment() {
+        TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
+        PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
+
+        try {
+            JSONObject query = new JSONObject();
+            query.put("post_id", getIntent().getStringExtra("postID"));
+            query.put("body", body.getEditText().getText().toString());
+            query.put("user", preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
+
+            EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.SAVE_COMMENT, query));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     //Eventbus events
     @Subscribe

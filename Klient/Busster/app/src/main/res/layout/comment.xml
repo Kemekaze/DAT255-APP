@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -19,6 +19,18 @@
             android:layout_height="wrap_content"
             android:padding="3dp"
             android:id="@+id/comment">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="T"
+                android:id="@+id/comment_user"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:gravity="left" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -26,22 +38,25 @@
                 android:text="Body"
                 android:id="@+id/comment_body"
                 android:width="280dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:minHeight="40dp" />
+                android:minHeight="40dp"
+                android:layout_below="@+id/comment_user"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="T"
+                android:text="timesince"
                 android:id="@+id/comment_time"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:gravity="right"
-                />
+                android:width="280dp"
+                android:minHeight="40dp"
+                android:gravity="bottom|right"
+                android:layout_alignWithParentIfMissing="false"
+                android:layout_below="@+id/comment_body"
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>
