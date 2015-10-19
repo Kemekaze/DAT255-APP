@@ -16,14 +16,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dat255.busster.Adapters.CommentsAdapter;
 import dat255.busster.Events.SendDataEvent;
+import dat255.busster.Events.UserPostEvent;
 import dat255.busster.Objects.Post;
+import dat255.busster.Objects.UserPost;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.Notifyer;
 import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class ViewCommentsActivity extends AppCompatActivity {
     private final String TAG = "dat255.ViewComments";
@@ -35,33 +39,26 @@ public class ViewCommentsActivity extends AppCompatActivity {
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
+    private UserPost userPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ((TextView) findViewById(R.id.comment_parent_user)).setText(
-                getIntent().getStringExtra("user")
-        );
-        ((TextView) findViewById(R.id.comment_parent_body)).setText(
-                getIntent().getStringExtra("body")
-        );
-        ((TextView) findViewById(R.id.comment_parent_time)).setText(
-                getIntent().getStringExtra("time")
-        );
         getSupportActionBar().hide();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addOnScrollListener(scrollListener);
+      //  mRecyclerView.addOnScrollListener(scrollListener);
 
         ArrayList<Post.Comment> data = new ArrayList<>();
         mAdapter = new CommentsAdapter(data, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +70,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
 
         Notifyer.setContext(this);
     }
+/*
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -90,20 +88,42 @@ public class ViewCommentsActivity extends AppCompatActivity {
             if (loading) {
                 if ( (visibleItemCount + firstVisibleItem) >= totalItemCount) {
                     loading = false;
-                    getMoreComments();
+                   // getMoreComments();
                 }
             }
         }
-    };
+    };*/
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "onStart");
+        super.onStart();
+        EventBus.getDefault().register(this);
+        List<UserPost> userPosts = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts;
+        userPost = userPosts.get(0);
+        ((CommentsAdapter)mAdapter).addCommentsRefresh(userPost.getComments());
+        ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
+        ((TextView) findViewById(R.id.comment_parent_user)).setText(userPost.getUser());
+        ((TextView) findViewById(R.id.comment_parent_time)).setText(userPost.getTimeSince());
+
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "onStop");
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
     public void getMoreComments(){
         Log.i(TAG, "getMorePosts");
-        getPosts(10, mAdapter.getItemCount());
+        getComments(10, mAdapter.getItemCount());
     }
-    private void getPosts(int limit, int skip) {
+
+
+    private void getComments(int limit, int skip) {
         Log.i(TAG, "getPosts");
         try {
             EventBus.getDefault().post(
-                    new SendDataEvent(Constants.SocketEvents.GET_POSTS,
+                    new SendDataEvent(Constants.SocketEvents.GET_COMMENTS,
                             ServerQueries.getPosts(new JSONObject(), limit, skip, new JSONObject().put("date", -1))
                     )
             );
@@ -113,10 +133,11 @@ public class ViewCommentsActivity extends AppCompatActivity {
     }
     public void refreshPosts() {
         Log.i(TAG, "refreshPosts");
-        getPosts(10, 0);
+        getComments(10, 0);
     }
     public void addCommentActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
+        intent.putExtra("postID",userPost.getId());
         this.startActivity(intent);
     }
 
@@ -124,5 +145,9 @@ public class ViewCommentsActivity extends AppCompatActivity {
     public void onBackPressed() {
         this.finish();
         overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
+    }
+    @Subscribe
+    public void userPostEvent(UserPostEvent userPostEvent) {
+        Log.i(TAG, "UserPostEvent");
     }
 }
