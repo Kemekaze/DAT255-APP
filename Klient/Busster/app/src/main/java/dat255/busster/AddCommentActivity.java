@@ -60,6 +60,7 @@ public class AddCommentActivity extends AppCompatActivity {
                 return true;
             case R.id.send_comment_action:
                 saveComment();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
