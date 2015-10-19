@@ -95,12 +95,15 @@ public class ViewCommentsActivity extends AppCompatActivity {
         Log.i(TAG, "onStart");
         super.onStart();
         EventBus.getDefault().register(this);
-        List<UserPost> userPosts = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts;
-        userPost = userPosts.get(0);
-        ((CommentsAdapter)mAdapter).addCommentsRefresh(userPost.getComments());
+        userPost = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts.get(0);
+        
+        ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),//1);
+
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
         ((TextView) findViewById(R.id.comment_parent_user)).setText(userPost.getUser());
         ((TextView) findViewById(R.id.comment_parent_time)).setText(userPost.getTimeSince());
+
+
 
     }
 

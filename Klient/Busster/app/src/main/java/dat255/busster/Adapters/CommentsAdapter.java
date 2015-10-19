@@ -1,5 +1,6 @@
 package dat255.busster.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
      * Constructor
      */
     public CommentsAdapter(List<Post.Comment> comments, RecyclerView mRecyclerView) {
+
         this.comments = comments;
         this.recyclerView = mRecyclerView;
         notifyDataSetChanged();
@@ -80,7 +82,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         }
     };
 
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
@@ -99,11 +100,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         return comments;
     }
 
-    public void refreshVotes(int position, Post.Comment comment) {
-        comments.set(position, comment);
-        this.notifyDataSetChanged();
-    }
-
     public void updateComments(){
         this.notifyDataSetChanged();
     }
@@ -118,6 +114,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 break;
             default:
                 this.comments.addAll(comments);
+                this.notifyDataSetChanged();
                 break;
         }
     }
@@ -125,8 +122,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.comments.addAll(0, comments);
         this.notifyDataSetChanged();
     }
-    public void addCommentsRefresh(List<Post.Comment> comments) {
-        this.comments = comments;
+    private void addCommentsRefresh(List<Post.Comment> comments) {
+
+        Log.i(TAG, comments.size() + "");
+        this.comments.clear();
+        this.comments.addAll(comments);
+        Log.i(TAG, comments.size() + "");
         this.notifyDataSetChanged();
     }
 
