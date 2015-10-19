@@ -18,6 +18,7 @@ import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Resources.CharacterCountErrorWatcher;
 import dat255.busster.Resources.Constants;
+import dat255.busster.Resources.Notifyer;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -37,6 +38,8 @@ public class AddPostActivity extends AppCompatActivity {
 
         TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
+
+        Notifyer.setContext(this);
 
     }
     @Override

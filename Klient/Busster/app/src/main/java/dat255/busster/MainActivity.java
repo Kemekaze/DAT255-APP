@@ -29,6 +29,7 @@ import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Resources.Constants;
+import dat255.busster.Resources.Notifyer;
 import dat255.busster.Resources.ServerQueries;
 import dat255.busster.Services.SocketService;
 import de.greenrobot.event.EventBus;
@@ -93,8 +94,7 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new FeedAdapter(this,mArray,mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
-
-
+        Notifyer.setContext(this);
 
     }
     public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {

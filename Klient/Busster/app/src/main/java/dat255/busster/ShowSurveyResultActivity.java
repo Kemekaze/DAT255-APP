@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.StatusEvent;
+import dat255.busster.Resources.Notifyer;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -29,6 +30,8 @@ public class ShowSurveyResultActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Notifyer.setContext(this);
 
     }
 

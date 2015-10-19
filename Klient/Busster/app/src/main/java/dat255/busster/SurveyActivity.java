@@ -135,10 +135,8 @@ public class SurveyActivity extends AppCompatActivity {
         View v = getLayoutInflater().inflate(R.layout.dialog_result, null);
         dialogBuilder.setView(v);
 
-        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // dialog.setContentView(getLayoutInflater().inflate(R.layout.dialog_result, null));
-
         ArrayList<String> strs = new ArrayList<String>();
+        strs.add(sur.getBody());
         for(int i = 0; i< sur.getOptions(); i++) {
             strs.add( sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i));
 
@@ -153,7 +151,7 @@ public class SurveyActivity extends AppCompatActivity {
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                //finish();
             }
         });
 

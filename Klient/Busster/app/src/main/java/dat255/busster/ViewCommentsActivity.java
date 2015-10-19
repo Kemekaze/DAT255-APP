@@ -24,6 +24,7 @@ import dat255.busster.Events.UserPostEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.UserPost;
 import dat255.busster.Resources.Constants;
+import dat255.busster.Resources.Notifyer;
 import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -66,6 +67,8 @@ public class ViewCommentsActivity extends AppCompatActivity {
                 addCommentActivity(view);
             }
         });
+
+        Notifyer.setContext(this);
     }
 /*
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
