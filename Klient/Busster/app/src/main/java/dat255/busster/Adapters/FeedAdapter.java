@@ -19,6 +19,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import java.util.Arrays;
 import java.util.List;
 
+import dat255.busster.DB.SurveyDBHandler;
 import dat255.busster.DB.VoteDBHandler;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
@@ -32,6 +33,7 @@ import dat255.busster.Objects.Vote;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
 import dat255.busster.Resources.ServerQueries;
+import dat255.busster.Resources.DialogTool;
 import dat255.busster.SurveyActivity;
 import dat255.busster.ViewCommentsActivity;
 import de.greenrobot.event.EventBus;
@@ -205,19 +207,25 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
 
             if(p instanceof Survey){
-                Survey survey = (Survey)p;
-                Intent intent = new Intent(context, SurveyActivity.class);
-                intent.putExtra("Body",p.getBody());
-                intent.putExtra("Answers",((Survey) p).getAlternatives());
-                intent.putExtra("Count",((Survey) p).getCount());
-                intent.putExtra("User",p.getUser());
-                intent.putExtra("Time", p.getTimeSince());
 
+                SurveyDBHandler surveyHandler = new SurveyDBHandler(context,null);
+                Survey survey = (Survey) p;
+                if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
 
-                EventBus.getDefault().postSticky(new SurveyEvent(Arrays.asList(survey)));
+                    Intent intent = new Intent(context, SurveyActivity.class);
+                    intent.putExtra("Body", p.getBody());
+                    intent.putExtra("Answers", ((Survey) p).getAlternatives());
+                    intent.putExtra("Count", ((Survey) p).getCount());
+                    intent.putExtra("User", p.getUser());
+                    intent.putExtra("Time", p.getTimeSince());
 
+                    EventBus.getDefault().postSticky(new SurveyEvent(Arrays.asList(survey)));
 
-                context.startActivity(intent);
+                    context.startActivity(intent);
+
+                }else{
+                    DialogTool.resultDialog(context, survey);
+                }
 
             }else if(p instanceof UserPost){
                 //open comments

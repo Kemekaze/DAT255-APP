@@ -21,6 +21,7 @@ import dat255.busster.Adapters.CommentsAdapter;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Resources.Constants;
+import dat255.busster.Resources.Notifyer;
 import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 
@@ -69,6 +70,8 @@ public class ViewCommentsActivity extends AppCompatActivity {
                 addCommentActivity(view);
             }
         });
+
+        Notifyer.setContext(this);
     }
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
