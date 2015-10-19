@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -122,21 +124,30 @@ public class SurveyActivity extends AppCompatActivity {
     }
 
 
+
+
     public void resultDialog(Survey sur) {
 
 
-        dialogBuilder = new AlertDialog.Builder(this);
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(this);
 
 
-        dialogBuilder.setTitle("Resultat");
-        dialogBuilder.setMessage(sur.getCount(0) + " röstade på " + sur.getAlternatives().get(0));
-        String print = "";
+        View v = getLayoutInflater().inflate(R.layout.dialog_result, null);
+        dialogBuilder.setView(v);
+
+        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // dialog.setContentView(getLayoutInflater().inflate(R.layout.dialog_result, null));
+
+        ArrayList<String> strs = new ArrayList<String>();
         for(int i = 0; i< sur.getOptions(); i++) {
-            print += sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i)+ "\n\n";
+            strs.add( sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i));
 
         }
-        dialogBuilder.setMessage(print);
 
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+        ListView lw = (ListView) v.findViewById(R.id.listResultView);
+
+        lw.setAdapter(listAdapter);
 
 
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -150,8 +161,8 @@ public class SurveyActivity extends AppCompatActivity {
         dialogBuilder.create();
         dialogBuilder.show();
 
-
     }
+
 
 
 }
