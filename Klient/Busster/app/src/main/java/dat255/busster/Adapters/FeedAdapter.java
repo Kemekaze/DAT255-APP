@@ -116,7 +116,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
         holder.view.setClickable(true);
-        holder.view.setOnLongClickListener(clickListener);
+        holder.view.setOnClickListener(clickListener);
 
 
         //holder.swipeLayout.addSwipeListener(swipeListener);
@@ -198,9 +198,9 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
     }
 
-    private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
+    private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
-        public boolean onLongClick(View v) {
+        public void onClick(View v) {
             int position = recyclerView.getChildAdapterPosition(v);
             Log.i(TAG,"onClick : "+ position);
             Post p = getItem(position);
@@ -239,7 +239,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
             }/*else if(p instanceof EventPost){
                 //open event
             }*/
-            return true;
+
         }
     };
     private void voteUserPost(int pos,boolean like){

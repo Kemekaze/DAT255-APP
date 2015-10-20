@@ -60,10 +60,11 @@ public class DataHandler {
                     posts.add(new UserPost(jsonArray.getJSONObject(i)));
                 else if(meta.getString("type").equals("survey"))
                     posts.add(new Survey(jsonArray.getJSONObject(i)));
-                else if(meta.getString("type").equals("event"))
+                else if(meta.getString("type").equals("event")) {
                     posts.add(new Event(jsonArray.getJSONObject(i)));
-                   //Notifications
+                    //Notifications
                     Notifyer.nextStopNotify(new Event(jsonArray.getJSONObject(i)));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
