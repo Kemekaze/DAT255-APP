@@ -1,4 +1,4 @@
-# DAT255-APP
+# Group Super Friends
 
 ## Getting Started
 ```bash
