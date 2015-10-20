@@ -2,6 +2,7 @@ package dat255.busster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -50,12 +52,15 @@ public class ViewCommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_comments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        CollapsingToolbarLayout toolbar2 = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolbar2.setTitleEnabled(false);
+        toolbar2.setTitle("");
         mRecyclerView = (RecyclerView) findViewById(R.id.comments_feed);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-      //  mRecyclerView.addOnScrollListener(scrollListener);
+        mRecyclerView.addOnScrollListener(scrollListener);
 
         ArrayList<Post.Comment> data = new ArrayList<>();
         mAdapter = new CommentsAdapter(data, mRecyclerView);
@@ -72,7 +77,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
 
         Notifyer.setContext(this);
     }
-/*
+
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -82,19 +87,14 @@ public class ViewCommentsActivity extends AppCompatActivity {
             visibleItemCount = mLayoutManager.getChildCount();
             totalItemCount = mLayoutManager.getItemCount();
             firstVisibleItem = ((LinearLayoutManager)mLayoutManager).findFirstVisibleItemPosition();
-
-            Log.i(TAG, "Loading:" + String.valueOf(loading));
-            Log.i(TAG,"visibleItemCount:"+String.valueOf(visibleItemCount) );
-            Log.i(TAG,"totalItemCount:"+String.valueOf(totalItemCount) );
-            Log.i(TAG,"firstVisibleItem:"+String.valueOf(firstVisibleItem) );
+            Log.i(TAG,"dy: "+dy);
             if (loading) {
                 if ( (visibleItemCount + firstVisibleItem) >= totalItemCount) {
                     loading = false;
-                   // getMoreComments();
                 }
             }
         }
-    };*/
+    };
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart");
@@ -155,7 +155,17 @@ public class ViewCommentsActivity extends AppCompatActivity {
         intent.putExtra("postID", userPost.getId());
         this.startActivity(intent);
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onBackPressed() {
         this.finish();

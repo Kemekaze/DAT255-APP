@@ -36,6 +36,7 @@ public class AddPostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+
         TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
 
