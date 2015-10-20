@@ -21,14 +21,12 @@ exports.get = function(bus, sensor, t1, t2, callback){
             //console.log("Error: " + error);
             //console.log("Response: " + response.statusCode);
             //console.log("Body: '"+ body+"'");
-            if(body != "")
+            if(!error){
+            	if(body != "")
                 callback(JSON.parse(body));
             else
                 callback(body);
-            
-            
-            
-
+            }
     });
         
 }

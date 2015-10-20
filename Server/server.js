@@ -209,7 +209,7 @@ io.on('connection', function(socket){
 		var body    = data.body;
 		// validation here
 
-	  	lib.db.posts.saveComment(post_id,user,body,function(comment){
+	  	lib.db.posts.saveComment(post_id,body,user,function(comment){
 	  		console.log("Comment saved for post id: "+post_id);
 	  		socket.emit('commentSaved', comment);
 	  	});
@@ -258,16 +258,6 @@ io.on('connection', function(socket){
 	  	});
 
 	});
-
-	socket.on('saveComment', function (data) {
-		var post_id = data.post_id;
-		var user = data.user;
-		var body = data.body;
-	  	lib.db.posts.saveComment(post_id,body,user,function(post){
-	  			socket.emit('saveComment', {status:"1"});	  		 		
-	  	});
-	});
-
 
 	socket.on('getBusGPS', function (data) {
 		var bus_id = data.bus_id;
