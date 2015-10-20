@@ -105,7 +105,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),1);
 
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
-        ((TextView) findViewById(R.id.comment_parent_user)).setText(userPost.getUser());
+        ((TextView) findViewById(R.id.comment_parent_user)).setText("- "+userPost.getUser());
         ((TextView) findViewById(R.id.comment_parent_time)).setText(userPost.getTimeSince());
 
 
