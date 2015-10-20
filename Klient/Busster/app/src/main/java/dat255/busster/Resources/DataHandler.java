@@ -63,7 +63,7 @@ public class DataHandler {
                 else if(meta.getString("type").equals("event"))
                     posts.add(new Event(jsonArray.getJSONObject(i)));
                    //Notifications
-                    Notifyer.nextStopNotify((Event)posts);
+                    Notifyer.nextStopNotify(new Event(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

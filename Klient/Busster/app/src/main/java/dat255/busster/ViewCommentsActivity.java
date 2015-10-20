@@ -100,7 +100,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         userPost = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts.get(0);
         
-        ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),//1);
+        ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),1);
 
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
         ((TextView) findViewById(R.id.comment_parent_user)).setText(userPost.getUser());
