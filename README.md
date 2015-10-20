@@ -1,4 +1,4 @@
-# Group Super Friends
+# Group: Super Friends
 
 ## Getting Started
 ```bash
