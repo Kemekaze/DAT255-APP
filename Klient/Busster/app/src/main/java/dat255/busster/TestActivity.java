@@ -15,6 +15,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import dat255.busster.Objects.Event;
+
 public class TestActivity extends AppCompatActivity {
 
     Notification.Builder not ;
@@ -31,12 +33,12 @@ public class TestActivity extends AppCompatActivity {
         resultDialog();
     }
 
-    public void sentNoty(){
+    public void nextStopNotify(Event event){
         not.setSmallIcon(R.drawable.ic_action_directions_bus);
-        not.setTicker("this is the ticker");
+        not.setTicker("Nästa hållplats");
         not.setWhen(System.currentTimeMillis());
-        not.setContentTitle("Busster");
-        not.setContentText("bababablabalalal");
+        not.setContentTitle("Nästa hållplats");
+        not.setContentText(event.getBody());
 
         Intent intent = new Intent(this, TestActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
@@ -73,7 +75,7 @@ public class TestActivity extends AppCompatActivity {
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sentNoty();
+
             }
         });
 

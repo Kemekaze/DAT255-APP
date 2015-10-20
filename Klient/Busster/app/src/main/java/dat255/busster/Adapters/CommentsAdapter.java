@@ -1,5 +1,6 @@
 package dat255.busster.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
      * Constructor
      */
     public CommentsAdapter(List<Post.Comment> comments, RecyclerView mRecyclerView) {
+
         this.comments = comments;
         this.recyclerView = mRecyclerView;
         notifyDataSetChanged();
@@ -45,9 +47,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
 
-            body = (TextView) view.findViewById(R.id.body);
-            user = (TextView) view.findViewById(R.id.user);
-            time = (TextView) view.findViewById(R.id.time);
+            body = (TextView) view.findViewById(R.id.comment_body);
+            user = (TextView) view.findViewById(R.id.comment_user);
+            time = (TextView) view.findViewById(R.id.comment_time);
             this.view = view;
         }
     }
@@ -63,10 +65,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.view.setClickable(true);
         //holder.view.setOnLongClickListener(clickListener);
-
+        Log.i(TAG, Integer.toString(comments.size()));
         holder.body.setText(comments.get(position).getBody());
         holder.user.setText(comments.get(position).getUser());
         holder.time.setText(comments.get(position).getTimeSince());
+        // holder.user.setText(comments.get(position).getUser());
     }
 
     private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
@@ -78,7 +81,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             return true;
         }
     };
-
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -98,11 +100,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         return comments;
     }
 
-    public void refreshVotes(int position, Post.Comment comment) {
-        comments.set(position, comment);
-        this.notifyDataSetChanged();
-    }
-
     public void updateComments(){
         this.notifyDataSetChanged();
     }
@@ -117,15 +114,21 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 break;
             default:
                 this.comments.addAll(comments);
+                this.notifyDataSetChanged();
                 break;
         }
-        this.notifyDataSetChanged();
     }
     private void addCommentsBeginning(List<Post.Comment> comments) {
         this.comments.addAll(0, comments);
+        this.notifyDataSetChanged();
     }
     private void addCommentsRefresh(List<Post.Comment> comments) {
-        this.comments = comments;
+
+        Log.i(TAG, comments.size() + "");
+        this.comments.clear();
+        this.comments.addAll(comments);
+        Log.i(TAG, comments.size() + "");
+        this.notifyDataSetChanged();
     }
 
     public void addComment(Post.Comment comment) {
