@@ -132,35 +132,38 @@ BusSchema.methods.updateJourney = function(stops,callback){
 					var direction = stopsSorted[s][0].deps[d].direction;
 
 					vt.request(stopsSorted[s][0].deps[d].JourneyDetailRef.ref, function(journeyStops){
+						if(journeyStops.JourneyDetail !== undefined){
+							if(journeyStops.JourneyDetail.Stop !== undefined){
+								var updateData=journeyStops.JourneyDetail.Stop;
 
-						var updateData=journeyStops.JourneyDetail.Stop;
+								for(var i =0,len=updateData.length; i<len;i++ ){
+									var stopid = updateData[i].id
+									delete updateData[i].id;
+									delete updateData[i].track;
+									updateData[i]['stopid'] = stopid;
+								}
 
-						for(var i =0,len=updateData.length; i<len;i++ ){
-							var stopid = updateData[i].id
-							delete updateData[i].id;
-							delete updateData[i].track;
-							updateData[i]['stopid'] = stopid;
+								//update bus with new data				
+								bus.journey.stops = updateData;
+								bus.journey.name = direction;
+								var serviceid = journeyStops.JourneyDetail.JourneyName.name;
+								serviceid = serviceid.substring(4,serviceid.length)
+								bus.journey.ids.serviceid = serviceid;
+
+								var journeyid = journeyStops.JourneyDetail.JourneyId;
+								bus.journey.route = {
+												idxfrom: journeyid.routeIdxFrom,
+					  							idxto: journeyid.routeIdxTo
+								};
+
+								bus.journey.ids.stopsid = journeyid.id; 
+								// save updated data
+								bus.save(function (err) {
+								    if (!err) 
+								    	callback({status:"Journey updated for bus '"+bus.regnr+"'",data:bus})
+								});
+							}
 						}
-
-						//update bus with new data				
-						bus.journey.stops = updateData;
-						bus.journey.name = direction;
-						var serviceid = journeyStops.JourneyDetail.JourneyName.name;
-						serviceid = serviceid.substring(4,serviceid.length)
-						bus.journey.ids.serviceid = serviceid;
-
-						var journeyid = journeyStops.JourneyDetail.JourneyId;
-						bus.journey.route = {
-										idxfrom: journeyid.routeIdxFrom,
-			  							idxto: journeyid.routeIdxTo
-						};
-
-						bus.journey.ids.stopsid = journeyid.id; 
-						// save updated data
-						bus.save(function (err) {
-						    if (!err) 
-						    	callback({status:"Journey updated for bus '"+bus.regnr+"'",data:bus})
-						});
 					});
 					foundJourney = true;
 					break;

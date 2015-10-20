@@ -63,29 +63,6 @@ public class Post /*implements Parcelable*/{
         return type;
     }
 
-    public String getTimeSince() {
-        long tTime = this.time;
-        long diff = System.currentTimeMillis()-tTime;
-        if(diff<0) tTime+=diff;
-        //Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
-        Interval interval = new Interval(tTime,System.currentTimeMillis());
-        Period p = interval.toPeriod();
-        String time;
-        if(p.getYears() > 0)
-            time = p.getYears()+"Y";
-        else if(p.getMonths() > 0)
-            time = p.getMonths()+"M";
-        else if(p.getDays() > 0)
-            time = p.getDays()+"d";
-        else if(p.getHours() > 0)
-            time = p.getHours()+"h";
-        else if(p.getMinutes() > 0)
-            time = p.getMinutes()+"m";
-        else
-            time = p.getSeconds()+"s";
-
-        return time+"";
-    }
 
     public String getUser() {
         return user;
@@ -95,7 +72,9 @@ public class Post /*implements Parcelable*/{
     public String getColor() {
         return color;
     }
-
+    public String getTimeSince() {
+        return getTimeSince(this.time);
+    }
     public class Comment{
         private String _id;
         private String body;
@@ -132,7 +111,7 @@ public class Post /*implements Parcelable*/{
         }
 
         public String getTimeSince() {
-            return "EMPTY";
+            return Post.getTimeSince(this.time);
         }
 
         public String getUser() {
@@ -142,5 +121,28 @@ public class Post /*implements Parcelable*/{
         /*public int[] getVotes() {
             return votes;
         }*/
+    }
+    public static String getTimeSince(long t) {
+        long tTime = t;
+        long diff = System.currentTimeMillis()-tTime;
+        if(diff<0) tTime+=diff;
+        //Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
+        Interval interval = new Interval(tTime,System.currentTimeMillis());
+        Period p = interval.toPeriod();
+        String time;
+        if(p.getYears() > 0)
+            time = p.getYears()+"Y";
+        else if(p.getMonths() > 0)
+            time = p.getMonths()+"M";
+        else if(p.getDays() > 0)
+            time = p.getDays()+"d";
+        else if(p.getHours() > 0)
+            time = p.getHours()+"h";
+        else if(p.getMinutes() > 0)
+            time = p.getMinutes()+"m";
+        else
+            time = p.getSeconds()+"s";
+
+        return time+"";
     }
 }

@@ -17,15 +17,14 @@ exports.get = function(bus, sensor, t1, t2, callback){
             "Authorization" : auth
         }
     },
-    function (error, response, body) {
-            //console.log("Error: " + error);
-            //console.log("Response: " + response.statusCode);
-            //console.log("Body: '"+ body+"'");
-            if(!error){
+    function (error, response, body) {            
+            if(!error && response.statusCode == 200){
             	if(body != "")
-                callback(JSON.parse(body));
-            else
-                callback(body);
+	                callback(JSON.parse(body));
+	            else
+	                callback(body);
+            }else{
+            	callback("");
             }
     });
         

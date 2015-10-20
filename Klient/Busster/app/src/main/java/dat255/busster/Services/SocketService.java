@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import dat255.busster.Events.CommentsEvent;
 import dat255.busster.Events.GPSEvent;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SavePostEvent;
@@ -222,7 +223,11 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventSaveComment");
-
+            JSONObject obj = (JSONObject)args[0];
+            EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
+            Log.i(TAG, obj.toString());
+            UserPost post = new UserPost(obj.optJSONObject("post"));
+            EventBus.getDefault().postSticky(new CommentsEvent(post.getComments(), 1));
         }
     };
     //Buses

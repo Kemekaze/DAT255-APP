@@ -199,7 +199,7 @@ io.on('connection', function(socket){
 
 	  	lib.db.posts.getAllComments(post_id,function(comments){
 	  		console.log("Returning comments for post id: "+post_id);
-	  		socket.emit('comments', comments);
+	  		socket.emit('getComments', comments);
 	  	});
 	});
 
@@ -211,7 +211,10 @@ io.on('connection', function(socket){
 
 	  	lib.db.posts.saveComment(post_id,body,user,function(comment){
 	  		console.log("Comment saved for post id: "+post_id);
-	  		socket.emit('commentSaved', comment);
+	  		lib.db.posts.findById(post_id,function(post){
+	  			socket.emit('saveComment', {status:"ok",post:post[0]});
+	  		});
+	  		
 	  	});
 	});
 

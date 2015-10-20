@@ -180,7 +180,7 @@ exports.saveComment = function(post_id,body,user,callback){
 	};
 	PostModel.where({_id:post_id}).update({ $push: { comments: comment }}, function (err, p) {
 	  if (err) return console.error(err);
-	  callback(p);
+	  callback(comment);
 	});
 } 
 exports.getComments = function(post_id,callback){

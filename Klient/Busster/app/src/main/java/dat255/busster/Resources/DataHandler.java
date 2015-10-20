@@ -34,6 +34,21 @@ public class DataHandler {
         }
         return posts;
     }
+    public static  <T> T jsonToObj(Class<T> tClass,JSONObject jsonObject){
+        try {
+            T cls = tClass.getConstructor(JSONObject.class).newInstance(jsonObject);
+            return cls;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static <T> List<T> jsonArrToObjArr(Class<T> tClass, JSONArray jsonArray) throws IllegalAccessException, InstantiationException {
         List<T> posts = new ArrayList<T>();
         for(int i = 0; i< jsonArray.length();i++){
@@ -63,7 +78,7 @@ public class DataHandler {
                 else if(meta.getString("type").equals("event"))
                     posts.add(new Event(jsonArray.getJSONObject(i)));
                    //Notifications
-                    Notifyer.nextStopNotify((Event)posts);
+                    //Notifyer.nextStopNotify((Event)posts);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -3,23 +3,24 @@ package dat255.busster;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dat255.busster.Adapters.CommentsAdapter;
+import dat255.busster.Events.CommentsEvent;
 import dat255.busster.Events.SendDataEvent;
+import dat255.busster.Events.StatusEvent;
 import dat255.busster.Events.UserPostEvent;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.UserPost;
@@ -28,6 +29,7 @@ import dat255.busster.Resources.Notifyer;
 import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 public class ViewCommentsActivity extends AppCompatActivity {
     private final String TAG = "dat255.ViewComments";
@@ -100,7 +102,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         userPost = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts.get(0);
         
-        ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),//1);
+        ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),1);
 
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
         ((TextView) findViewById(R.id.comment_parent_user)).setText(userPost.getUser());
@@ -109,7 +111,17 @@ public class ViewCommentsActivity extends AppCompatActivity {
 
 
     }
-
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void updateCommentsEvent(CommentsEvent event) {
+        Log.i(TAG, "updateCommentsEvent(CommentsEvent)");
+        //update post list
+        CommentsAdapter postsAdapter = (CommentsAdapter) mAdapter;
+        postsAdapter.addComments(event.comments, event.eventType);
+    }
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void statusEvent(StatusEvent event) {
+        Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
+    }
     @Override
     protected void onStop() {
         Log.i(TAG, "onStop");
@@ -140,7 +152,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
     }
     public void addCommentActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
-        intent.putExtra("postID",userPost.getId());
+        intent.putExtra("postID", userPost.getId());
         this.startActivity(intent);
     }
 

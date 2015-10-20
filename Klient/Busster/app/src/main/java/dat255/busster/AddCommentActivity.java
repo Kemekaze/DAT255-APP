@@ -1,8 +1,6 @@
 package dat255.busster;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +18,6 @@ import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
 import dat255.busster.Resources.CharacterCountErrorWatcher;
 import dat255.busster.Resources.Constants;
-import dat255.busster.Resources.ServerQueries;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -60,7 +56,6 @@ public class AddCommentActivity extends AppCompatActivity {
                 return true;
             case R.id.send_comment_action:
                 saveComment();
-                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -97,9 +92,9 @@ public class AddCommentActivity extends AppCompatActivity {
     //Eventbus events
     @Subscribe
     public void saveCommentStatus(SavePostEvent event){
-        Log.i(TAG, "savePostStatus");
+        Log.i(TAG, "saveCommentStatus");
         if(event.getStatus().equals("ok")){
-            EventBus.getDefault().postSticky(new StatusEvent("Post saved!"));
+            EventBus.getDefault().postSticky(new StatusEvent("Comment saved!"));
             this.finish();
         }
         //BEhandla error för fel.
