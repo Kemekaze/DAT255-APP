@@ -113,12 +113,24 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final int pos = position;
         holder.view.setClickable(true);
         holder.view.setOnClickListener(clickListener);
         holder.view.setOnLongClickListener(clickLongListener);
-       
+        holder.comment_count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int position = pos;
+                Log.i(TAG,"onClick : "+ position);
+                Post p = getItem(position);
+
+                //open comments
+                UserPost userPost = (UserPost)p;
+                goToComments(userPost);
+            }
+        });
 
 
         //holder.swipeLayout.addSwipeListener(swipeListener);
@@ -240,8 +252,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         }
     };
 
-
-
+    
 
 
     private View.OnLongClickListener clickLongListener = new View.OnLongClickListener() {
