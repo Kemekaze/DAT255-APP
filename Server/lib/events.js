@@ -14,8 +14,8 @@ var updateBusesJourneyCount = 0;
 var updateBusesGPSCount = 0;
 
 var JOUNEY_UPDATE_TIME = 30;
-var JOUNEY_IDS_UPDATE_TIME = 5;
-var GPS_UPDATE_TIME = 5;
+var JOUNEY_IDS_UPDATE_TIME = 15;
+var GPS_UPDATE_TIME = 15;
 var EVENT_NEXTSTOP_TIME = 10;
 
 exports.beginUpdateBuses = function(){
