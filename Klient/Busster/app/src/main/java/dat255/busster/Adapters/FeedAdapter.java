@@ -117,6 +117,8 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         final int pos = position;
         holder.view.setClickable(true);
         holder.view.setOnClickListener(clickListener);
+        holder.view.setOnLongClickListener(clickLongListener);
+       
 
 
         //holder.swipeLayout.addSwipeListener(swipeListener);
@@ -229,12 +231,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
             }else if(p instanceof UserPost){
                 //open comments
-                UserPost userPost = (UserPost)p;
-                Activity activity = (Activity) context;
-                Intent commentIntent = new Intent(activity, ViewCommentsActivity.class);
-                EventBus.getDefault().postSticky(new UserPostEvent(Arrays.asList(userPost)));
-                context.startActivity(commentIntent);
-                activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+
 
             }/*else if(p instanceof EventPost){
                 //open event
@@ -242,6 +239,41 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
         }
     };
+
+
+
+
+
+    private View.OnLongClickListener clickLongListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            int position = recyclerView.getChildAdapterPosition(v);
+            Log.i(TAG,"onClick : "+ position);
+            Post p = getItem(position);
+
+            if(p instanceof UserPost){
+                    //open comments
+                UserPost userPost = (UserPost)p;
+                goToComments(userPost);
+
+                }/*else if(p instanceof EventPost){
+                    //open event
+                }*/
+            return true;
+            }
+
+    };
+
+    private  void goToComments(UserPost userPost){
+
+        Activity activity = (Activity) context;
+        Intent commentIntent = new Intent(activity, ViewCommentsActivity.class);
+        EventBus.getDefault().postSticky(new UserPostEvent(Arrays.asList(userPost)));
+        context.startActivity(commentIntent);
+        activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+    }
+
+
     private void voteUserPost(int pos,boolean like){
 
         Post p= posts.get(pos);
