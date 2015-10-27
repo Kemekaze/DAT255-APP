@@ -60,13 +60,6 @@
             android:label="@string/title_activity_view_comments"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_main2"
-
-            android:theme="@style/AppTheme.NoActionBar" >
-
-        </activity>
     </application>
 
 </manifest>

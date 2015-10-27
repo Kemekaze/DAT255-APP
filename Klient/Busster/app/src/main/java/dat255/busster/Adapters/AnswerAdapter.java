@@ -22,6 +22,7 @@ import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.SurveyVote;
 import dat255.busster.R;
 import dat255.busster.Resources.Constants;
+import dat255.busster.Resources.DialogTool;
 import dat255.busster.SurveyActivity;
 import de.greenrobot.event.EventBus;
 
@@ -29,10 +30,11 @@ import de.greenrobot.event.EventBus;
  * Created by Rasmus on 2015-10-14.
  */
 public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder> {
-    public static final String TAG ="dat255.AnswerAdapter";
-    private  List<String> answers;
-    private  Context context;
-    private  RecyclerView recyclerView;
+
+    public static final String TAG = "dat255.AnswerAdapter";
+    private List<String> answers;
+    private Context context;
+    private RecyclerView recyclerView;
     public Survey survey;
     private SurveyDBHandler surveyHandler;
 
@@ -46,12 +48,11 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         return vh;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
 
         public TextView id;
         public RadioButton option;
-
         public View view;
 
 
@@ -68,10 +69,9 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         this.context = context;
         this.answers = answers;
         this.recyclerView = mRecyclerView;
-        surveyHandler = new SurveyDBHandler(context,null);
+        surveyHandler = new SurveyDBHandler(context, null);
 
     }
-
 
 
     @Override
@@ -79,10 +79,10 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
 
         viewHolder.option.setText(getItem(position));
         List<Integer> exists = surveyHandler.checkIfExists(survey.getId());
-        Log.i(TAG,"0: "+exists.get(0));
-        if(exists.get(0) == 1) {
-            Log.i(TAG,"0: "+exists.get(0)+" 1: "+exists.get(1)+" pos: "+position);
-            if(position == exists.get(1)){
+        Log.i(TAG, "0: " + exists.get(0));
+        if (exists.get(0) == 1) {
+            Log.i(TAG, "0: " + exists.get(0) + " 1: " + exists.get(1) + " pos: " + position);
+            if (position == exists.get(1)) {
                 viewHolder.option.setChecked(true);
                 lastChecked = viewHolder.option;
             }
@@ -91,19 +91,18 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         viewHolder.option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RadioButton checked = (RadioButton)v;
-                if(lastChecked != null){
-                    if(lastChecked != checked)
+                RadioButton checked = (RadioButton) v;
+                if (lastChecked != null) {
+                    if (lastChecked != checked)
                         checked.setChecked(false);
                     return;
                 }
                 lastChecked = checked;
                 int position = recyclerView.getChildAdapterPosition(viewHolder.view);
                 Log.i("Survey", "onClick : " + position);
-                String answer = getItem(position);
-                //survey.addResult(position);
 
-                if(surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
+
+                if (surveyHandler.checkIfExists(survey.getId()).get(0) == 0) {
                     JSONObject query = new JSONObject();
                     try {
                         query.put("option", position + 1);
@@ -112,7 +111,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    surveyHandler.addVote(new SurveyVote(survey.getId(),position));
+                    surveyHandler.addVote(new SurveyVote(survey.getId(), position));
                     EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.UPDATE_SURVEY, query));
 
 
@@ -122,17 +121,19 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
             }
         });
 
-        if(isVoted()){
+        if (isVoted()) {
             showResult();
         }
     }
 
-    public void showResult(){
-        SurveyActivity surveyActivity =(SurveyActivity) context;
-        surveyActivity.resultDialog(survey);
+
+    private void showResult() {
+        SurveyActivity surveyActivity = (SurveyActivity) context;
+        DialogTool.resultDialog(surveyActivity, survey);
     }
 
-    public boolean isVoted(){
+
+    private boolean isVoted() {
         return surveyHandler.checkIfExists(survey.getId()).get(0) == 1;
     }
 
@@ -145,21 +146,18 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         return position;
     }
 
-    public String getItem(int position){
+    public String getItem(int position) {
         return answers.get(position);
     }
-
-    public List<String> getAnswers() {
-        return answers;
-    }
-
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return 0;
     }
 
-    public void setSurvey(Survey survey){
+    public void setSurvey(Survey survey) {
         this.survey = survey;
     }
+
+
 }

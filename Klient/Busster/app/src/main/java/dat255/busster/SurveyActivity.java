@@ -1,6 +1,7 @@
 package dat255.busster;
 
-import android.content.DialogInterface;
+
+
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -122,45 +121,6 @@ public class SurveyActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-
-
-    public void resultDialog(Survey sur) {
-
-
-        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(this);
-
-
-        View v = getLayoutInflater().inflate(R.layout.dialog_result, null);
-        dialogBuilder.setView(v);
-
-        ArrayList<String> strs = new ArrayList<String>();
-        strs.add(sur.getBody());
-        for(int i = 0; i< sur.getOptions(); i++) {
-            strs.add( sur.getCount(i) + " röstade på " + sur.getAlternatives().get(i));
-
-        }
-
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
-        ListView lw = (ListView) v.findViewById(R.id.listResultView);
-
-        lw.setAdapter(listAdapter);
-
-
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //finish();
-            }
-        });
-
-
-        dialogBuilder.create();
-        dialogBuilder.show();
-
-    }
-
 
 
 }

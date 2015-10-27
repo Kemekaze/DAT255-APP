@@ -20,25 +20,30 @@ public  class Notifyer {
     private static Context context;
 
 
-
+    /**
+     *initialize notification and shows it on the top of the screen
+     * @param event
+     */
     public static void nextStopNotify(Event event){
+        if(context != null) {
 
-        not = new Notification.Builder(context);
-        not.setAutoCancel(true);
+            not = new Notification.Builder(context);
+            not.setAutoCancel(true);
 
-        not.setSmallIcon(R.drawable.ic_action_directions_bus);
-        not.setTicker("Nästa hållplats");
-        not.setWhen(System.currentTimeMillis());
-        not.setContentTitle("Nästa hållplats");
-        not.setContentText(event.getBody());
+            not.setSmallIcon(R.drawable.ic_action_directions_bus);
+            not.setTicker("Nästa hållplats");
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        not.setContentIntent(pendingIntent);
+            not.setWhen(System.currentTimeMillis());
+            not.setContentTitle("Nästa hållplats");
+            not.setContentText(event.getBody());
 
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(uID, not.build());
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            not.setContentIntent(pendingIntent);
 
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(uID, not.build());
+        }
     }
 
     public static void setContext(Context ctxt) {
