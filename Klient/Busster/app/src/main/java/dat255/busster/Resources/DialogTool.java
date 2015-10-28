@@ -15,17 +15,28 @@ import dat255.busster.R;
 /**
  * Created by Rasmus on 2015-10-19.
  */
+
+/**
+ * DialogTool is used to create diffrent dialog popups
+ */
 public class DialogTool {
 
+
+    /**
+     * Creating and showing  a dialog with result from the survey.
+     * @param context in which context the dialog should be shown.
+     * @param sur the survey which result will be shown in the dialog.
+     */
     public static void resultDialog(Context context,Survey sur) {
 
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(context);
 
+        //Set the layout of the dialog
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-
         View v = inflater.inflate(R.layout.dialog_result, null);
         dialogBuilder.setView(v);
+
 
         ArrayList<String> strs = new ArrayList<String>();
         strs.add(sur.getBody());
@@ -34,9 +45,9 @@ public class DialogTool {
 
         }
 
+        //setting a list in the dialog view to the results
         ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, strs);
         ListView lw = (ListView) v.findViewById(R.id.listResultView);
-
         lw.setAdapter(listAdapter);
 
 

@@ -27,7 +27,7 @@ import dat255.busster.SurveyActivity;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by Rasmus on 2015-10-14.
+ * An adapter for the list of alternatives in the survey
  */
 public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder> {
 
@@ -47,6 +47,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -73,7 +74,11 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
 
     }
 
-
+    /**
+     * Setting the layout for each alternative i the list.
+     * @param viewHolder which defines what the view will contain
+     * @param position the position of the alternative
+     */
     @Override
     public void onBindViewHolder(final AnswerAdapter.ViewHolder viewHolder, int position) {
 
@@ -127,6 +132,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
     }
 
 
+
     private void showResult() {
         SurveyActivity surveyActivity = (SurveyActivity) context;
         DialogTool.resultDialog(surveyActivity, survey);
@@ -137,6 +143,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
         return surveyHandler.checkIfExists(survey.getId()).get(0) == 1;
     }
 
+    
     @Override
     public int getItemCount() {
         return answers.size();
