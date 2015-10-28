@@ -1,13 +1,11 @@
 package dat255.busster;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,8 +34,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity{
     private final String TAG = "dat255.MainActivity";
 
     private RecyclerView mRecyclerView;
@@ -58,30 +55,21 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
+
         setContentView(R.layout.activity_main);
         preferencesDBHandler = new PreferencesDBHandler(this,null);
         // set Display name in top
         setTitle(preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        new Thread(){
-            public void run(){
-                Intent socketServiceIntent = new Intent(getApplicationContext(),SocketService.class);
-                startService(socketServiceIntent);
-            }
-        }.start();
-
+        if(!isMyServiceRunning(SocketService.class)){
+            new Thread() {
+                public void run() {
+                    Intent socketServiceIntent = new Intent(getApplicationContext(), SocketService.class);
+                    startService(socketServiceIntent);
+                }
+            }.start();
+        }
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_feed_container);
         swipeLayout.setOnRefreshListener(refreshListener);
         swipeLayout.setColorSchemeResources(R.color.orange_600, R.color.green_600, R.color.blue_600, R.color.red_600);
@@ -93,9 +81,9 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Post> mArray = new ArrayList<Post>();
         mAdapter = new FeedAdapter(this,mArray,mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
-
         Notifyer.setContext(this);
 
+        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
     }
     public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
@@ -122,15 +110,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -183,17 +162,6 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        Intent intent = dat255.busster.Menu.Menu.getNavigationItem(this,item);
-        startActivity(intent);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void updatePostsEvent(PostsEvent event) {
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
@@ -244,7 +212,15 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
         this.startActivity(intent);
     }
-
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public RecyclerView.Adapter getmAdapter() {
         return mAdapter;
     }

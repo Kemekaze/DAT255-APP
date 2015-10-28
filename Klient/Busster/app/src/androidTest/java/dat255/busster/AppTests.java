@@ -1,11 +1,14 @@
 package dat255.busster;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 
 import dat255.busster.Adapters.FeedAdapter;
+import dat255.busster.Objects.Post;
 
 
 public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{

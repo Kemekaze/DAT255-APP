@@ -1,8 +1,6 @@
 package dat255.busster.Objects;
 
 
-import android.util.Log;
-
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.json.JSONException;
@@ -27,7 +25,6 @@ public class Post /*implements Parcelable*/{
         }catch (Exception e){
             e.printStackTrace();
         }*/
-        Log.i("dat255","Post: "+post.toString());
         try {
             this._id = post.getString("_id");
             this.body = post.getString("body");

@@ -1,7 +1,5 @@
 package dat255.busster.Objects;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +19,6 @@ public class UserPost extends Post{
 
     public UserPost(JSONObject post) {
         super(post);
-        Log.i("dat255", "UserPost: "+post.toString());
         try {
             JSONObject meta = post.getJSONObject("meta");
             JSONObject votes = meta.getJSONObject("votes");
