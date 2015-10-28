@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_feed_container);
         swipeLayout.setOnRefreshListener(refreshListener);
         swipeLayout.setColorSchemeResources(R.color.orange_600, R.color.green_600, R.color.blue_600, R.color.red_600);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.post_feed);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addOnScrollListener(scrollListener);
@@ -239,12 +238,22 @@ public class MainActivity extends AppCompatActivity
     }
     public void refreshPosts() {
         Log.i(TAG, "refreshPosts");
-        getPosts(filter(),10, 0);
+        getPosts(filter(), 10, 0);
     }
     public void addPostActivity(View view){
         Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
         this.startActivity(intent);
     }
 
+    public RecyclerView.Adapter getmAdapter() {
+        return mAdapter;
+    }
 
+    public RecyclerView getmRecyclerView() {
+        return mRecyclerView;
+    }
+
+    public SwipeRefreshLayout.OnRefreshListener getRefreshListener() {
+        return refreshListener;
+    }
 }
