@@ -25,7 +25,7 @@ import de.greenrobot.event.Subscribe;
 
 public class AddPostActivity extends AppCompatActivity {
     private final String TAG = "dat255.AddPostActivity";
-
+    PreferencesDBHandler preferencesDBHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +41,7 @@ public class AddPostActivity extends AppCompatActivity {
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
 
         Notifyer.setContext(this);
+        preferencesDBHandler = new PreferencesDBHandler(this,null);
 
     }
     @Override
@@ -78,8 +79,9 @@ public class AddPostActivity extends AppCompatActivity {
         }
     }
     public void savePost() {
+        Log.i(TAG,"savePost");
         TextInputLayout body = (TextInputLayout) findViewById(R.id.post_body);
-        PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
+
         // set Display name in top
         try {
             JSONObject query = new JSONObject();

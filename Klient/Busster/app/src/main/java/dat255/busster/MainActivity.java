@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
         setContentView(R.layout.activity_main);
         preferencesDBHandler = new PreferencesDBHandler(this,null);
         // set Display name in top
@@ -173,7 +174,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         Log.i(TAG,"onStart");
         EventBus.getDefault().register(this);
-        EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
         super.onStart();
     }
     @Override

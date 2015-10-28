@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -134,6 +135,7 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventAuthorized");
             socket.emit(Constants.SocketEvents.GET_STOPS);
+            socket.emit(Constants.SocketEvents.GET_POSTS);
         }
     };
     private Emitter.Listener eventUnauthorized = new Emitter.Listener() {
@@ -153,16 +155,7 @@ public class SocketService extends Service {
 
             int type = data.optInt("type");
             EventBus.getDefault().post(new PostsEvent(DataHandler.postToRposts(posts), type));
-            /*try {
-                List<UserPost> ups =DataHandler.<UserPost>jsonArrToObjArr(UserPost.class, posts);
-                List<? extends Post> posts1 = ups;
-                EventBus.getDefault().post(new PostsEvent((List<Post>)posts1, type));
 
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }*/
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {
@@ -172,9 +165,15 @@ public class SocketService extends Service {
             JSONObject obj = (JSONObject)args[0];
 
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
-            List<UserPost> ups =DataHandler.<UserPost>jsonToObjArr(UserPost.class, obj);
-            List<? extends Post> posts1 = ups;
-            EventBus.getDefault().postSticky(new PostsEvent((List<Post>)posts1, 2));
+            List<UserPost> ups = null;
+            try {
+                ups = DataHandler.<UserPost>jsonToObjArr(UserPost.class, obj.getJSONObject("post"));
+                List<? extends Post> posts1 = ups;
+                EventBus.getDefault().postSticky(new PostsEvent((List<Post>)posts1, 2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     };
     private Emitter.Listener eventIncVotesUp = new Emitter.Listener() {

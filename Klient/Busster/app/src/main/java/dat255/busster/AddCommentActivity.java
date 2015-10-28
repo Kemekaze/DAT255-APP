@@ -23,7 +23,7 @@ import de.greenrobot.event.Subscribe;
 
 public class AddCommentActivity extends AppCompatActivity {
     private final String TAG = "dat255.AddComment";
-
+    PreferencesDBHandler preferencesDBHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +36,7 @@ public class AddCommentActivity extends AppCompatActivity {
 
         TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
+        preferencesDBHandler  = new PreferencesDBHandler(this,null);
     }
 
 
@@ -75,9 +76,8 @@ public class AddCommentActivity extends AppCompatActivity {
         super.onStop();
     }
     public void saveComment() {
+        Log.i(TAG,"saveComment");
         TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
-        PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
-
         try {
             JSONObject query = new JSONObject();
             query.put("post_id", getIntent().getStringExtra("postID"));

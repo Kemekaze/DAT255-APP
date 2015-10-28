@@ -13,9 +13,6 @@ import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
 
-/**
- * Created by Costas Pappas on 2015-09-30.
- */
 public class DataHandler {
 
     public static  <T> List<T> jsonToObjArr(Class<T> tClass,JSONObject jsonObject){

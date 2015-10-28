@@ -67,7 +67,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addCommentActivity);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,5 +174,13 @@ public class ViewCommentsActivity extends AppCompatActivity {
     @Subscribe
     public void userPostEvent(UserPostEvent userPostEvent) {
         Log.i(TAG, "UserPostEvent");
+    }
+
+    public RecyclerView.Adapter getmAdapter() {
+        return mAdapter;
+    }
+
+    public RecyclerView getmRecyclerView() {
+        return mRecyclerView;
     }
 }
