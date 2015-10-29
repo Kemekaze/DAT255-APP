@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by elias on 2015-10-13.
+ * used for getting the different fields of a busstop and setting it for an object.
  */
 public class Stop {
     private String _id ="";
