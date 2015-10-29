@@ -26,6 +26,7 @@ public  class Notifyer {
      */
     public static void nextStopNotify(Event event){
         if(context != null) {
+            
 
             not = new Notification.Builder(context);
             not.setAutoCancel(true);

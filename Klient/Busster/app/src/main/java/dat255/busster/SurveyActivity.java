@@ -24,6 +24,7 @@ import dat255.busster.Objects.Survey;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
+
 public class SurveyActivity extends AppCompatActivity {
 
     private final String TAG = "dat255.SurveyActivity";
