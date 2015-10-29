@@ -24,8 +24,10 @@ import de.greenrobot.event.Subscribe;
 
 
 public class AddPostActivity extends AppCompatActivity {
+    
     private final String TAG = "dat255.AddPostActivity";
     PreferencesDBHandler preferencesDBHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class AddPostActivity extends AppCompatActivity {
         preferencesDBHandler = new PreferencesDBHandler(this,null);
 
     }
+
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart");

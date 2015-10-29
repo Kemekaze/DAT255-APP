@@ -42,9 +42,7 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout swipeLayout;
 
-    private int previousTotal = 0;
     private boolean loading = true;
-    private int visibleThreshold = 5;
 
     private int menuFilterSelected=1;
     PreferencesDBHandler preferencesDBHandler;
@@ -62,6 +60,7 @@ public class MainActivity extends AppCompatActivity{
         setTitle(preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         if(!isMyServiceRunning(SocketService.class)){
             new Thread() {
                 public void run() {
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }.start();
         }
+
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_feed_container);
         swipeLayout.setOnRefreshListener(refreshListener);
         swipeLayout.setColorSchemeResources(R.color.orange_600, R.color.green_600, R.color.blue_600, R.color.red_600);
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity{
 
         EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
     }
+
     public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
     };
+
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -171,14 +173,17 @@ public class MainActivity extends AppCompatActivity{
         loading = true;
         swipeLayout.setRefreshing(false);
     }
+
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event) {
         Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
+
     public void getMorePosts(){
         Log.i(TAG, "getMorePosts");
         getPosts(filter(), 10, mAdapter.getItemCount());
     }
+
     private void getPosts(JSONObject query,int limit, int skip) {
         Log.i(TAG, "getPosts");
         try {
@@ -191,6 +196,7 @@ public class MainActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
+
     private JSONObject filter(){
         try {
             if (menuFilterSelected == R.id.main_menu_filter_2) {

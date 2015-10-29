@@ -16,7 +16,7 @@ public class Constants {
 
 
     public class SocketEvents {
-        //
+
         public static final String AUTHENTICATE = "authenticate";
         public static final String AUTHORIZED = "authorized";
         public static final String UNAUTHORIZED = "unauthorized";
