@@ -1,7 +1,7 @@
 package dat255.busster.Objects;
 
 /**
- * Created by elias on 2015-10-10.
+ * the class handling the votes on a post. 
  */
 public class Vote {
     private int _id;
