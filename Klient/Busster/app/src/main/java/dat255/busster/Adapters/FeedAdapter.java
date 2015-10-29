@@ -38,12 +38,17 @@ import dat255.busster.SurveyActivity;
 import dat255.busster.ViewCommentsActivity;
 import de.greenrobot.event.EventBus;
 
-
+/**
+ * is used for getting the mainfeed containing the superclass Posts that contains both surveys and userposts.
+ * 
+ */ 
 public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     private static  final String TAG = "dat255.FeedAdapter";
 
 
-
+/**
+ *  Creates views of the items in the dataset.
+ */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
 
@@ -91,6 +96,12 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
     private Context mContext;
     private VoteDBHandler votesHandler;
     private Context context;
+    
+    /**
+     * @param context the context where the feedadapter is called 
+     * @param posts  the list of posts, userposts and surveys. 
+     * @param mRecyclerView  which type of view.
+     */
 
     public FeedAdapter(Context context, List<Post> posts, RecyclerView mRecyclerView) {
         this.context = context;
@@ -205,6 +216,11 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         holder.time.setText(posts.get(position).getTimeSince());
 
     }
+    
+    /**
+     *  Decides what the onclick on a post shall do, if the post if of type survey and hasn't been voted 
+     * the surveyview activity will be shown otherwise it will show the surveyresult.
+     */
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -247,7 +263,10 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
 
 
     
-
+    /**
+     *  used for setting up what shall happen on longclick on a post, if the post is a userpost
+     * then it opens comments.
+     */
 
     private View.OnLongClickListener clickLongListener = new View.OnLongClickListener() {
         @Override
@@ -266,6 +285,12 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
             }
 
     };
+    
+    /**
+     * Opens the commentsactivity to show the comments of the selected post. 
+     * @param userPost the selected userpost.
+     *  
+     */
 
     private  void goToComments(UserPost userPost){
 
@@ -276,7 +301,11 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         activity.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
-
+    /**
+     * used to vote for a post which is swiped.
+     * @param pos the position in the feed
+     * @param like true if liked false if disliked 
+     */
     private void voteUserPost(int pos,boolean like){
 
         Post p= posts.get(pos);
