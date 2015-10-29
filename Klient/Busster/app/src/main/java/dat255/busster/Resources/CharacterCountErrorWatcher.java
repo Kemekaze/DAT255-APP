@@ -10,6 +10,9 @@ import android.text.TextWatcher;
 import android.text.style.AlignmentSpan;
 import android.text.style.ForegroundColorSpan;
 
+/**
+ * used for checking if the textinput by the user isn't bigger then a specified amount. 
+ */
 
 public class CharacterCountErrorWatcher
         implements TextWatcher
@@ -20,7 +23,13 @@ public class CharacterCountErrorWatcher
     private final SpannableStringBuilder mErrorText = new SpannableStringBuilder();
     private int mMinLen;
     private int mMaxLen;
-
+        
+        /**
+         * Setting the min & max length for a specified layout and the error text.
+         * @param textInputLayout the textinput layout.
+         * @param minLen the minimum length of chars
+         * @param maxLen the maximum length of chars
+         */
     public CharacterCountErrorWatcher(TextInputLayout textInputLayout, int minLen, int maxLen)
     {
         mTextInputLayout = textInputLayout;
@@ -29,7 +38,10 @@ public class CharacterCountErrorWatcher
         mMaxLen = maxLen;
         updateErrorText();
     }
-
+        
+    /**
+     *  updates the errortext for an textinput layout showin length typed and the maxlength.
+     */
     private void updateErrorText()
     {
         mErrorText.clear();
