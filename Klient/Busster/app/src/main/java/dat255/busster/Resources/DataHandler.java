@@ -13,6 +13,10 @@ import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Survey;
 import dat255.busster.Objects.UserPost;
 
+/**
+ * contains static generic functions for handling different type of data. 
+ * 
+ */
 public class DataHandler {
 
     public static  <T> List<T> jsonToObjArr(Class<T> tClass,JSONObject jsonObject){
