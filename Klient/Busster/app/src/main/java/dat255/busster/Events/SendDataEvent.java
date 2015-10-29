@@ -1,7 +1,7 @@
 package dat255.busster.Events;
 
 /**
- * Created by Kemekaze on 2015-09-29.
+ * used for carrying the eventName and the data.
  */
 public class SendDataEvent {
 
