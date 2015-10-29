@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by elias on 2015-09-25.
+ * 
  * Class that all constants are declared
  */
 public class Constants {
