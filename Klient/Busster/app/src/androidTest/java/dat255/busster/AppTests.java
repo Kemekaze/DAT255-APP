@@ -1,17 +1,26 @@
 package dat255.busster;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 
 import dat255.busster.Adapters.FeedAdapter;
+import dat255.busster.DB.SurveyDBHandler;
 import dat255.busster.Objects.Post;
+import dat255.busster.Objects.UserPost;
 
 
 public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
+
+
+
     private final String TAG = "dat255.test.Main";
     private Solo solo;
     public AppTests() {
@@ -22,6 +31,7 @@ public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
     public void setUp() throws Exception {
         solo = new Solo(getInstrumentation(),getActivity());
     }
+
 
     @Override
     protected void tearDown() throws Exception {
@@ -52,6 +62,30 @@ public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
         //Assert that the created post is added to the Resyclerlist
         assertNotNull(solo.getText("Post test"));
     }
+
+    public void testVoteUserPost() throws Exception{
+        //Assert that MainActivity is opened
+        solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+        MainActivity main = (MainActivity) solo.getCurrentActivity();
+        FeedAdapter adapter =((FeedAdapter)main.getmAdapter());
+
+        //Click on menu item so that we can vote
+        solo.clickOnMenuItem("Posts", true);
+        solo.sleep(1000);
+        WindowManager wm = (WindowManager) main.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        UserPost p = (UserPost)adapter.getItem(0);
+        int likes[]= p.getVotes();
+        //like
+        solo.drag(size.x / 8, size.x / 2, size.y / 4, size.y / 4, 1);
+        assertEquals(likes[0] - likes[0] + 1, p.getVotes()[0] - p.getVotes()[1]);
+        solo.sleep(1500);
+        //dislike
+        solo.drag(size.x-size.x/8,size.x/2,size.y/4,size.y/4,1);
+        assertEquals(likes[0] - likes[0] - 1, p.getVotes()[0] - p.getVotes()[1]);
+    }
     public void testGetMorePosts() throws Exception{
         //Assert that MainActivity is opened
         solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
@@ -81,6 +115,7 @@ public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
         main.getRefreshListener().onRefresh();
 
     }
+
     public void testSelectFilter() throws Exception{
         //Assert that MainActivity is opened
         solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
@@ -96,7 +131,27 @@ public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
         }
     }
 
-    public void testShowUserPostAndAddComment() throws Exception{
+    public void testShowComments() throws Exception {
+        //Assert that MainActivity is opened
+        solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+
+        MainActivity main = (MainActivity) solo.getCurrentActivity();
+        FeedAdapter adapter = ((FeedAdapter) main.getmAdapter());
+        //get first userpost
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (adapter.getItem(i).getType().equals("userpost")) {
+                solo.clickLongInRecycleView(i);
+
+                break;
+            }
+        }
+        //Assert that ViewCommentsActivity is opened
+        solo.assertCurrentActivity("Expected ViewCommentsActivity", "ViewCommentsActivity");
+        solo.goBack();
+        //Assert that MainActivity is opened
+        solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+    }
+    public void testAddComment() throws Exception{
         //Assert that MainActivity is opened
         solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
 
@@ -137,9 +192,47 @@ public class AppTests extends ActivityInstrumentationTestCase2<MainActivity>{
         //Assert that MainActivity is opened
         solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
 
-
-
     }
+
+    public void testVoteSurvey() throws Exception{
+        //Assert that MainActivity is opened
+        solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+        MainActivity main = (MainActivity) solo.getCurrentActivity();
+        FeedAdapter adapter =((FeedAdapter)main.getmAdapter());
+
+        //Click on menu item so that we can vote
+        solo.clickOnMenuItem("Surveys", true);
+        solo.sleep(1000);
+
+        solo.clickInRecyclerView(0);
+        //Assert that SurveyActivity is opened
+        solo.assertCurrentActivity("Expected SurveyActivity", "SurveyActivity");
+        solo.sleep(1000);
+        SurveyDBHandler surveyDBHandler = new SurveyDBHandler(
+                solo.getCurrentActivity().getApplicationContext(),null
+        );
+        int sizeBefore = surveyDBHandler.getVotes().size();
+        solo.clickOnRadioButton(0);
+        solo.sleep(1000);
+        assertEquals(sizeBefore + 1, surveyDBHandler.getVotes().size());
+        assertEquals(true,solo.waitForDialogToOpen());
+    }
+    public void testShowSurveyReulst() throws Exception{
+        //Assert that MainActivity is opened
+        solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+        MainActivity main = (MainActivity) solo.getCurrentActivity();
+        FeedAdapter adapter =((FeedAdapter)main.getmAdapter());
+
+        //Click on menu item so that we can vote
+        solo.clickOnMenuItem("Surveys", true);
+        solo.sleep(1000);
+
+        solo.clickInRecyclerView(0);
+        //Assert that a dialog is opened
+        assertEquals(true,solo.waitForDialogToOpen());
+        solo.sleep(1000);
+    }
+
 
 
 }
