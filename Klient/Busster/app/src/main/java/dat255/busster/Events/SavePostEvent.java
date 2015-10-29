@@ -1,7 +1,7 @@
 package dat255.busster.Events;
 
 /**
- * Created by ido on 30/09/15.
+ * used for getting the status of an event.
  */
 public class SavePostEvent {
     private  String status;
