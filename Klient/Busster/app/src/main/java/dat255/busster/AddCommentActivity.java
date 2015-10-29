@@ -21,9 +21,18 @@ import dat255.busster.Resources.Constants;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
+/**
+ * This activity is for adding comments to a post. The user
+ * can write text in a textInputField and the text is then
+ * packed into a JSONObject and sent over the dataBus to be sent
+ * to the server by the SocketService.
+ */
 public class AddCommentActivity extends AppCompatActivity {
     private final String TAG = "dat255.AddComment";
 
+    /**
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +47,11 @@ public class AddCommentActivity extends AppCompatActivity {
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
     }
 
-
+    /**
+     * Called
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -47,6 +60,12 @@ public class AddCommentActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    /**
+     * Handles interaction with menuItems.
+     * @param item MenuItem that was selected.
+     * @return true if executed correctly, otherwise false.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -62,18 +81,30 @@ public class AddCommentActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Registers the activity to the EventBus.
+     */
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart");
         EventBus.getDefault().register(this);
         super.onStart();
     }
+
+    /**
+     * Uregisters the activity from the EventBus.
+     */
     @Override
     protected void onStop() {
         Log.i(TAG,"onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
+    /**
+     * Saves the body of the TextInputField together with username
+     * and a post id to a JSONObject and sends it to the DataBus.
+     */
     public void saveComment() {
         TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
         PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
@@ -89,7 +120,12 @@ public class AddCommentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //Eventbus events
+
+    /**
+     * Sends a StatusEvent to the EventBus if comment was
+     * successfully saved.
+     * @param event SavePostEvent 
+     */
     @Subscribe
     public void saveCommentStatus(SavePostEvent event){
         Log.i(TAG, "saveCommentStatus");
@@ -97,7 +133,7 @@ public class AddCommentActivity extends AppCompatActivity {
             EventBus.getDefault().postSticky(new StatusEvent("Comment saved!"));
             this.finish();
         }
-        //BEhandla error för fel.
+        //Handle error
         else Log.e(TAG, "PostSaveError");
     }
 

@@ -15,7 +15,12 @@ import java.util.List;
 import dat255.busster.Objects.Post;
 import dat255.busster.R;
 
-
+/**
+ * This class extends android class android.widget.Adapter providing
+ * access to the data items for the underlying AdapterView. The dataset
+ * used by this class is List<Post.Comment> comments, containing the
+ * comments of the post selected by the user (parent post).
+ */
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
     private static  final String TAG = "dat255.CommentsAdapter";
 
@@ -32,8 +37,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    /*
-     * ViewHolder
+    /**
+     * This internal class creates views of the items in the
+     * dataset. Every comment item will have three TextViews
+     * containing the users name (who posted the comment), the
+     * comment body and timeSince() it was posted.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
@@ -43,7 +51,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         public TextView time;
         public View view;
 
-
+        /**
+         * Initiates the TextViews to the corresponding layout
+         * in layout/comment.xml
+         * @param view
+         */
         public ViewHolder(View view) {
             super(view);
 
@@ -53,7 +65,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             this.view = view;
         }
     }
-    // Create new views (invoked by the layout manager)
+
+    /**
+     * Creates new views, invoked by the layout manager when ViewHolder
+     * is created.
+     * @param parent Parent ViewGroup
+     * @param viewType
+     * @return ViewHolder vh
+     */
     @Override
     public CommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment, parent, false);
@@ -61,15 +80,18 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         return vh;
     }
 
+    /**
+     * Sets the textfields of ViewHolder holder to that of the
+     * comment in position's position.
+     * @param holder the holder which textfields will be set
+     * @param position the position (in List comments) of the comment to be used
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.view.setClickable(true);
-        //holder.view.setOnLongClickListener(clickListener);
-        Log.i(TAG, Integer.toString(comments.size()));
         holder.body.setText(comments.get(position).getBody());
         holder.user.setText(comments.get(position).getUser());
         holder.time.setText(comments.get(position).getTimeSince());
-        // holder.user.setText(comments.get(position).getUser());
     }
 
     private View.OnLongClickListener clickListener = new View.OnLongClickListener() {
@@ -82,27 +104,48 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         }
     };
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /**
+     * returns the size of the dataset comments (invoked by
+     * the layout manager)
+     * @return size of List commments
+     */
     @Override
     public int getItemCount() {
         return comments.size();
     }
 
+    /**
+     * Returns item id of comment in the given position.
+     * @param position position of the requested comment
+     *                 in List comments
+     * @return long id of comment in position
+     */
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * Returns the comment at a given position in List comments.
+     * @param position position of the requested comment
+     * @return requested comment.
+     */
     public Post.Comment getItem(int position){
         return comments.get(position);
     }
 
-    public List<Post.Comment> getPosts() {
+    /**
+     * Returns the comment list of this adapter.
+     * @return the whole comment List.
+     */
+    public List<Post.Comment> getComments() {
         return comments;
     }
 
-    public void updateComments(){
-        this.notifyDataSetChanged();
-    }
+    /**
+     * Adds a List of comments to current list of comments.
+     * @param comments the comments to be added.
+     * @param type the way the list will be added.
+     */
     public void addComments(List<Post.Comment> comments,int type) {
         if(comments.size() == 0) return;
         switch(type){
@@ -118,10 +161,21 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 break;
         }
     }
+
+    /**
+     * Adds new list of comments to beginning of comment list.
+     * @param comments list of new comments to be added
+     */
     private void addCommentsBeginning(List<Post.Comment> comments) {
         this.comments.addAll(0, comments);
         this.notifyDataSetChanged();
     }
+
+    /**
+     * Removes all items in current list of comments and adds
+     * the items from the new list of comments to it.
+     * @param comments new List of comments to be added.
+     */
     private void addCommentsRefresh(List<Post.Comment> comments) {
 
         Log.i(TAG, comments.size() + "");
@@ -131,15 +185,21 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
+    /**
+     * Adds a single comment to the comment list.
+     * @param comment Comment to be added.
+     */
     public void addComment(Post.Comment comment) {
         comments.add(comment);
         this.notifyDataSetChanged();
     }
+
+    /**
+     * Adds a single comment to the beginning of list comments.
+     * @param comment comment to be added
+     */
     public void addCommentBeginning(Post.Comment comment) {
         comments.add(0, comment);
         this.notifyDataSetChanged();
     }
-
-
-
 }
