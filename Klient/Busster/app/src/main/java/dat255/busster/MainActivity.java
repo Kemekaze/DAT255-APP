@@ -34,6 +34,12 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
+/**
+ * This Activity is the main Activity of the application.
+ * It fetches the posts and surveys from the server and
+ * displays them to the screen. It also has a menu drawer
+ * where users can jump between specific Activities.
+ */
 public class MainActivity extends AppCompatActivity{
     private final String TAG = "dat255.MainActivity";
 
@@ -47,8 +53,10 @@ public class MainActivity extends AppCompatActivity{
     private int menuFilterSelected=1;
     PreferencesDBHandler preferencesDBHandler;
 
-
-
+    /**
+     * HALP
+     * @param savedInstanceState state of the application.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +121,11 @@ public class MainActivity extends AppCompatActivity{
         }
     };
 
+    /**
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -120,6 +133,12 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    /**
+     * When a MenuItem is a selected, performs actions based
+     * on its id.
+     * @param item item that was selected
+     * @return true if successful, else false.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -151,12 +170,20 @@ public class MainActivity extends AppCompatActivity{
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Registers this activity to the EventBus when started.
+     */
     @Override
     protected void onStart() {
         Log.i(TAG,"onStart");
         EventBus.getDefault().register(this);
         super.onStart();
     }
+
+    /**
+     * Unregisters this activity from the EventBus when stopped.
+     */
     @Override
     protected void onStop() {
         Log.i(TAG, "onStop");
@@ -164,6 +191,10 @@ public class MainActivity extends AppCompatActivity{
         super.onStop();
     }
 
+    /**
+     *
+     * @param event
+     */
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void updatePostsEvent(PostsEvent event) {
         Log.i(TAG, "updatePostsEvent(PostsEvent)");
@@ -174,16 +205,33 @@ public class MainActivity extends AppCompatActivity{
         swipeLayout.setRefreshing(false);
     }
 
+
+    /**
+     * Posts a SnackBar message with information
+     * from the passed event.
+     * @param event StatusEvent containing information to be displayed
+     */
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void statusEvent(StatusEvent event) {
         Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
 
+
+    /**
+     * Gets more posts
+     */
     public void getMorePosts(){
         Log.i(TAG, "getMorePosts");
         getPosts(filter(), 10, mAdapter.getItemCount());
     }
 
+
+    /**
+     * Gets posts 
+     * @param query
+     * @param limit
+     * @param skip
+     */
     private void getPosts(JSONObject query,int limit, int skip) {
         Log.i(TAG, "getPosts");
         try {
@@ -197,6 +245,12 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
+    /**
+     * Checks if the user is filtering certain posts and
+     * returns a JSONObject with that information.
+     * @return JSONObject containing filter information.
+     */
     private JSONObject filter(){
         try {
             if (menuFilterSelected == R.id.main_menu_filter_2) {
@@ -214,10 +268,17 @@ public class MainActivity extends AppCompatActivity{
         Log.i(TAG, "refreshPosts");
         getPosts(filter(), 10, 0);
     }
+
+    /**
+     * Starts AddPostActivity. Called from onClick() of
+     * floatingActionButton.
+     * @param view View that was pressed.
+     */
     public void addPostActivity(View view){
         Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
         this.startActivity(intent);
     }
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
