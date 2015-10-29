@@ -24,7 +24,10 @@ import dat255.busster.Objects.Survey;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
-
+/**
+ * This activity is for showing a survey where you can vote.
+ * After you voted you will be able see the result off the current survey.
+ */
 public class SurveyActivity extends AppCompatActivity {
 
     private final String TAG = "dat255.SurveyActivity";
@@ -40,7 +43,11 @@ public class SurveyActivity extends AppCompatActivity {
     private Survey survey;
     private AlertDialog.Builder dialogBuilder;
 
-
+    /**
+     * Creating the layout of the survey and put
+     * all the information in it's place.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -77,6 +84,11 @@ public class SurveyActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Gets the relevant survey  from the DataBus and
+     * pass the information from survey to list adapter.
+     */
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart");
@@ -88,6 +100,9 @@ public class SurveyActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * Unregisters this activity from the EventBus when stopped.
+     */
     @Override
     protected void onStop() {
         Log.i(TAG, "onStop");
@@ -95,10 +110,15 @@ public class SurveyActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    /**
+     * When a survey event is called write in log.
+     * @param surveyEvent the event which is called.
+     */
     @Subscribe
     public void surveyEvent(SurveyEvent surveyEvent) {
         Log.i(TAG, "SurveyEventDone");
     }
+
 
 
     @Override

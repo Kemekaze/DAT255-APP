@@ -99,6 +99,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         this.recyclerView = mRecyclerView;
         votesHandler = new VoteDBHandler(context,null);
     }
+
     // Create new views (invoked by the layout manager)
     @Override
     public FeedAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -133,7 +134,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
         });
 
 
-        //holder.swipeLayout.addSwipeListener(swipeListener);
+
         if(posts.get(position).getType().equals("userpost")) {
             UserPost userPost=  (UserPost) posts.get(position);
             holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -238,12 +239,12 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                 //open comments
 
 
-            }/*else if(p instanceof EventPost){
-                //open event
-            }*/
+            }
 
         }
     };
+
+
 
     
 
@@ -260,9 +261,7 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                 UserPost userPost = (UserPost)p;
                 goToComments(userPost);
 
-                }/*else if(p instanceof EventPost){
-                    //open event
-                }*/
+                }
             return true;
             }
 

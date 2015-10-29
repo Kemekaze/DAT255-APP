@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Post /*implements Parcelable*/{
+public class Post {
 
     private String _id ="";
     private String body = "";
@@ -20,11 +20,7 @@ public class Post /*implements Parcelable*/{
 
 
     public Post(JSONObject post) {
-        /*try{
-            this.color = Constants.COLORS.get(new Random().nextInt(Constants.COLORS.size()));
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
+
         try {
             this._id = post.getString("_id");
             this.body = post.getString("body");
@@ -83,18 +79,12 @@ public class Post /*implements Parcelable*/{
 
         public Comment(JSONObject comment){
             try {
-                //JSONObject meta = post.getJSONObject("meta");
-                //JSONObject votes = meta.getJSONObject("votes");
 
                 this._id = comment.getString("_id");
                 this.body = comment.getString("body");
                 this.user = comment.getString("user");
                 this.time = comment.getLong("date");
 
-                /*this.votes = new int[]{
-                        votes.getInt("up"),
-                        votes.getInt("down")
-                };*/
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -117,15 +107,13 @@ public class Post /*implements Parcelable*/{
             return user;
         }
 
-        /*public int[] getVotes() {
-            return votes;
-        }*/
+
     }
     public static String getTimeSince(long t) {
         long tTime = t;
         long diff = System.currentTimeMillis()-tTime;
         if(diff<0) tTime+=diff;
-        //Log.i("dat255","P: "+tTime+" N: "+System.currentTimeMillis());
+
         Interval interval = new Interval(tTime,System.currentTimeMillis());
         Period p = interval.toPeriod();
         String time;

@@ -48,9 +48,7 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout swipeLayout;
 
-    private int previousTotal = 0;
     private boolean loading = true;
-    private int visibleThreshold = 5;
 
     private int menuFilterSelected=1;
     PreferencesDBHandler preferencesDBHandler;
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity{
         setTitle(preferencesDBHandler.getPreference(Constants.DB.PREFERENCES.DISPLAY_NAME).get_value());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         if(!isMyServiceRunning(SocketService.class)){
             new Thread() {
                 public void run() {
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }.start();
         }
+
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_feed_container);
         swipeLayout.setOnRefreshListener(refreshListener);
         swipeLayout.setColorSchemeResources(R.color.orange_600, R.color.green_600, R.color.blue_600, R.color.red_600);
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity{
 
         EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
     }
+
     public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
     };
+
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity{
         swipeLayout.setRefreshing(false);
     }
 
+
     /**
      * Posts a SnackBar message with information
      * from the passed event.
@@ -213,16 +216,18 @@ public class MainActivity extends AppCompatActivity{
         Snackbar.make(this.getCurrentFocus(), event.getStatusText(), Snackbar.LENGTH_LONG).show();
     }
 
+
     /**
-     * Gets more posts :DD
+     * Gets more posts
      */
     public void getMorePosts(){
         Log.i(TAG, "getMorePosts");
         getPosts(filter(), 10, mAdapter.getItemCount());
     }
 
+
     /**
-     * Gets posts ? :)
+     * Gets posts
      * @param query
      * @param limit
      * @param skip
@@ -239,6 +244,7 @@ public class MainActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
+
 
     /**
      * Checks if the user is filtering certain posts and
@@ -282,6 +288,7 @@ public class MainActivity extends AppCompatActivity{
         }
         return false;
     }
+
     public RecyclerView.Adapter getmAdapter() {
         return mAdapter;
     }

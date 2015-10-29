@@ -30,8 +30,10 @@ import de.greenrobot.event.Subscribe;
  * SocketService.
  */
 public class AddPostActivity extends AppCompatActivity {
+    
     private final String TAG = "dat255.AddPostActivity";
     PreferencesDBHandler preferencesDBHandler;
+
 
     /**
      * Sets content view, sets action bar parameters and
@@ -57,6 +59,7 @@ public class AddPostActivity extends AppCompatActivity {
         preferencesDBHandler = new PreferencesDBHandler(this,null);
 
     }
+
 
     /**
      * Registers this activity to the EventBus when started.
