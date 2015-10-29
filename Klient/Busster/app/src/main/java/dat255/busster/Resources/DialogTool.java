@@ -13,10 +13,6 @@ import dat255.busster.Objects.Survey;
 import dat255.busster.R;
 
 /**
- * Created by Rasmus on 2015-10-19.
- */
-
-/**
  * DialogTool is used to create diffrent dialog popups
  */
 public class DialogTool {
