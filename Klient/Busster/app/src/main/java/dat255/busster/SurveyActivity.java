@@ -24,7 +24,10 @@ import dat255.busster.Objects.Survey;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
-
+/**
+ * This activity is for showing a survey where you can vote.
+ * After you voted you will be able see the result off the current survey.
+ */
 public class SurveyActivity extends AppCompatActivity {
 
     private final String TAG = "dat255.SurveyActivity";
