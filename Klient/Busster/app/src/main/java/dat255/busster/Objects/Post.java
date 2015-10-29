@@ -6,6 +6,9 @@ import org.joda.time.Period;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * the superclass for all postitems in the feed
+ */
 
 public class Post {
 
@@ -18,7 +21,10 @@ public class Post {
     private String color = "#039BE5";
 
 
-
+    /**
+     *  tries to set all the field in post to the corresponding field.
+     *  cathes if it fails.
+     */ 
     public Post(JSONObject post) {
 
         try {
@@ -109,6 +115,11 @@ public class Post {
 
 
     }
+    
+    /**
+     * Used for getting the time when posted and for calculating how long it was since it was posted.
+     *  @param t the time when posted
+     */
     public static String getTimeSince(long t) {
         long tTime = t;
         long diff = System.currentTimeMillis()-tTime;
