@@ -5,7 +5,7 @@ import java.util.List;
 import dat255.busster.Objects.Post;
 
 /**
- * Created by elias on 2015-10-20.
+ * used for all commentevents
  */
 public class CommentsEvent {
 
