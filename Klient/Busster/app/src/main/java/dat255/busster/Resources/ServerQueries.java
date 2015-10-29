@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by elias on 2015-09-25.
+ * handling the queries to the server for saving different type of json objects.
  */
 public class ServerQueries {
 
