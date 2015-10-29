@@ -11,7 +11,7 @@ import dat255.busster.Objects.Event;
 import dat255.busster.R;
 
 /**
- * Created by Rasmus on 2015-10-19.
+ * used for notification handling
  */
 public  class Notifyer {
 
