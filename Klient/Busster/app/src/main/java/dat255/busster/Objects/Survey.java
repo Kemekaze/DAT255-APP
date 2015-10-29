@@ -6,10 +6,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Rasmus on 2015-10-13.
- */
-
-/**
  * Survey is a subclass to post. the exception for surveys is that it has
  * alternatives which can be chosen and will contain a result and amount
  * of participants. when people are voting in a survey result will change
