@@ -5,7 +5,7 @@ import java.util.List;
 import dat255.busster.Objects.Survey;
 
 /**
- * Created by Rasmus on 2015-10-14.
+ * handling the events of typ survey.
  */
 public class SurveyEvent {
 
