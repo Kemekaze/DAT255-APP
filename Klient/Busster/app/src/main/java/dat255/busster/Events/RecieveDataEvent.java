@@ -1,5 +1,8 @@
 package dat255.busster.Events;
 
+/**
+ * used for carrying data information.
+ */
 
 public class RecieveDataEvent {
     private Object data = null;
