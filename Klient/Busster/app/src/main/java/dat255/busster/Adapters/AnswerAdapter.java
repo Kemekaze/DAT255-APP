@@ -132,18 +132,25 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
     }
 
 
-
+    /**
+     * Showing the dialog window for the result
+     */
     private void showResult() {
         SurveyActivity surveyActivity = (SurveyActivity) context;
         DialogTool.resultDialog(surveyActivity, survey);
     }
 
 
+    /**
+     * Checks if the user already voted.
+     * @return when it is already voted true if not false
+     */
     private boolean isVoted() {
         return surveyHandler.checkIfExists(survey.getId()).get(0) == 1;
     }
 
-    
+
+
     @Override
     public int getItemCount() {
         return answers.size();
@@ -161,6 +168,7 @@ public class AnswerAdapter extends RecyclerSwipeAdapter<AnswerAdapter.ViewHolder
     public int getSwipeLayoutResourceId(int position) {
         return 0;
     }
+
 
     public void setSurvey(Survey survey) {
         this.survey = survey;
