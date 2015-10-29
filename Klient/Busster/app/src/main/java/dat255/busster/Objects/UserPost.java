@@ -19,7 +19,6 @@ public class UserPost extends Post{
 
     public UserPost(JSONObject post) {
         super(post);
-
         try {
             JSONObject meta = post.getJSONObject("meta");
             JSONObject votes = meta.getJSONObject("votes");

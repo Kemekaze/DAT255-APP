@@ -25,18 +25,17 @@ public class Post /*implements Parcelable*/{
         }catch (Exception e){
             e.printStackTrace();
         }*/
-
         try {
-            JSONObject meta = post.getJSONObject("meta");
-
-            JSONObject bus = meta.getJSONObject("bus");
-
             this._id = post.getString("_id");
             this.body = post.getString("body");
             this.user = post.getString("user");
-            this.busLine = bus.getInt("serviceid");
-            this.type = meta.getString("type");
             this.time = post.getLong("date");
+            JSONObject meta = post.getJSONObject("meta");
+            this.type = meta.getString("type");
+
+            JSONObject bus = meta.getJSONObject("bus");
+            this.busLine = bus.getInt("serviceid");
+
 
         } catch (JSONException e) {
             e.printStackTrace();

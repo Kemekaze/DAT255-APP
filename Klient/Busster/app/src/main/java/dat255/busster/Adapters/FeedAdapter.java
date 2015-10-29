@@ -141,24 +141,19 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
             holder.swipeLayout.setLeftSwipeEnabled(true);
             holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, holder.rightLayout);
             holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.leftLayout);
-
             holder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
-                public void onStartOpen(SwipeLayout layout) {
-
-                }
+                public void onStartOpen(SwipeLayout layout) {}
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    layout.close(true);
+                    layout.close();
                     boolean like = (layout.getDragEdge().name().equals("Left")) ? true : false;
                     voteUserPost(pos, like);
                 }
 
                 @Override
-                public void onStartClose(SwipeLayout layout) {
-
-                }
+                public void onStartClose(SwipeLayout layout) {}
 
                 @Override
                 public void onClose(SwipeLayout layout) {
@@ -166,13 +161,11 @@ public class FeedAdapter extends RecyclerSwipeAdapter<FeedAdapter.ViewHolder> {
                 }
 
                 @Override
-                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-
-                }
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {}
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    layout.close(true);
+                    layout.close();
                 }
             });
 

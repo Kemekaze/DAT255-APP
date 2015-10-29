@@ -53,6 +53,8 @@ public class ViewCommentsActivity extends AppCompatActivity {
     /**
      * Sets content view to layout activity_view_comments and binds a
      * CommentsAdapter to the RecyclerView.
+     * Changes toolbar and its title to display the parent
+     * Post information (body, user and timeSince() it was posted).
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addCommentActivity);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +107,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
             }
         }
     };
+
     /**
      * Gets the relevant post and its comments from the DataBus and
      * sets the head TextFields to the matching posts strings.
@@ -115,16 +118,12 @@ public class ViewCommentsActivity extends AppCompatActivity {
         super.onStart();
         EventBus.getDefault().register(this);
         userPost = (EventBus.getDefault().getStickyEvent(UserPostEvent.class)).userPosts.get(0);
-        
         ((CommentsAdapter)mAdapter).addComments(userPost.getComments(),1);
 
         // sets the textfields to the corresponding fields from the selected post
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
         ((TextView) findViewById(R.id.comment_parent_user)).setText("- "+userPost.getUser());
         ((TextView) findViewById(R.id.comment_parent_time)).setText(userPost.getTimeSince());
-
-
-
     }
 
     /**
@@ -140,7 +139,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
     }
 
     /**
-     * Displays a snackbar message on the screen.
+     * Displays a SnackBar message on the screen.
      * @param event StatusEvent containing the information to be displayed.
      */
     @Subscribe(threadMode = ThreadMode.MainThread)
@@ -149,8 +148,7 @@ public class ViewCommentsActivity extends AppCompatActivity {
     }
 
     /**
-     * unregisters this activity from the EventBus
-     * when stopped.
+     * unregisters this activity from the EventBus when stopped.
      */
     @Override
     protected void onStop() {
@@ -171,9 +169,10 @@ public class ViewCommentsActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param item
-     * @return
+     * Handles interaction with menuItems. If home button was pressed
+     * finish this activity and go back to previous activity.
+     * @param item MenuItem that was selected.
+     * @return true if executed correctly, otherwise false.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -195,5 +194,25 @@ public class ViewCommentsActivity extends AppCompatActivity {
     public void onBackPressed() {
         this.finish();
         overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
+    }
+    @Subscribe
+    public void userPostEvent(UserPostEvent userPostEvent) {
+        Log.i(TAG, "UserPostEvent");
+    }
+
+    /**
+     * Returns the adapter used to create views for the comments.
+     * @return adapter
+     */
+    public RecyclerView.Adapter getmAdapter() {
+        return mAdapter;
+    }
+
+    /**
+     * Returns RecyclerView containing the views for the comments.
+     * @return RecyclerView
+     */
+    public RecyclerView getmRecyclerView() {
+        return mRecyclerView;
     }
 }

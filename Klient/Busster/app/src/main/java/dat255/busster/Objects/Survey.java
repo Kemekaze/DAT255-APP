@@ -94,4 +94,14 @@ public class Survey extends Post {
         return options;
     }
 
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    @Override
+    public String getColor() {
+        return this.color;
+    }
+
 }

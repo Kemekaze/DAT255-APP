@@ -6,18 +6,17 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
 import dat255.busster.Events.CommentsEvent;
-import dat255.busster.Events.GPSEvent;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StopsEvent;
-import dat255.busster.Objects.GPS;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Stop;
 import dat255.busster.Objects.UserPost;
@@ -134,6 +133,7 @@ public class SocketService extends Service {
         public void call(Object... args) {
             Log.i(TAG, "eventAuthorized");
             socket.emit(Constants.SocketEvents.GET_STOPS);
+            socket.emit(Constants.SocketEvents.GET_POSTS);
         }
     };
     private Emitter.Listener eventUnauthorized = new Emitter.Listener() {
@@ -153,16 +153,7 @@ public class SocketService extends Service {
 
             int type = data.optInt("type");
             EventBus.getDefault().post(new PostsEvent(DataHandler.postToRposts(posts), type));
-            /*try {
-                List<UserPost> ups =DataHandler.<UserPost>jsonArrToObjArr(UserPost.class, posts);
-                List<? extends Post> posts1 = ups;
-                EventBus.getDefault().post(new PostsEvent((List<Post>)posts1, type));
 
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }*/
         }
     };
     private Emitter.Listener eventSavePost = new Emitter.Listener() {
@@ -172,9 +163,15 @@ public class SocketService extends Service {
             JSONObject obj = (JSONObject)args[0];
 
             EventBus.getDefault().post(new SavePostEvent(obj.opt("status").toString()));
-            List<UserPost> ups =DataHandler.<UserPost>jsonToObjArr(UserPost.class, obj);
-            List<? extends Post> posts1 = ups;
-            EventBus.getDefault().postSticky(new PostsEvent((List<Post>)posts1, 2));
+            List<UserPost> ups = null;
+            try {
+                ups = DataHandler.<UserPost>jsonToObjArr(UserPost.class, obj.getJSONObject("post"));
+                List<? extends Post> posts1 = ups;
+                EventBus.getDefault().postSticky(new PostsEvent((List<Post>)posts1, 2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     };
     private Emitter.Listener eventIncVotesUp = new Emitter.Listener() {
@@ -252,19 +249,6 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventGetBusesGPS");
-            //vad den skall göra
-            JSONObject data = (JSONObject)args[0];
-            JSONArray gps = (JSONArray)data.opt("gps");
-
-            try {
-                EventBus.getDefault().post(new GPSEvent(DataHandler.<GPS>jsonArrToObjArr(GPS.class, gps)));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
-
-
         }
     };
     private Emitter.Listener eventGetBusGPS = new Emitter.Listener() {

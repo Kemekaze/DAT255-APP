@@ -30,9 +30,7 @@ import de.greenrobot.event.Subscribe;
 public class AddCommentActivity extends AppCompatActivity {
     private final String TAG = "dat255.AddComment";
 
-    /**
-     *
-     */
+    PreferencesDBHandler preferencesDBHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +43,14 @@ public class AddCommentActivity extends AppCompatActivity {
 
         TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
         body.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(body, 3, 180));
+        preferencesDBHandler  = new PreferencesDBHandler(this,null);
     }
 
     /**
-     * Called
-     * @param menu
-     * @return
+     * Called when optionsMenu is created. Decompresses the
+     * data passed in.
+     * @param menu the data to be inflated.
+     * @return true if successful, else false.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,9 +106,8 @@ public class AddCommentActivity extends AppCompatActivity {
      * and a post id to a JSONObject and sends it to the DataBus.
      */
     public void saveComment() {
+        Log.i(TAG,"saveComment");
         TextInputLayout body = (TextInputLayout) findViewById(R.id.comment_body_edit);
-        PreferencesDBHandler preferencesDBHandler = new PreferencesDBHandler(this,null);
-
         try {
             JSONObject query = new JSONObject();
             query.put("post_id", getIntent().getStringExtra("postID"));
