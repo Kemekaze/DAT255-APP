@@ -27,11 +27,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public List<Post.Comment> comments;
     public RecyclerView recyclerView;
 
-    /*
-     * Constructor
+    /**
+     * Initializes the list of comments and the recyclerView
+     * and notifies that the DataSet has changed.
+     * @param comments new comments to be put in the dataset.
+     * @param mRecyclerView RecyclerView to be used.
      */
     public CommentsAdapter(List<Post.Comment> comments, RecyclerView mRecyclerView) {
-
         this.comments = comments;
         this.recyclerView = mRecyclerView;
         notifyDataSetChanged();
@@ -41,7 +43,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
      * This internal class creates views of the items in the
      * dataset. Every comment item will have three TextViews
      * containing the users name (who posted the comment), the
-     * comment body and timeSince() it was posted.
+     * comment body and timeSince it was posted.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
