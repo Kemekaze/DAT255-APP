@@ -1,5 +1,14 @@
 # Group: Super Friends
 
+## APK
+https://github.com/Kemekaze/DAT255-APP/tree/dev/APK
+## Dokumentationen
+https://github.com/Kemekaze/DAT255-APP/wiki/Dokumentation
+## Post Mortem Report
+https://github.com/Kemekaze/DAT255-APP/wiki/Post-mortem-report
+
+***
+
 ## Getting Started
 ```bash
 git clone git://github.com/Kemekaze/DAT255-APP.git
