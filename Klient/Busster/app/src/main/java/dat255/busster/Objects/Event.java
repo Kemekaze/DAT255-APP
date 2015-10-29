@@ -3,7 +3,7 @@ package dat255.busster.Objects;
 import org.json.JSONObject;
 
 /**
- * Created by elias on 2015-10-15.
+ * used for getting the type and the color of an post.
  */
 public class Event extends  Post{
 
