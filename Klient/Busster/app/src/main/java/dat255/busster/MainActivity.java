@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     /**
-     * Gets posts 
+     * Gets posts
      * @param query
      * @param limit
      * @param skip
@@ -288,6 +288,7 @@ public class MainActivity extends AppCompatActivity{
         }
         return false;
     }
+
     public RecyclerView.Adapter getmAdapter() {
         return mAdapter;
     }
