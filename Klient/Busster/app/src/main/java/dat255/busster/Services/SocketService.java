@@ -13,12 +13,10 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import dat255.busster.Events.CommentsEvent;
-import dat255.busster.Events.GPSEvent;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SavePostEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StopsEvent;
-import dat255.busster.Objects.GPS;
 import dat255.busster.Objects.Post;
 import dat255.busster.Objects.Stop;
 import dat255.busster.Objects.UserPost;
@@ -251,19 +249,6 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.i(TAG, "eventGetBusesGPS");
-            //vad den skall göra
-            JSONObject data = (JSONObject)args[0];
-            JSONArray gps = (JSONArray)data.opt("gps");
-
-            try {
-                EventBus.getDefault().post(new GPSEvent(DataHandler.<GPS>jsonArrToObjArr(GPS.class, gps)));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
-
-
         }
     };
     private Emitter.Listener eventGetBusGPS = new Emitter.Listener() {
