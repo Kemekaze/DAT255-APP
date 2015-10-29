@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Rasmus on 2015-10-13.
+ * The subclass to the type Post used for all userposts in the feed
+ * 
  */
 public class UserPost extends Post{
 
