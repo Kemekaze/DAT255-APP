@@ -12,9 +12,7 @@ import java.util.List;
 import dat255.busster.Objects.SurveyVote;
 import dat255.busster.Resources.Constants;
 
-/**
- * Created by elias on 2015-10-10.
- */
+
 public class SurveyDBHandler extends DBHandler {
     public static final String TAG ="dat255.SVoteDBHandler";
 

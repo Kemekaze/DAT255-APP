@@ -4,6 +4,7 @@ package dat255.busster.Objects;
  * the class handling the votes on a post. 
  */
 public class Vote {
+
     private int _id;
     private String _postId;
     private Boolean _like;

@@ -1,7 +1,9 @@
 package dat255.busster.Objects;
 
 /**
- * Created by Rasmus on 2015-10-14.
+ * Containing the information from a vote in a survey.
+ * The information includes the id:s and what kind
+ * the user voted for in the survey;
  */
 public class SurveyVote {
 
@@ -9,12 +11,23 @@ public class SurveyVote {
     private String _postId;
     private int _option;
 
+    /**
+     * Setting th values.
+     * @param _id id of the post in form of a integer
+     * @param _postId id of the post in form of a string
+     * @param _option answer the user voted for.
+     */
     public SurveyVote(int _id,String _postId,int _option) {
         this._id = _id;
         this._option = _option;
         this._postId = _postId;
     }
 
+    /**
+     *
+     * @param _postId id of the post in form of a string
+     * @param _option answer the user voted for.
+     */
     public SurveyVote(String _postId,int _option) {
         this._option = _option;
         this._postId = _postId;
