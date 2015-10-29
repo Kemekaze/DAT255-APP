@@ -29,6 +29,9 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+/**
+ * handles the communication between the client and the server.
+ */
 public class SocketService extends Service {
     private static final String TAG = "dat255.SocketService";
 
