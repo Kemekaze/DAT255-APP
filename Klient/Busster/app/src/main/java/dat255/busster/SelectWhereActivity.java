@@ -139,8 +139,8 @@ public class SelectWhereActivity extends AppCompatActivity {
     }
     
     /**
-     * @param event
      * is used for autocompleting the busstops when the users input the busstop he/she want to get of at.
+     * @param event the type of event to be recieved
      */ 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void recieveStops(StopsEvent event) {
