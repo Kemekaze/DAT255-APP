@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import dat255.busster.Adapters.FeedAdapter;
 import dat255.busster.DB.PreferencesDBHandler;
+import dat255.busster.Events.CommentsEvent;
 import dat255.busster.Events.PostsEvent;
 import dat255.busster.Events.SendDataEvent;
 import dat255.busster.Events.StatusEvent;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity{
     PreferencesDBHandler preferencesDBHandler;
 
     /**
-     * HALP
+     * Setting the start values of the feed and the layout of activity.
      * @param savedInstanceState state of the application.
      */
     @Override
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity{
         EventBus.getDefault().post(new SendDataEvent(Constants.SocketEvents.GET_POSTS));
     }
 
+
     public SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
     };
+
 
     public RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -190,6 +193,7 @@ public class MainActivity extends AppCompatActivity{
             statusEvent(sE);
         }
 
+        refreshPosts();
         super.onStart();
     }
 
