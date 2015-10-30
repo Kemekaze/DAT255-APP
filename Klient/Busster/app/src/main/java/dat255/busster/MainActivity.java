@@ -48,7 +48,9 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout swipeLayout;
 
+    private int previousTotal = 0;
     private boolean loading = true;
+    private int visibleThreshold = 5;
 
     private int menuFilterSelected=1;
     PreferencesDBHandler preferencesDBHandler;
@@ -178,6 +180,16 @@ public class MainActivity extends AppCompatActivity{
     protected void onStart() {
         Log.i(TAG,"onStart");
         EventBus.getDefault().register(this);
+        PostsEvent pE= (EventBus.getDefault().getStickyEvent(PostsEvent.class));
+        if(pE != null){
+            updatePostsEvent(pE);
+        }
+
+        StatusEvent sE= (EventBus.getDefault().getStickyEvent(StatusEvent.class));
+        if(sE != null){
+            statusEvent(sE);
+        }
+
         super.onStart();
     }
 

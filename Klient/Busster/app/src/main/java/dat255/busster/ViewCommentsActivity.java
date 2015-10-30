@@ -124,6 +124,22 @@ public class ViewCommentsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.comment_parent_body)).setText(userPost.getBody());
         ((TextView) findViewById(R.id.comment_parent_user)).setText("- "+userPost.getUser());
         ((TextView) findViewById(R.id.comment_parent_time)).setText(userPost.getTimeSince());
+
+        StatusEvent sE= (EventBus.getDefault().getStickyEvent(StatusEvent.class));
+        if(sE != null){
+            statusEvent(sE);
+            
+        }
+
+        UserPostEvent upE= (EventBus.getDefault().getStickyEvent(UserPostEvent.class));
+        if(upE != null){
+            userPost = upE.userPosts.get(0);
+        }
+
+        CommentsEvent cE= (EventBus.getDefault().getStickyEvent(CommentsEvent.class));
+        if(cE != null){
+            updateCommentsEvent(cE);
+        }
     }
 
     /**
